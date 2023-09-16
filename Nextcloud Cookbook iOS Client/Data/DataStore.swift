@@ -32,13 +32,17 @@ class DataStore {
         return try await task.value
     }
     
-    func save<D: Encodable>(data: D, toPath path: String) async throws {
+    func save<D: Encodable>(data: D, toPath path: String) async {
         let task = Task {
             let data = try JSONEncoder().encode(data)
             let outfile = try Self.fileURL(appending: path)
             try data.write(to: outfile)
         }
-        _ = try await task.value
+        do {
+            _ = try await task.value
+        } catch {
+            print("Could not save data (path: \(path)")
+        }
     }
     
     func clearAll() {

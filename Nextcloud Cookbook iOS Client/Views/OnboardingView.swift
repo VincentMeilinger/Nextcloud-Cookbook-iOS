@@ -146,7 +146,8 @@ struct LoginTextField: View {
     var body: some View {
         TextField(example, text: $text)
             .textFieldStyle(.plain)
-            .textCase(.lowercase)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
             .foregroundColor(.white)
             .accentColor(.white)
             .padding()

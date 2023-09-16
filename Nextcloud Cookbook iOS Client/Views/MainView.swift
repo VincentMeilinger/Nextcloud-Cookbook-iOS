@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject var viewModel = MainViewModel()
+    @StateObject var userSettings: UserSettings
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
     var body: some View {
         NavigationStack {
@@ -29,7 +30,7 @@ struct MainView: View {
             }
             .navigationTitle("CookBook")
             .toolbar {
-                NavigationLink( destination: SettingsView()) {
+                NavigationLink( destination: SettingsView(userSettings: userSettings)) {
                     Image(systemName: "gear")
                 }
             }
@@ -45,7 +46,7 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        MainView(userSettings: UserSettings())
     }
 }
 

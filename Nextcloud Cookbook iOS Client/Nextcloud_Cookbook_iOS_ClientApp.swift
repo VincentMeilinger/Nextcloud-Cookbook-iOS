@@ -12,7 +12,7 @@ struct Nextcloud_Cookbook_iOS_ClientApp: App {
     @StateObject var userSettings = UserSettings()
     var body: some Scene {
         WindowGroup {
-            MainView()
+            MainView(userSettings: userSettings)
                 .fullScreenCover(isPresented: $userSettings.onboarding) {
                     OnboardingView(userSettings: userSettings)
                 }

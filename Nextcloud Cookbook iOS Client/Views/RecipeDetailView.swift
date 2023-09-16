@@ -25,8 +25,8 @@ struct RecipeDetailView: View {
                         .frame(height: 300)
                         .clipped()
                 } else {
-                    Color.blue
-                        .frame(height: 300)
+                    Color("ncblue")
+                        .frame(height: 150)
                 }
                 
                 if let recipeDetail = recipeDetail {
@@ -80,8 +80,7 @@ struct RecipeYieldSection: View {
             Text("Servings: \(recipeDetail.recipeYield)")
             Spacer()
         }.padding()
-            .background(Color("accent"))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            
     }
 }
 

@@ -16,7 +16,9 @@ struct RecipeCardView: View {
         HStack {
             Image(uiImage: recipeThumb ?? UIImage(named: "CookBook")!)
                 .resizable()
-                .frame(maxWidth: 80, maxHeight: 80)
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 80, height: 80)
+                .clipped()
             Text(recipe.name)
                 .font(.headline)
                 

@@ -63,6 +63,6 @@ struct RecipeDetail: Codable {
 }
 
 struct RecipeImage {
-    let thumb: UIImage
-    let full: UIImage?
+    var thumb: UIImage?
+    var full: UIImage?
 }
