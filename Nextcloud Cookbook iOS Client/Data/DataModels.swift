@@ -63,6 +63,7 @@ struct RecipeDetail: Codable {
 }
 
 struct RecipeImage {
+    var imageExists: Bool = true
     var thumb: UIImage?
     var full: UIImage?
 }

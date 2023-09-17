@@ -77,22 +77,36 @@ import UIKit
     ///     - needsUpdate: Determines wether the image should be loaded directly from the server, or if it should be loaded from cache/store first.
     /// - Returns: The image if found locally or on the server, otherwise nil.
     func loadImage(recipeId: Int, full: Bool, needsUpdate: Bool = false) async -> UIImage? {
-        print("loadImage(recipeId: \(recipeId), full: \(full), needsUpdate: \(needsUpdate)")
+        print("loadImage(recipeId: \(recipeId), full: \(full), needsUpdate: \(needsUpdate))")
         // If the image needs an update, request it from the server and overwrite the stored image
         if needsUpdate {
             if let data = await imageDataFromServer(recipeId: recipeId, full: full) {
-                guard let image = UIImage(data: data) else { return nil }
+                guard let image = UIImage(data: data) else {
+                    imageCache[recipeId] = RecipeImage(imageExists: false)
+                    return nil
+                }
                 await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, full))
                 imageToCache(image: image, recipeId: recipeId, full: full)
                 return image
+            } else {
+                imageCache[recipeId] = RecipeImage(imageExists: false)
+                return nil
             }
         }
+        
+        // Check imageExists flag to detect if we attempted to load a non-existing image before.
+        // This allows us to avoid sending requests to the server if we already know the recipe has no image.
+        if imageCache[recipeId] != nil {
+            guard imageCache[recipeId]!.imageExists else { return nil }
+        }
+        
         // Try to load image from cache
         print("Attempting to load image from cache ...")
-        if imageCache[recipeId] != nil {
+        if let image = imageFromCache(recipeId: recipeId, full: full) {
             print("Image found in cache.")
-            return imageFromCache(recipeId: recipeId, full: full)
+            return image
         }
+        
         // Try to load from store
         print("Attempting to load image from local storage ...")
         if let image = await imageFromStore(recipeId: recipeId, full: full) {
@@ -100,17 +114,31 @@ import UIKit
             imageToCache(image: image, recipeId: recipeId, full: full)
             return image
         }
+        
         // Try to load from the server. Store if successfull.
         print("Attempting to load image from server ...")
         if let data = await imageDataFromServer(recipeId: recipeId, full: full) {
             print("Image data received.")
-            imageCache[recipeId] = RecipeImage() // Create empty RecipeImage for each recipe even if no image found, so that further server requests are only sent if explicitly requested.
-            guard let image = UIImage(data: data) else { return nil }
+            // Create empty RecipeImage for each recipe even if no image found, so that further server requests are only sent if explicitly requested.
+            guard let image = UIImage(data: data) else {
+                imageCache[recipeId] = RecipeImage(imageExists: false)
+                return nil
+            }
             await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, full))
             imageToCache(image: image, recipeId: recipeId, full: full)
             return image
         }
+        imageCache[recipeId] = RecipeImage(imageExists: false)
         return nil
+    }
+    
+    func deleteAllData() {
+        if dataStore.clearAll() {
+            self.categories = []
+            self.recipes = [:]
+            self.imageCache = [:]
+            self.recipeDetails = [:]
+        }
     }
 }
 
@@ -140,11 +168,13 @@ extension MainViewModel {
     
     private func imageToCache(image: UIImage, recipeId: Int, full: Bool) {
         if imageCache[recipeId] == nil {
-            imageCache[recipeId] = RecipeImage()
+            imageCache[recipeId] = RecipeImage(imageExists: true)
         }
         if full {
+            imageCache[recipeId]!.imageExists = true
             imageCache[recipeId]!.full = image
         } else {
+            imageCache[recipeId]!.imageExists = true
             imageCache[recipeId]!.thumb = image
         }
     }

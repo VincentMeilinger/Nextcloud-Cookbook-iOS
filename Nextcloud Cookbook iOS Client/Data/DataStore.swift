@@ -16,8 +16,16 @@ class DataStore {
             appropriateFor: nil,
             create: false
         )
-
         .appendingPathComponent(appending)
+    }
+    
+    private static func fileURL() throws -> URL {
+        try FileManager.default.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: false
+        )
     }
     
     func load<D: Decodable>(fromPath path: String) async throws -> D? {
@@ -45,12 +53,24 @@ class DataStore {
         }
     }
     
-    func clearAll() {
+    func clearAll() -> Bool {
+        print("Attempting to delete all data ...")
+        let fm = FileManager.default
+        guard let folderPath = fm.urls(for: .documentDirectory, in: .userDomainMask).first?.path() else { return false }
+        print("Folder path: ", folderPath)
         do {
-            try FileManager.default.removeItem(at: Self.fileURL(appending: ""))
+            let filePaths = try fm.contentsOfDirectory(atPath: folderPath)
+            for filePath in filePaths {
+                print("File path: ", filePath)
+                try fm.removeItem(atPath: folderPath + filePath)
+            }
         } catch {
-            print("Could not delete file, probably read-only filesystem")
+            print("Could not delete documents folder contents: \(error)")
+            return false
         }
+        print("Done.")
+        return true
+        
     }
     
 }

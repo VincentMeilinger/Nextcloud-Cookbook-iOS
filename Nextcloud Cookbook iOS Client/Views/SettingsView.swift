@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var userSettings: UserSettings
+    @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
         List {
@@ -33,7 +34,7 @@ struct SettingsView: View {
             {
                 Button("Clear Cache") {
                     print("Clear cache.")
-                    
+                    viewModel.deleteAllData()
                 }
                 .buttonStyle(.borderedProminent)
                 .accentColor(.red)

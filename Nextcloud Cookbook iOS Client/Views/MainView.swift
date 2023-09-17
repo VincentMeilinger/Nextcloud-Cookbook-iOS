@@ -30,7 +30,7 @@ struct MainView: View {
             }
             .navigationTitle("CookBook")
             .toolbar {
-                NavigationLink( destination: SettingsView(userSettings: userSettings)) {
+                NavigationLink( destination: SettingsView(userSettings: userSettings, viewModel: viewModel)) {
                     Image(systemName: "gear")
                 }
             }
