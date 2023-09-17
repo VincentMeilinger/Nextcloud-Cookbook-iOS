@@ -1,6 +1,6 @@
 # Nextcloud-Cookbook-iOS
 
-A Nextcloud Cookbook native iOS client, built using Swift and SwiftUI.
+A Nextcloud Cookbook native iOS/iPadOS/MacOS client, built using Swift and SwiftUI.
 
 :warning: This is not a standalone application! :warning:
 
