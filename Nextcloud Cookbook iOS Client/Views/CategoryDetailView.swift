@@ -14,7 +14,7 @@ struct RecipeBookView: View {
     @State var categoryName: String
     @ObservedObject var viewModel: MainViewModel
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 if let recipes = viewModel.recipes[categoryName] {
                     ForEach(recipes, id: \.recipe_id) { recipe in

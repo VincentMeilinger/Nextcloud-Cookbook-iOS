@@ -45,14 +45,16 @@ struct RecipeDetailView: View {
                         Divider()
                         RecipeYieldSection(recipeDetail: recipeDetail)
                         RecipeDurationSection(recipeDetail: recipeDetail)
-                        if(!recipeDetail.recipeIngredient.isEmpty) {
-                            RecipeIngredientSection(recipeDetail: recipeDetail)
-                        }
-                        if(!recipeDetail.tool.isEmpty) {
-                            RecipeToolSection(recipeDetail: recipeDetail)
-                        }
-                        if(!recipeDetail.recipeInstructions.isEmpty) {
-                            RecipeInstructionSection(recipeDetail: recipeDetail)
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
+                            if(!recipeDetail.recipeIngredient.isEmpty) {
+                                RecipeIngredientSection(recipeDetail: recipeDetail)
+                            }
+                            if(!recipeDetail.tool.isEmpty) {
+                                RecipeToolSection(recipeDetail: recipeDetail)
+                            }
+                            if(!recipeDetail.recipeInstructions.isEmpty) {
+                                RecipeInstructionSection(recipeDetail: recipeDetail)
+                            }
                         }
                     }.padding(.horizontal, 5)
                     
@@ -130,19 +132,20 @@ struct RecipeIngredientSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
+            Divider()
             HStack {
                 SecondaryLabel(text: "Ingredients")
                 Spacer()
             }
             ForEach(recipeDetail.recipeIngredient, id: \.self) { ingredient in
-                Text("\u{2022} \(ingredient)")
-                    .multilineTextAlignment(.leading)
-                    .padding(4)
+                HStack(alignment: .top) {
+                    Text("\u{2022}")
+                    Text("\(ingredient)")
+                        .multilineTextAlignment(.leading)
+                }
+                .padding(4)
             }
         }.padding()
-        .frame(maxWidth: .infinity)
-        .background(Color("accent"))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
@@ -150,19 +153,20 @@ struct RecipeToolSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
+            Divider()
             HStack {
                 SecondaryLabel(text: "Tools")
                 Spacer()
             }
             ForEach(recipeDetail.tool, id: \.self) { tool in
-                Text("\u{2022} \(tool)")
-                    .multilineTextAlignment(.leading)
-                    .padding(4)
+                HStack(alignment: .top) {
+                    Text("\u{2022}")
+                    Text("\(tool)")
+                        .multilineTextAlignment(.leading)
+                }
+                .padding(4)
             }
         }.padding()
-        .frame(maxWidth: .infinity)
-        .background(Color("accent"))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
@@ -170,6 +174,7 @@ struct RecipeInstructionSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
+            Divider()
             HStack {
                 SecondaryLabel(text: "Instructions")
                 Spacer()
@@ -181,8 +186,6 @@ struct RecipeInstructionSection: View {
                 }.padding(4)
             }
         }.padding()
-        .background(Color("accent"))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
