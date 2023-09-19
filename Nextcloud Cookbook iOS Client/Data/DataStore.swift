@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 class DataStore {
+    let fileManager = FileManager.default
+    
+    
     private static func fileURL(appending: String) throws -> URL {
         try FileManager.default.url(
             for: .documentDirectory,
@@ -53,16 +56,24 @@ class DataStore {
         }
     }
     
+    func recipeDetailExists(recipeId: Int) -> Bool {
+        let filePath = "recipe\(recipeId).data"
+        guard let folderPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first?.path() else { return false }
+        let exists = fileManager.fileExists(atPath: folderPath + filePath)
+        print("Path: ", folderPath + filePath)
+        print("Recipe detail with id \(recipeId)", exists ? "exists" : "does not exist")
+        return exists
+    }
+    
     func clearAll() -> Bool {
         print("Attempting to delete all data ...")
-        let fm = FileManager.default
-        guard let folderPath = fm.urls(for: .documentDirectory, in: .userDomainMask).first?.path() else { return false }
+        guard let folderPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first?.path() else { return false }
         print("Folder path: ", folderPath)
         do {
-            let filePaths = try fm.contentsOfDirectory(atPath: folderPath)
+            let filePaths = try fileManager.contentsOfDirectory(atPath: folderPath)
             for filePath in filePaths {
                 print("File path: ", filePath)
-                try fm.removeItem(atPath: folderPath + filePath)
+                try fileManager.removeItem(atPath: folderPath + filePath)
             }
         } catch {
             print("Could not delete documents folder contents: \(error)")

@@ -12,6 +12,8 @@ struct RecipeCardView: View {
     @State var viewModel: MainViewModel
     @State var recipe: Recipe
     @State var recipeThumb: UIImage?
+    @State var isDownloaded: Bool
+    
     var body: some View {
         HStack {
             Image(uiImage: recipeThumb ?? UIImage(named: "CookBook")!)
@@ -23,6 +25,12 @@ struct RecipeCardView: View {
                 .font(.headline)
                 
             Spacer()
+            VStack {
+                Image(systemName: isDownloaded ? "checkmark.icloud" : "icloud.and.arrow.down")
+                    .foregroundColor(.secondary)
+                    .padding()
+                Spacer()
+            }
         }
         .background(.ultraThickMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 10))

@@ -26,7 +26,7 @@ struct CategoryCardView: View {
                                 Text(category.name)
                                     .font(.headline)
                             )
-                            .frame(maxHeight: 30)
+                            .frame(maxHeight: 25)
                     }
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 10))

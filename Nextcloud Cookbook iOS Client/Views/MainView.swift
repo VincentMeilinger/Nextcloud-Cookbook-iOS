@@ -12,7 +12,7 @@ struct MainView: View {
     @StateObject var userSettings: UserSettings
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(viewModel.categories, id: \.name) { category in
@@ -30,8 +30,24 @@ struct MainView: View {
             }
             .navigationTitle("CookBook")
             .toolbar {
+                Menu {
+                    Button {
+                        print("Downloading all recipes ...")
+                        Task {
+                            await viewModel.downloadAllRecipes()
+                        }
+                    } label: {
+                        HStack {
+                            Text("Download all recipes")
+                            Image(systemName: "icloud.and.arrow.down")
+                        }
+                    }
+                    
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
                 NavigationLink( destination: SettingsView(userSettings: userSettings, viewModel: viewModel)) {
-                    Image(systemName: "gear")
+                    Image(systemName: "gearshape")
                 }
             }
         }

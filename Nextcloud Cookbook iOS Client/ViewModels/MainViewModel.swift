@@ -69,6 +69,30 @@ import UIKit
         return RecipeDetail.error()
     }
     
+    func downloadAllRecipes() async {
+        for category in categories {
+            await loadRecipeList(categoryName: category.name, needsUpdate: true)
+            guard let recipeList = recipes[category.name] else { continue }
+            for recipe in recipeList {
+                let _ = await loadRecipeDetail(recipeId: recipe.recipe_id, needsUpdate: true)
+                let _ = await loadImage(recipeId: recipe.recipe_id, full: false)
+            }
+        }
+    }
+    
+    /// Check if recipeDetail is stored locally, either in cache or on disk
+    /// - Parameters
+    ///     - recipeId: The id of a recipe.
+    /// - Returns: True if the recipeDetail is stored, otherwise false
+    func recipeDetailExists(recipeId: Int) -> Bool {
+        if recipeDetails[recipeId] != nil {
+            return true
+        } else if (dataStore.recipeDetailExists(recipeId: recipeId)) {
+            return true
+        }
+        return false
+    }
+    
     
     /// Try to load the recipe image from cache. If not found, try to load from store or the server.
     /// - Parameters
@@ -156,7 +180,7 @@ extension MainViewModel {
                 let (data, error): (D?, Error?) = await networkController.sendDataRequest(request)
                 print(error as Any)
                 if let data = data {
-                    try await dataStore.save(data: data, toPath: localPath)
+                    await dataStore.save(data: data, toPath: localPath)
                 }
                 return data
             }
