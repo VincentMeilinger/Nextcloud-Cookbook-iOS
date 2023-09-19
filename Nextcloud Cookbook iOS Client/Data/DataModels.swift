@@ -67,3 +67,5 @@ struct RecipeImage {
     var thumb: UIImage?
     var full: UIImage?
 }
+
+

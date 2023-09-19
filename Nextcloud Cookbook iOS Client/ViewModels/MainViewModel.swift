@@ -233,7 +233,7 @@ extension MainViewModel {
         do {
             let networkPath = networkImagePath(recipeId, full)
             let request = RequestWrapper(method: .GET, path: networkPath, accept: .IMAGE)
-            let (data, _): (Data?, Error?) = try await networkController.sendHTTPRequest(path: request.path, request)
+            let (data, _): (Data?, Error?) = try await networkController.sendHTTPRequest(request)
             guard let data = data else {
                 print("Error receiving or decoding data.")
                 return nil

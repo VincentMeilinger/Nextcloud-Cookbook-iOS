@@ -59,10 +59,7 @@ class DataStore {
     func recipeDetailExists(recipeId: Int) -> Bool {
         let filePath = "recipe\(recipeId).data"
         guard let folderPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first?.path() else { return false }
-        let exists = fileManager.fileExists(atPath: folderPath + filePath)
-        print("Path: ", folderPath + filePath)
-        print("Recipe detail with id \(recipeId)", exists ? "exists" : "does not exist")
-        return exists
+        return fileManager.fileExists(atPath: folderPath + filePath)
     }
     
     func clearAll() -> Bool {

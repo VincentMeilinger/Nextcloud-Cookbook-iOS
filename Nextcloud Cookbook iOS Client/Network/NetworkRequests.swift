@@ -21,7 +21,7 @@ enum AcceptHeader: String {
 
 struct RequestWrapper {
     let method: RequestMethod
-    let path: String
+    var path: String
     let accept: AcceptHeader
     let body: Codable?
     
@@ -31,6 +31,24 @@ struct RequestWrapper {
         self.body = body
         self.accept = accept
     }
+    
+    func prepend(cookBookPath: String) -> String {
+        return cookBookPath + self.path
+    }
 }
 
+struct LoginV2Request: Codable {
+    let poll: LoginV2Poll
+    let login: String
+}
 
+struct LoginV2Poll: Codable {
+    let token: String
+    let endpoint: String
+}
+
+struct LoginV2Response: Codable {
+    let server: String
+    let loginName: String
+    let appPassword: String
+}
