@@ -141,7 +141,7 @@ struct LoginTab: View {
                                 }
                             }
                         }
-                    Text("Submitting will open a web browser. Please follow the login instructions provided there.\nAfter a successfull login, return to this application and press 'Done'.")
+                    Text("Submitting will open a web browser. Please follow the login instructions provided there.\nAfter a successfull login, return to this application and press 'Validate'.")
                         .font(.subheadline)
                         .padding(.bottom)
                         .tint(.white)
@@ -152,10 +152,13 @@ struct LoginTab: View {
                             // fetch login v2 response
                             Task {
                                 guard let res = await fetchLoginV2Response() else { return }
-                                print(res.loginName)
+                                print("Login successfull for user \(res.loginName)!")
+                                userSettings.username = res.loginName
+                                userSettings.token = res.appPassword
+                                userSettings.onboarding = false
                             }
                         } label: {
-                            Text("Done")
+                            Text("Validate")
                                 .foregroundColor(.white)
                                 .font(.headline)
                                 .padding()
@@ -188,23 +191,64 @@ struct LoginTab: View {
     }
     
     func sendLoginV2Request() async {
-        let request = RequestWrapper(
+        let hostPath = "https://\(userSettings.serverAddress)"
+        let headerFields: [HeaderField] = [
+            //HeaderField.ocsRequest(value: true),
+            //HeaderField.accept(value: .JSON)
+        ]
+        let request = RequestWrapper.customRequest(
             method: .POST,
-            path: "https://\(userSettings.serverAddress)/index.php/login/v2"
+            path: .LOGINV2REQ,
+            headerFields: headerFields
         )
-        let (loginReq, _): (LoginV2Request?, Error?) = await NetworkHandler.sendDataRequest(request)
-        self.loginRequest = loginReq
+        do {
+            let (data, _): (Data?, Error?) = try await NetworkHandler.sendHTTPRequest(
+                request,
+                hostPath: hostPath,
+                authString: nil
+            )
+            
+            guard let data = data else { return }
+            print("Data: \(data)")
+            let loginReq: LoginV2Request? = JSONDecoder.safeDecode(data)
+            self.loginRequest = loginReq
+        } catch {
+            print("Could not establish communication with the server.")
+        }
+        
     }
     
     func fetchLoginV2Response() async -> LoginV2Response? {
         guard let loginRequest = loginRequest else { return nil }
-        let request = RequestWrapper(
+        let headerFields = [
+            HeaderField.ocsRequest(value: true),
+            HeaderField.accept(value: .JSON),
+            HeaderField.contentType(value: .FORM)
+        ]
+        let request = RequestWrapper.customRequest(
             method: .POST,
-            path: loginRequest.poll.endpoint,
-            body: "token=\(loginRequest.poll.token)"
+            path: .NONE,
+            headerFields: headerFields,
+            body: "token=\(loginRequest.poll.token)".data(using: .utf8),
+            authenticate: false
         )
-        let (loginRes, _): (LoginV2Response?, Error?) = await NetworkHandler.sendDataRequest(request)
-        return loginRes
+        
+        var (data, error): (Data?, Error?) = (nil, nil)
+        do {
+            (data, error) = try await NetworkHandler.sendHTTPRequest(
+                request,
+                hostPath: loginRequest.poll.endpoint,
+                authString: nil
+            )
+        } catch {
+            print("Error: ", error)
+        }
+        guard let data = data else { return nil }
+        if let loginRes: LoginV2Response = JSONDecoder.safeDecode(data) {
+            return loginRes
+        }
+        print("Could not decode.")
+        return nil
     }
 }
 

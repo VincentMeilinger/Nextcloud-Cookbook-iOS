@@ -36,10 +36,10 @@ struct RecipeCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
         .task {
-            recipeThumb = await viewModel.loadImage(recipeId: recipe.recipe_id, full: false)
+            recipeThumb = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: true)
         }
         .refreshable {
-            recipeThumb = await viewModel.loadImage(recipeId: recipe.recipe_id, full: false, needsUpdate: true)
+            recipeThumb = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: true, needsUpdate: true)
         }
     }
 }

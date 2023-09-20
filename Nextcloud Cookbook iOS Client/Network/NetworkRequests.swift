@@ -8,47 +8,153 @@
 import Foundation
 
 enum RequestMethod: String {
-    case GET = "GET", POST = "POST", PUT = "PUT", DELETE = "DELETE"
+    case GET = "GET", 
+         POST = "POST",
+         PUT = "PUT",
+         DELETE = "DELETE"
 }
 
-enum RequestPath: String {
-    case GET_CATEGORIES = "categories"
+enum RequestPath {
+    case CATEGORIES,
+         RECIPE_LIST(categoryName: String),
+         RECIPE_DETAIL(recipeId: Int),
+         IMAGE(recipeId: Int, thumb: Bool)
+    
+    case LOGINV2REQ,
+         CUSTOM(path: String),
+         NONE
+    
+    var stringValue: String {
+        switch self {
+        case .CATEGORIES: return "categories"
+        case .RECIPE_LIST(categoryName: let name): return "category/\(name)"
+        case .RECIPE_DETAIL(recipeId: let recipeId): return "recipes/\(recipeId)"
+        case .IMAGE(recipeId: let recipeId, thumb: let thumb): return "recipes/\(recipeId)/image?size=\(thumb ? "thumb" : "full")"
+            
+        case .LOGINV2REQ: return "/index.php/login/v2"
+        case .CUSTOM(path: let path): return path
+        case .NONE: return ""
+        }
+    }
 }
 
-enum AcceptHeader: String {
-    case JSON = "application/json", IMAGE = "image/jpeg"
+enum ContentType: String {
+    case JSON = "application/json", 
+         IMAGE = "image/jpeg",
+         FORM = "application/x-www-form-urlencoded"
+}
+
+struct HeaderField {
+    private let _field: String
+    private let _value: String
+    
+    func getField() -> String {
+        return _field
+    }
+    
+    func getValue() -> String {
+        return _value
+    }
+    
+    static func accept(value: ContentType) -> HeaderField {
+        return HeaderField(_field: "accept", _value: value.rawValue)
+    }
+    
+    static func ocsRequest(value: Bool) -> HeaderField {
+        return HeaderField(_field: "OCS-APIRequest", _value: value ? "true" : "false")
+    }
+    
+    static func contentType(value: ContentType) -> HeaderField {
+        return HeaderField(_field: "Content-Type", _value: value.rawValue)
+    }
 }
 
 struct RequestWrapper {
-    let method: RequestMethod
-    var path: String
-    let accept: AcceptHeader
-    let body: Codable?
+    private let _method: RequestMethod
+    private let _path: RequestPath
+    private let _headerFields: [HeaderField]
+    private let _body: Data?
+    private let _authenticate: Bool = true
     
-    init(method: RequestMethod, path: String, body: Codable? = nil, accept: AcceptHeader = .JSON) {
-        self.method = method
-        self.path = path
-        self.body = body
-        self.accept = accept
+    private init(
+        method: RequestMethod,
+        path: RequestPath,
+        headerFields: [HeaderField] = [],
+        body: Data? = nil,
+        authenticate: Bool = true
+    ) {
+        self._method = method
+        self._path = path
+        self._headerFields = headerFields
+        self._body = body
     }
     
-    func prepend(cookBookPath: String) -> String {
-        return cookBookPath + self.path
+    func getMethod() -> String {
+        return self._method.rawValue
+    }
+    
+    func getPath() -> String {
+        return self._path.stringValue
+    }
+    
+    func getHeaderFields() -> [HeaderField] {
+        return self._headerFields
+    }
+    
+    func getBody() -> Data? {
+        return _body
+    }
+    
+    func needsAuth() -> Bool {
+        return _authenticate
     }
 }
 
-struct LoginV2Request: Codable {
-    let poll: LoginV2Poll
-    let login: String
+extension RequestWrapper {
+    static func customRequest(
+        method: RequestMethod,
+        path: RequestPath,
+        headerFields: [HeaderField] = [],
+        body: Data? = nil,
+        authenticate: Bool = true
+    ) -> RequestWrapper {
+        let request = RequestWrapper(
+            method: method,
+            path: path,
+            headerFields: headerFields,
+            body: body,
+            authenticate: authenticate
+        )
+        return request
+    }
+    
+    static func jsonGetRequest(path: RequestPath) -> RequestWrapper {
+        let headerFields = [
+            HeaderField.ocsRequest(value: true),
+            HeaderField.accept(value: .JSON)
+        ]
+        let request = RequestWrapper(
+            method: .GET,
+            path: path,
+            headerFields: headerFields,
+            authenticate: true
+        )
+        return request
+    }
+    
+    static func imageRequest(path: RequestPath) -> RequestWrapper {
+        let headerFields = [
+            HeaderField.ocsRequest(value: true),
+            HeaderField.accept(value: .IMAGE)
+        ]
+        let request = RequestWrapper(
+            method: .GET,
+            path: path,
+            headerFields: headerFields,
+            authenticate: true
+        )
+        return request
+    }
 }
 
-struct LoginV2Poll: Codable {
-    let token: String
-    let endpoint: String
-}
 
-struct LoginV2Response: Codable {
-    let server: String
-    let loginName: String
-    let appPassword: String
-}

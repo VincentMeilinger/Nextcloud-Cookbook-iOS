@@ -8,9 +8,17 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject var viewModel = MainViewModel()
-    @StateObject var userSettings: UserSettings
+    @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var userSettings: UserSettings
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
+    
+    init(userSettings: UserSettings, viewModel: MainViewModel) {
+        self.userSettings = userSettings
+        self.viewModel = viewModel
+        self.viewModel.apiInterface = APIInterface(userSettings: userSettings)
+        
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView(.vertical, showsIndicators: false) {
@@ -60,11 +68,6 @@ struct MainView: View {
     }
 }
 
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView(userSettings: UserSettings())
-    }
-}
 
 
 

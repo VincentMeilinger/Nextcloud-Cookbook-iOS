@@ -13,3 +13,15 @@ public enum NotImplementedError: Error, CustomStringConvertible {
         return "Function not implemented."
     }
 }
+
+public enum NetworkError: String, Error {
+    case missingUrl = "Missing URL."
+    case parametersNil = "Parameters are nil."
+    case encodingFailed = "Parameter encoding failed."
+    case redirectionError = "Redirection error"
+    case clientError = "Client error"
+    case serverError = "Server error"
+    case invalidRequest = "Invalid request"
+    case unknownError = "Unknown error"
+    case dataError = "Invalid data error."
+}

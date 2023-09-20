@@ -65,11 +65,11 @@ struct RecipeDetailView: View {
         .navigationTitle(showTitle ? recipe.name : "")
         .task {
             recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id)
-            recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, full: true)
+            recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false)
         }
         .refreshable {
             recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id, needsUpdate: true)
-            recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, full: true, needsUpdate: true)
+            recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false, needsUpdate: true)
         }
         
     }

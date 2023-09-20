@@ -15,20 +15,19 @@ import UIKit
     private var imageCache: [Int: RecipeImage] = [:]
     
     let dataStore: DataStore
-    let networkController: NetworkController
+    var apiInterface: APIInterface? = nil
     
     /// The path of an image in storage
-    private var localImagePath: (Int, Bool) -> (String) = { recipeId, full in
-        return "image\(recipeId)_\(full ? "full" : "thumb")"
+    private var localImagePath: (Int, Bool) -> (String) = { recipeId, thumb in
+        return "image\(recipeId)_\(thumb ? "thumb" : "full")"
     }
     
     /// The path of an image on the server
-    private var networkImagePath: (Int, Bool) -> (String) = { recipeId, full in
-        return "recipes/\(recipeId)/image?size=\(full ? "full" : "thumb")"
+    private var networkImagePath: (Int, Bool) -> (String) = { recipeId, thumb in
+        return "recipes/\(recipeId)/image?size=\(thumb ? "thumb" : "full")"
     }
     
     init() {
-        self.networkController = NetworkController()
         self.dataStore = DataStore()
     }
     
@@ -36,7 +35,11 @@ import UIKit
     /// - Parameters
     ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from store first.
     func loadCategoryList(needsUpdate: Bool = false) async {
-        if let categoryList: [Category] = await load(localPath: "categories.data", networkPath: "categories", needsUpdate: needsUpdate) {
+        if let categoryList: [Category] = await loadObject(
+            localPath: "categories.data",
+            networkPath: .CATEGORIES,
+            needsUpdate: needsUpdate
+        ) {
             self.categories = categoryList
         }
     }
@@ -46,7 +49,11 @@ import UIKit
     ///     - categoryName: The name of the category containing the requested list of recipes.
     ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from store first.
     func loadRecipeList(categoryName: String, needsUpdate: Bool = false) async {
-        if let recipeList: [Recipe] = await load(localPath: "category_\(categoryName).data", networkPath: "category/\(categoryName)", needsUpdate: needsUpdate) {
+        if let recipeList: [Recipe] = await loadObject(
+            localPath: "category_\(categoryName).data",
+            networkPath: .RECIPE_LIST(categoryName: categoryName),
+            needsUpdate: needsUpdate
+        ) {
             recipes[categoryName] = recipeList
         }
     }
@@ -62,7 +69,11 @@ import UIKit
                 return recipeDetail
             }
         }
-        if let recipeDetail: RecipeDetail = await load(localPath: "recipe\(recipeId).data", networkPath: "recipes/\(recipeId)", needsUpdate: needsUpdate) {
+        if let recipeDetail: RecipeDetail = await loadObject(
+            localPath: "recipe\(recipeId).data",
+            networkPath: .RECIPE_DETAIL(recipeId: recipeId),
+            needsUpdate: needsUpdate
+        ) {
             recipeDetails[recipeId] = recipeDetail
             return recipeDetail
         }
@@ -75,7 +86,7 @@ import UIKit
             guard let recipeList = recipes[category.name] else { continue }
             for recipe in recipeList {
                 let _ = await loadRecipeDetail(recipeId: recipe.recipe_id, needsUpdate: true)
-                let _ = await loadImage(recipeId: recipe.recipe_id, full: false)
+                let _ = await loadImage(recipeId: recipe.recipe_id, thumb: true)
             }
         }
     }
@@ -100,17 +111,18 @@ import UIKit
     ///     - full: If true, load the full resolution image. Otherwise, load a thumbnail-sized image.
     ///     - needsUpdate: Determines wether the image should be loaded directly from the server, or if it should be loaded from cache/store first.
     /// - Returns: The image if found locally or on the server, otherwise nil.
-    func loadImage(recipeId: Int, full: Bool, needsUpdate: Bool = false) async -> UIImage? {
-        print("loadImage(recipeId: \(recipeId), full: \(full), needsUpdate: \(needsUpdate))")
+    func loadImage(recipeId: Int, thumb: Bool, needsUpdate: Bool = false) async -> UIImage? {
+        print("loadImage(recipeId: \(recipeId), thumb: \(thumb), needsUpdate: \(needsUpdate))")
         // If the image needs an update, request it from the server and overwrite the stored image
         if needsUpdate {
-            if let data = await imageDataFromServer(recipeId: recipeId, full: full) {
+            guard let apiInterface = apiInterface else { return nil }
+            if let data = await apiInterface.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
                 guard let image = UIImage(data: data) else {
                     imageCache[recipeId] = RecipeImage(imageExists: false)
                     return nil
                 }
-                await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, full))
-                imageToCache(image: image, recipeId: recipeId, full: full)
+                await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, thumb))
+                imageToCache(image: image, recipeId: recipeId, thumb: thumb)
                 return image
             } else {
                 imageCache[recipeId] = RecipeImage(imageExists: false)
@@ -126,30 +138,31 @@ import UIKit
         
         // Try to load image from cache
         print("Attempting to load image from cache ...")
-        if let image = imageFromCache(recipeId: recipeId, full: full) {
+        if let image = imageFromCache(recipeId: recipeId, thumb: thumb) {
             print("Image found in cache.")
             return image
         }
         
         // Try to load from store
         print("Attempting to load image from local storage ...")
-        if let image = await imageFromStore(recipeId: recipeId, full: full) {
+        if let image = await imageFromStore(recipeId: recipeId, thumb: thumb) {
             print("Image found in local storage.")
-            imageToCache(image: image, recipeId: recipeId, full: full)
+            imageToCache(image: image, recipeId: recipeId, thumb: thumb)
             return image
         }
         
         // Try to load from the server. Store if successfull.
         print("Attempting to load image from server ...")
-        if let data = await imageDataFromServer(recipeId: recipeId, full: full) {
+        guard let apiInterface = apiInterface else { return nil }
+        if let data = await apiInterface.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
             print("Image data received.")
             // Create empty RecipeImage for each recipe even if no image found, so that further server requests are only sent if explicitly requested.
             guard let image = UIImage(data: data) else {
                 imageCache[recipeId] = RecipeImage(imageExists: false)
                 return nil
             }
-            await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, full))
-            imageToCache(image: image, recipeId: recipeId, full: full)
+            await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, thumb))
+            imageToCache(image: image, recipeId: recipeId, thumb: thumb)
             return image
         }
         imageCache[recipeId] = RecipeImage(imageExists: false)
@@ -170,14 +183,15 @@ import UIKit
 
 
 extension MainViewModel {
-    private func load<D: Codable>(localPath: String, networkPath: String, needsUpdate: Bool = false) async -> D? {
+    private func loadObject<T: Codable>(localPath: String, networkPath: RequestPath, needsUpdate: Bool = false) async -> T? {
         do {
-            if !needsUpdate, let data: D = try await dataStore.load(fromPath: localPath) {
+            if !needsUpdate, let data: T = try await dataStore.load(fromPath: localPath) {
                 print("Data found locally.")
                 return data
             } else {
-                let request = RequestWrapper(method: .GET, path: networkPath)
-                let (data, error): (D?, Error?) = await networkController.sendDataRequest(request)
+                guard let apiInterface = apiInterface else { return nil }
+                let request = RequestWrapper.jsonGetRequest(path: networkPath)
+                let (data, error): (T?, Error?) = await apiInterface.sendDataRequest(request)
                 print(error as Any)
                 if let data = data {
                     await dataStore.save(data: data, toPath: localPath)
@@ -190,33 +204,33 @@ extension MainViewModel {
         return nil
     }
     
-    private func imageToCache(image: UIImage, recipeId: Int, full: Bool) {
+    private func imageToCache(image: UIImage, recipeId: Int, thumb: Bool) {
         if imageCache[recipeId] == nil {
             imageCache[recipeId] = RecipeImage(imageExists: true)
         }
-        if full {
-            imageCache[recipeId]!.imageExists = true
-            imageCache[recipeId]!.full = image
-        } else {
+        if thumb {
             imageCache[recipeId]!.imageExists = true
             imageCache[recipeId]!.thumb = image
+        } else {
+            imageCache[recipeId]!.imageExists = true
+            imageCache[recipeId]!.full = image
         }
     }
     
-    private func imageFromCache(recipeId: Int, full: Bool) -> UIImage? {
+    private func imageFromCache(recipeId: Int, thumb: Bool) -> UIImage? {
         if imageCache[recipeId] != nil {
-            if full {
-                return imageCache[recipeId]!.full
-            } else {
+            if thumb {
                 return imageCache[recipeId]!.thumb
+            } else {
+                return imageCache[recipeId]!.full
             }
         }
         return nil
     }
     
-    private func imageFromStore(recipeId: Int, full: Bool) async -> UIImage? {
+    private func imageFromStore(recipeId: Int, thumb: Bool) async -> UIImage? {
         do {
-            let localPath = localImagePath(recipeId, full)
+            let localPath = localImagePath(recipeId, thumb)
             if let data: String = try await dataStore.load(fromPath: localPath) {
                 guard let dataDecoded = Data(base64Encoded: data) else { return nil }
                 let image = UIImage(data: dataDecoded)
@@ -225,22 +239,6 @@ extension MainViewModel {
         } catch {
             print("Could not find image in local storage.")
             return nil
-        }
-        return nil
-    }
-    
-    private func imageDataFromServer(recipeId: Int, full: Bool) async -> Data? {
-        do {
-            let networkPath = networkImagePath(recipeId, full)
-            let request = RequestWrapper(method: .GET, path: networkPath, accept: .IMAGE)
-            let (data, _): (Data?, Error?) = try await networkController.sendHTTPRequest(request)
-            guard let data = data else {
-                print("Error receiving or decoding data.")
-                return nil
-            }
-            return data
-        } catch {
-            print("Could not load image from server.")
         }
         return nil
     }

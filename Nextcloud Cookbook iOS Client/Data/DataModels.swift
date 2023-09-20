@@ -47,7 +47,8 @@ struct RecipeDetail: Codable {
             keywords: "",
             dateCreated: "",
             dateModified: "",
-            imageUrl: "", id: "",
+            imageUrl: "", 
+            id: "",
             prepTime: "",
             cookTime: "",
             totalTime: "",
@@ -68,4 +69,18 @@ struct RecipeImage {
     var full: UIImage?
 }
 
+struct LoginV2Request: Codable {
+    let poll: LoginV2Poll
+    let login: String
+}
 
+struct LoginV2Poll: Codable {
+    let token: String
+    let endpoint: String
+}
+
+struct LoginV2Response: Codable {
+    let server: String
+    let loginName: String
+    let appPassword: String
+}

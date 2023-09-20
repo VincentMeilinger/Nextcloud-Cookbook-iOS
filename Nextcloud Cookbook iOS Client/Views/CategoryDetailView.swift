@@ -59,7 +59,7 @@ struct RecipeBookView: View {
                 for recipe in recipes {
                     Task {
                         let _ = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id)
-                        let _ = await viewModel.loadImage(recipeId: recipe.recipe_id, full: true)
+                        let _ = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false)
                     }
                 }
             }

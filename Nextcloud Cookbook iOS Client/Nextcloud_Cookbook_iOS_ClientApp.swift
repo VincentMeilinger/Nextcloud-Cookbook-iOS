@@ -10,12 +10,16 @@ import SwiftUI
 @main
 struct Nextcloud_Cookbook_iOS_ClientApp: App {
     @StateObject var userSettings = UserSettings()
+    @StateObject var mainViewModel = MainViewModel()
     var body: some Scene {
         WindowGroup {
-            MainView(userSettings: userSettings)
-                .fullScreenCover(isPresented: $userSettings.onboarding) {
+            ZStack {
+                if userSettings.onboarding {
                     OnboardingView(userSettings: userSettings)
+                } else {
+                    MainView(userSettings: userSettings, viewModel: mainViewModel)
                 }
+            }.transition(.slide)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Extensions.swift
+//  DateFormatterExtension.swift
 //  Nextcloud Cookbook iOS Client
 //
 //  Created by Vincent Meilinger on 14.09.23.
