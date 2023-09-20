@@ -15,7 +15,7 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 - [ ] Add new recipes
 - [ ] Edit recipes
 - [ ] Delete recipes
-- [ ] Login with Nextcloud account using two factor authentication
+- [x] Login with Nextcloud account using two factor authentication
 - [x] Login with Nextcloud account using app-tokens
 - [ ] Support for multiple languages
 - [ ] Theming (optional)
