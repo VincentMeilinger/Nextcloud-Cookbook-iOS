@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 @MainActor class MainViewModel: ObservableObject {
     @Published var categories: [Category] = []
@@ -15,7 +16,7 @@ import UIKit
     private var imageCache: [Int: RecipeImage] = [:]
     
     let dataStore: DataStore
-    var apiInterface: APIInterface? = nil
+    var apiInterface: APIController? = nil
     
     /// The path of an image in storage
     private var localImagePath: (Int, Bool) -> (String) = { recipeId, thumb in

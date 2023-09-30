@@ -10,33 +10,30 @@ import SwiftUI
 struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
     @ObservedObject var userSettings: UserSettings
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
     
-    init(userSettings: UserSettings, viewModel: MainViewModel) {
-        self.userSettings = userSettings
-        self.viewModel = viewModel
-        self.viewModel.apiInterface = APIInterface(userSettings: userSettings)
-        
-    }
+    @State var showEditView: Bool = false
+    var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
     
     var body: some View {
         NavigationView {
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(viewModel.categories, id: \.name) { category in
-                        NavigationLink(
-                            destination: RecipeBookView(
-                                categoryName: category.name,
-                                viewModel: viewModel)
-                        ) {
-                            CategoryCardView(category: category)
+                        if category.recipe_count != 0 {
+                            NavigationLink(
+                                destination: RecipeBookView(
+                                    categoryName: category.name,
+                                    viewModel: viewModel
+                                )
+                            ) {
+                                CategoryCardView(category: category)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
-                .padding(.horizontal)
             }
-            .navigationTitle("CookBook")
+            .navigationTitle("Cookbooks")
             .toolbar {
                 Menu {
                     Button {
@@ -51,14 +48,27 @@ struct MainView: View {
                         }
                     }
                     
+                    Button {
+                        showEditView = true
+                    } label: {
+                        HStack {
+                            Text("Create new recipe")
+                            Image(systemName: "plus.circle")
+                        }
+                    }
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
+                
                 NavigationLink( destination: SettingsView(userSettings: userSettings, viewModel: viewModel)) {
                     Image(systemName: "gearshape")
                 }
             }
+            .background(
+                NavigationLink(destination: RecipeEditView(), isActive: $showEditView) { EmptyView() }
+            )
         }
+        .tint(.nextcloudBlue)
         .task {
             await viewModel.loadCategoryList()
         }

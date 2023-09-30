@@ -15,35 +15,41 @@ struct RecipeDetailView: View {
     @State var recipeDetail: RecipeDetail?
     @State var recipeImage: UIImage?
     @State var showTitle: Bool = false
+    @State var isDownloaded: Bool? = nil
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading) {
                 if let recipeImage = recipeImage {
                     Image(uiImage: recipeImage)
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 300)
+                        .scaledToFill()
+                        .frame(maxHeight: 300)
                         .clipped()
-                } else {
-                    Color("ncblue")
-                        .frame(height: 150)
                 }
                 
                 if let recipeDetail = recipeDetail {
                     LazyVStack (alignment: .leading) {
                         Divider()
-                        Text(recipeDetail.name)
-                            .font(.title)
-                            .bold()
-                            .padding()
-                            .onDisappear {
-                                showTitle = true
+                        HStack {
+                            Text(recipeDetail.name)
+                                .font(.title)
+                                .bold()
+                                .padding()
+                                .onDisappear {
+                                    showTitle = true
+                                }
+                                .onAppear {
+                                    showTitle = false
+                                }
+                            
+                            if let isDownloaded = isDownloaded {
+                                Spacer()
+                                Image(systemName: isDownloaded ? "checkmark.circle" : "icloud.and.arrow.down")
+                                    .foregroundColor(.secondary)
+                                    .padding()
                             }
-                            .onAppear {
-                                showTitle = false
-                            }
+                        }
                         Divider()
-                        RecipeYieldSection(recipeDetail: recipeDetail)
                         RecipeDurationSection(recipeDetail: recipeDetail)
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
                             if(!recipeDetail.recipeIngredient.isEmpty) {
@@ -59,13 +65,14 @@ struct RecipeDetailView: View {
                     }.padding(.horizontal, 5)
                     
                 }
-            }
+            }.animation(.easeInOut, value: recipeImage)
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(showTitle ? recipe.name : "")
         .task {
             recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id)
             recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false)
+            self.isDownloaded = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
         }
         .refreshable {
             recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id, needsUpdate: true)
@@ -75,31 +82,18 @@ struct RecipeDetailView: View {
     }
 }
 
-struct RecipeYieldSection: View {
-    @State var recipeDetail: RecipeDetail
-    var body: some View {
-        HStack {
-            Text("Servings: \(recipeDetail.recipeYield)")
-            Spacer()
-        }.padding()
-            
-    }
-}
 
 struct RecipeDurationSection: View {
     @State var recipeDetail: RecipeDetail
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             if let prepTime = recipeDetail.prepTime {
                 VStack {
                     SecondaryLabel(text: "Prep time")
                     Text(formatDate(duration: prepTime))
                         .lineLimit(1)
                 }.padding()
-                .frame(maxWidth: .infinity)
-                .background(Color("accent"))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             
             if let cookTime = recipeDetail.cookTime {
@@ -108,9 +102,6 @@ struct RecipeDurationSection: View {
                     Text(formatDate(duration: cookTime))
                         .lineLimit(1)
                 }.padding()
-                .frame(maxWidth: .infinity)
-                .background(Color("accent"))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             
             if let totalTime = recipeDetail.totalTime {
@@ -119,9 +110,6 @@ struct RecipeDurationSection: View {
                     Text(formatDate(duration: totalTime))
                         .lineLimit(1)
                 }.padding()
-                .frame(maxWidth: .infinity)
-                .background(Color("accent"))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
         }
     }
@@ -134,7 +122,13 @@ struct RecipeIngredientSection: View {
         VStack(alignment: .leading) {
             Divider()
             HStack {
-                SecondaryLabel(text: "Ingredients")
+                if recipeDetail.recipeYield == 0 {
+                    SecondaryLabel(text: "Ingredients")
+                } else if recipeDetail.recipeYield == 1 {
+                    SecondaryLabel(text: "Ingredients per serving")
+                } else {
+                    SecondaryLabel(text: "Ingredients for \(recipeDetail.recipeYield) servings")
+                }
                 Spacer()
             }
             ForEach(recipeDetail.recipeIngredient, id: \.self) { ingredient in

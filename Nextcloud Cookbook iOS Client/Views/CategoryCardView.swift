@@ -23,7 +23,7 @@ struct CategoryCardView: View {
                                 .ultraThickMaterial
                             )
                             .overlay(
-                                Text(category.name)
+                                Text(category.name == "*" ? "Other" : category.name)
                                     .font(.headline)
                             )
                             .frame(maxHeight: 25)

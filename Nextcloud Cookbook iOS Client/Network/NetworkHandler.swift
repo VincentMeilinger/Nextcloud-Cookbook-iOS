@@ -49,7 +49,7 @@ struct NetworkHandler {
             request.httpBody = body
         }
         
-        print("Request:\nMethod: \(request.httpMethod)\nHeaders: \(request.allHTTPHeaderFields)\nBody: \(request.httpBody)")
+        print("Request:\nMethod: \(request.httpMethod)\nPath: \(request.url?.absoluteString)\nHeaders: \(request.allHTTPHeaderFields)\nBody: \(request.httpBody)")
         
         // Wait for and return data and (decoded) response
         var data: Data? = nil
@@ -57,6 +57,7 @@ struct NetworkHandler {
         do {
             (data, response) = try await URLSession.shared.data(for: request)
             print("Response: ", response)
+            print("Data: ", data?.description, data, String(data: data ?? Data(), encoding: .utf8))
             return (data, nil)
         } catch {
             return (nil, decodeURLResponse(response: response as? HTTPURLResponse))

@@ -17,7 +17,10 @@ struct Nextcloud_Cookbook_iOS_ClientApp: App {
                 if userSettings.onboarding {
                     OnboardingView(userSettings: userSettings)
                 } else {
-                    MainView(userSettings: userSettings, viewModel: mainViewModel)
+                    MainView(viewModel: mainViewModel, userSettings: userSettings)
+                        .onAppear {
+                            mainViewModel.apiInterface = APIController(userSettings: userSettings)
+                        }
                 }
             }.transition(.slide)
         }

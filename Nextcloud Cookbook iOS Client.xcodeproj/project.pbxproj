@@ -29,7 +29,10 @@
 		A70171CB2AB4CD1700064C43 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171CA2AB4CD1700064C43 /* UserDefaults.swift */; };
 		A70171CD2AB501B100064C43 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171CC2AB501B100064C43 /* SettingsView.swift */; };
 		A703226A2ABAF49800D7C4ED /* JSONCoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */; };
-		A703226D2ABAF90D00D7C4ED /* APIInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703226C2ABAF90D00D7C4ED /* APIInterface.swift */; };
+		A703226D2ABAF90D00D7C4ED /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703226C2ABAF90D00D7C4ED /* APIController.swift */; };
+		A703226F2ABB1DD700D7C4ED /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */; };
+		A70D7CA12AC73CA800D53DBF /* RecipeEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */; };
+		A70D7CA32AC74B3B00D53DBF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70D7CA22AC74B3B00D53DBF /* DateExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,7 +79,10 @@
 		A70171CA2AB4CD1700064C43 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		A70171CC2AB501B100064C43 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCoderExtension.swift; sourceTree = "<group>"; };
-		A703226C2ABAF90D00D7C4ED /* APIInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIInterface.swift; sourceTree = "<group>"; };
+		A703226C2ABAF90D00D7C4ED /* APIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
+		A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditView.swift; sourceTree = "<group>"; };
+		A70D7CA22AC74B3B00D53DBF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,7 +174,7 @@
 		A70171B22AB211F000064C43 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				A703226C2ABAF90D00D7C4ED /* APIInterface.swift */,
+				A703226C2ABAF90D00D7C4ED /* APIController.swift */,
 				A70171B32AB2122900064C43 /* NetworkRequests.swift */,
 				A70171AE2AB2116B00064C43 /* NetworkHandler.swift */,
 				A70171B02AB211DF00064C43 /* CustomError.swift */,
@@ -192,6 +198,7 @@
 				A70171BD2AB4987900064C43 /* CategoryDetailView.swift */,
 				A70171C12AB498C600064C43 /* RecipeCardView.swift */,
 				A70171BF2AB498A900064C43 /* RecipeDetailView.swift */,
+				A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */,
 				A70171C82AB4CBB400064C43 /* OnboardingView.swift */,
 				A70171CC2AB501B100064C43 /* SettingsView.swift */,
 			);
@@ -212,7 +219,9 @@
 			isa = PBXGroup;
 			children = (
 				A70171B82AB399FB00064C43 /* DateFormatterExtension.swift */,
+				A70D7CA22AC74B3B00D53DBF /* DateExtension.swift */,
 				A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */,
+				A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -347,6 +356,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A70D7CA12AC73CA800D53DBF /* RecipeEditView.swift in Sources */,
+				A70D7CA32AC74B3B00D53DBF /* DateExtension.swift in Sources */,
 				A70171B12AB211DF00064C43 /* CustomError.swift in Sources */,
 				A70171C42AB4A31200064C43 /* DataStore.swift in Sources */,
 				A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */,
@@ -361,10 +372,11 @@
 				A70171842AA8E71900064C43 /* MainView.swift in Sources */,
 				A70171CB2AB4CD1700064C43 /* UserDefaults.swift in Sources */,
 				A703226A2ABAF49800D7C4ED /* JSONCoderExtension.swift in Sources */,
-				A703226D2ABAF90D00D7C4ED /* APIInterface.swift in Sources */,
+				A703226D2ABAF90D00D7C4ED /* APIController.swift in Sources */,
 				A70171822AA8E71900064C43 /* Nextcloud_Cookbook_iOS_ClientApp.swift in Sources */,
 				A70171AD2AA8EF4700064C43 /* MainViewModel.swift in Sources */,
 				A70171C92AB4CBB400064C43 /* OnboardingView.swift in Sources */,
+				A703226F2ABB1DD700D7C4ED /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,6 +528,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
@@ -539,7 +552,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -556,6 +569,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
@@ -579,7 +593,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

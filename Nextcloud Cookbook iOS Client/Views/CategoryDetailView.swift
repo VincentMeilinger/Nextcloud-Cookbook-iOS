@@ -20,14 +20,14 @@ struct RecipeBookView: View {
                 if let recipes = viewModel.recipes[categoryName] {
                     ForEach(recipes, id: \.recipe_id) { recipe in
                         NavigationLink(destination: RecipeDetailView(viewModel: viewModel, recipe: recipe)) {
-                            RecipeCardView(viewModel: viewModel, recipe: recipe, isDownloaded: viewModel.recipeDetailExists(recipeId: recipe.recipe_id))
+                            RecipeCardView(viewModel: viewModel, recipe: recipe)
                         }
                         .buttonStyle(.plain)
                     }
                 }
             }
         }
-        .navigationTitle(categoryName)
+        .navigationTitle(categoryName == "*" ? "Other" : categoryName)
         .toolbar {
             Menu {
                 Button {

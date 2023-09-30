@@ -19,7 +19,7 @@ struct OnboardingView: View {
         }
         .tabViewStyle(.page)
         .background(
-            selectedTab == 1 ? Color("ncblue").ignoresSafeArea() : Color(uiColor: .systemBackground).ignoresSafeArea()
+            selectedTab == 1 ? Color.nextcloudBlue.ignoresSafeArea() : Color(uiColor: .systemBackground).ignoresSafeArea()
         )
         .animation(.easeInOut, value: selectedTab)
     }
@@ -33,16 +33,13 @@ struct WelcomeTab: View {
                     .resizable()
                     .frame(width: 120, height: 120)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                Text("Tank you for downloading")
+                Text("Tank you for downloading the")
                     .font(.headline)
-                Text("Nextcloud")
-                    .font(.largeTitle)
-                    .bold()
-                Text("Cookbook")
+                Text("Cookbook Client")
                     .font(.largeTitle)
                     .bold()
                 Spacer()
-                Text("This application is an open source effort and still in development. If you encounter any problems, please report them on our GitHub page.\n\nCurrently, only app token login is supported. You can create an app token in the nextcloud security settings.")
+                Text("This application is an open source effort and still in development. If you encounter any problems, please report them on our GitHub page.")
                     .padding()
                 Spacer()
             }
@@ -54,12 +51,18 @@ struct WelcomeTab: View {
 struct LoginTab: View {
     @ObservedObject var userSettings: UserSettings
     
+    // Login flow
     enum LoginMethod {
         case v2, token
     }
     @State var selectedLoginMethod: LoginMethod = .v2
     @State var loginRequest: LoginV2Request? = nil
     
+    // Login error alert
+    @State var showAlert: Bool = false
+    @State var alertMessage: String = "Error: Could not connect to server."
+    
+    // TextField handling
     enum Field {
         case server
         case username
@@ -70,15 +73,7 @@ struct LoginTab: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading) {
-                HStack {
-                    Spacer()
-                    Image("nc-logo-white")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 150)
-                        .padding()
-                    Spacer()
-                }
+                Spacer()
                 Picker("Login Method", selection: $selectedLoginMethod) {
                     Text("Nextcloud Login").tag(LoginMethod.v2)
                     Text("App Token Login").tag(LoginMethod.token)
@@ -109,7 +104,11 @@ struct LoginTab: View {
                     HStack{
                         Spacer()
                         Button {
-                            userSettings.onboarding = false
+                            Task {
+                                if await loginCheck(nextcloudLogin: false) {
+                                    userSettings.onboarding = false
+                                }
+                            }
                         } label: {
                             Text("Submit")
                                 .foregroundColor(.white)
@@ -138,20 +137,43 @@ struct LoginTab: View {
                                 await sendLoginV2Request()
                                 if let loginRequest = loginRequest {
                                     await UIApplication.shared.open(URL(string: loginRequest.login)!)
+                                } else {
+                                    alertMessage = "Unable to reach server. Please check your server address and internet connection."
+                                    showAlert = true
                                 }
                             }
                         }
-                    Text("Submitting will open a web browser. Please follow the login instructions provided there.\nAfter a successfull login, return to this application and press 'Validate'.")
+                    Text("Entering the server address will open a web browser. Please follow the login instructions provided there. If the browser does not open, click the link 'Open in browser'\nAfter a successfull login, return to this application and press 'Validate'.")
                         .font(.subheadline)
                         .padding(.bottom)
-                        .tint(.white)
+                        .foregroundStyle(.white)
+                    Button {
+                        Task {
+                            await sendLoginV2Request()
+                            if let loginRequest = loginRequest {
+                                await UIApplication.shared.open(URL(string: loginRequest.login)!)
+                            } else {
+                                alertMessage = "Unable to reach server. Please check your server address and internet connection."
+                                showAlert = true
+                            }
+                        }
+                    } label: {
+                        Text("Open in browser")
+                            .foregroundColor(.white)
+                            .font(.headline)                            
+                    }
+                        
                     HStack{
                         Spacer()
                         
                         Button {
                             // fetch login v2 response
                             Task {
-                                guard let res = await fetchLoginV2Response() else { return }
+                                guard let res = await fetchLoginV2Response() else {
+                                    alertMessage = "Login failed. Please login via the browser and try again."
+                                    showAlert = true
+                                    return
+                                }
                                 print("Login successfull for user \(res.loginName)!")
                                 userSettings.username = res.loginName
                                 userSettings.token = res.appPassword
@@ -187,6 +209,9 @@ struct LoginTab: View {
             }
             .fontDesign(.rounded)
             .padding()
+            .alert(alertMessage, isPresented: $showAlert) {
+                Button("Ok", role: .cancel) { }
+            }
         }
     }
     
@@ -249,6 +274,53 @@ struct LoginTab: View {
         }
         print("Could not decode.")
         return nil
+    }
+    
+    func loginCheck(nextcloudLogin: Bool) async -> Bool {
+        if userSettings.serverAddress == "" {
+            alertMessage = "Please enter a server address!"
+            showAlert = true
+            return false
+        } else if !nextcloudLogin && (userSettings.username == "" || userSettings.token == "") {
+            alertMessage = "Please enter a user name and app token!"
+            showAlert = true
+            return false
+        }
+        let headerFields = [
+            HeaderField.ocsRequest(value: true),
+        ]
+        let request = RequestWrapper.customRequest(
+            method: .GET,
+            path: .CATEGORIES,
+            headerFields: headerFields,
+            authenticate: true
+        )
+        
+        var (data, error): (Data?, Error?) = (nil, nil)
+        do {
+            let loginString = "\(userSettings.username):\(userSettings.token)"
+            let loginData = loginString.data(using: String.Encoding.utf8)!
+            let authString = loginData.base64EncodedString()
+            (data, error) = try await NetworkHandler.sendHTTPRequest(
+                request,
+                hostPath: "https://\(userSettings.serverAddress)/index.php/apps/cookbook/api/v1/",
+                authString: authString
+            )
+        } catch {
+            print("Error: ", error)
+        }
+        guard let data = data else {
+            alertMessage = "Login failed. Please check your inputs."
+            showAlert = true
+            return false
+        }
+        if let testRequest: [Category] = JSONDecoder.safeDecode(data) {
+            print("validationResponse: \(testRequest)")
+            return true
+        }
+        alertMessage = "Login failed. Please check your inputs and internet connection."
+        showAlert = true
+        return false
     }
 }
 

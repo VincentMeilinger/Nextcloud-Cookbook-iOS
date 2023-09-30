@@ -12,7 +12,7 @@ struct RecipeCardView: View {
     @State var viewModel: MainViewModel
     @State var recipe: Recipe
     @State var recipeThumb: UIImage?
-    @State var isDownloaded: Bool
+    @State var isDownloaded: Bool? = nil
     
     var body: some View {
         HStack {
@@ -25,18 +25,21 @@ struct RecipeCardView: View {
                 .font(.headline)
                 
             Spacer()
-            VStack {
-                Image(systemName: isDownloaded ? "checkmark.icloud" : "icloud.and.arrow.down")
-                    .foregroundColor(.secondary)
-                    .padding()
-                Spacer()
+            if let isDownloaded = isDownloaded {
+                VStack {
+                    Image(systemName: isDownloaded ? "checkmark.circle" : "icloud.and.arrow.down")
+                        .foregroundColor(.secondary)
+                        .padding()
+                    Spacer()
+                }
             }
         }
-        .background(.ultraThickMaterial)
+        .background(Color.backgroundHighlight)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
         .task {
             recipeThumb = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: true)
+            self.isDownloaded = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
         }
         .refreshable {
             recipeThumb = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: true, needsUpdate: true)
