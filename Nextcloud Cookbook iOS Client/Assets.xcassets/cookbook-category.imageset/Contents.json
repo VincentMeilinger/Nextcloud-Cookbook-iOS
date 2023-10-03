@@ -1,11 +1,11 @@
 {
   "images" : [
     {
+      "filename" : "cookbook-category.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "cookbook.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

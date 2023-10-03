@@ -13,23 +13,19 @@ struct CategoryCardView: View {
     
     var body: some View {
         ZStack {
-            Image("CookBook")
-                .aspectRatio(1, contentMode: .fit)
+            Image("cookbook-category")
+                .resizable()
+                .scaledToFit()
                 .overlay(
                     VStack {
                         Spacer()
-                        Color.clear
-                            .background(
-                                .ultraThickMaterial
-                            )
-                            .overlay(
-                                Text(category.name == "*" ? "Other" : category.name)
-                                    .font(.headline)
-                            )
-                            .frame(maxHeight: 25)
+                        Text(category.name == "*" ? "Other" : category.name)
+                            .font(.headline)
+                            .lineLimit(2)
+                            .foregroundStyle(.white)
+                            .padding()
                     }
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding()
         }
     }

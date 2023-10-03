@@ -11,7 +11,7 @@ struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
     @ObservedObject var userSettings: UserSettings
     
-    @State var showEditView: Bool = false
+    @State private var showEditView: Bool = false
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
     
     var body: some View {
@@ -33,6 +33,9 @@ struct MainView: View {
                     }
                 }
             }
+            /*.navigationDestination(isPresented: $showEditView) {
+                RecipeEditView()
+            }*/
             .navigationTitle("Cookbooks")
             .toolbar {
                 Menu {
@@ -49,6 +52,7 @@ struct MainView: View {
                     }
                     
                     Button {
+                        print("Create recipe")
                         showEditView = true
                     } label: {
                         HStack {
@@ -67,6 +71,7 @@ struct MainView: View {
             .background(
                 NavigationLink(destination: RecipeEditView(), isActive: $showEditView) { EmptyView() }
             )
+            
         }
         .tint(.nextcloudBlue)
         .task {

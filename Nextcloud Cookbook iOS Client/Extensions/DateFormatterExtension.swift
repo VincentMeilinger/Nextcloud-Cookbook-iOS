@@ -18,17 +18,24 @@ extension Formatter {
 func formatDate(duration: String) -> String {
     var duration = duration
     if duration.hasPrefix("PT") { duration.removeFirst(2) }
-    let hour, minute, second: Double
+    var hour: Int = 0, minute: Int = 0
     if let index = duration.firstIndex(of: "H") {
-        hour = Double(duration[..<index]) ?? 0
+        hour = Int(duration[..<index]) ?? 0
         duration.removeSubrange(...index)
-    } else { hour = 0 }
+    }
     if let index = duration.firstIndex(of: "M") {
-        minute = Double(duration[..<index]) ?? 0
+        minute = Int(duration[..<index]) ?? 0
         duration.removeSubrange(...index)
-    } else { minute = 0 }
-    if let index = duration.firstIndex(of: "S") {
-        second = Double(duration[..<index]) ?? 0
-    } else { second = 0 }
-    return Formatter.positional.string(from: hour * 3600 + minute * 60 + second) ?? "0:00"
+    }
+    
+    if hour == 0 && minute != 0 {
+        return "\(minute)min"
+    }
+    if hour != 0 && minute == 0 {
+        return "\(hour)h"
+    }
+    if hour != 0 && minute != 0 {
+        return "\(hour)h \(minute)"
+    }
+    return "--"
 }

@@ -12,18 +12,17 @@ import SwiftUI
 
 struct RecipeBookView: View {
     @State var categoryName: String
+    @State var searchText: String = ""
     @ObservedObject var viewModel: MainViewModel
         
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
-                if let recipes = viewModel.recipes[categoryName] {
-                    ForEach(recipes, id: \.recipe_id) { recipe in
-                        NavigationLink(destination: RecipeDetailView(viewModel: viewModel, recipe: recipe)) {
-                            RecipeCardView(viewModel: viewModel, recipe: recipe)
-                        }
-                        .buttonStyle(.plain)
+                ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
+                    NavigationLink(destination: RecipeDetailView(viewModel: viewModel, recipe: recipe)) {
+                        RecipeCardView(viewModel: viewModel, recipe: recipe)
                     }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -44,6 +43,7 @@ struct RecipeBookView: View {
                 Image(systemName: "ellipsis.circle")
             }
         }
+        .searchable(text: $searchText, prompt: "Search recipes")
         .task {
             await viewModel.loadRecipeList(categoryName: categoryName)
         }
@@ -51,6 +51,15 @@ struct RecipeBookView: View {
             await viewModel.loadRecipeList(categoryName: categoryName, needsUpdate: true)
         }
     }
+    
+    func recipesFiltered() -> [Recipe] {
+        guard let recipes = viewModel.recipes[categoryName] else { return [] }
+        guard searchText != "" else { return recipes }
+        return recipes.filter { recipe in
+            recipe.name.lowercased().contains(searchText.lowercased())
+        }
+    }
+
     
     func downloadRecipes() {
         if let recipes = viewModel.recipes[categoryName] {

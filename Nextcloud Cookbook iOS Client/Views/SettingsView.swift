@@ -64,7 +64,7 @@ struct SettingsView: View {
                 }
                 .tint(.red)
                 
-                Button("Delete local data.") {
+                Button("Delete local data") {
                     print("Clear cache.")
                     alertType = .DELETE_CACHE
                     showAlert = true
@@ -72,7 +72,9 @@ struct SettingsView: View {
                 .tint(.red)
                             
             } header: {
-                Text("Danger Zone")
+                Text("Other")
+            } footer: {
+                Text("Deleting local data will not affect the recipe data stored on your server.")
             }
         }
         .navigationTitle("Settings")

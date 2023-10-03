@@ -16,7 +16,7 @@ struct RecipeCardView: View {
     
     var body: some View {
         HStack {
-            Image(uiImage: recipeThumb ?? UIImage(named: "CookBook")!)
+            Image(uiImage: recipeThumb ?? UIImage(named: "cookbook-recipe")!)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 80, height: 80)
@@ -35,7 +35,7 @@ struct RecipeCardView: View {
             }
         }
         .background(Color.backgroundHighlight)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: 17))
         .padding(.horizontal)
         .task {
             recipeThumb = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: true)

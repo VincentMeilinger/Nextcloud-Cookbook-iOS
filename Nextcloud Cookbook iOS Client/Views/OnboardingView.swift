@@ -29,7 +29,7 @@ struct WelcomeTab: View {
     var body: some View {
             VStack(alignment: .center) {
                 Spacer()
-                Image("CookBook")
+                Image("cookbook-icon")
                     .resizable()
                     .frame(width: 120, height: 120)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
