@@ -19,7 +19,7 @@ struct Nextcloud_Cookbook_iOS_ClientApp: App {
                 } else {
                     MainView(viewModel: mainViewModel, userSettings: userSettings)
                         .onAppear {
-                            mainViewModel.apiInterface = APIController(userSettings: userSettings)
+                            mainViewModel.apiController = APIController(userSettings: userSettings)
                         }
                 }
             }.transition(.slide)

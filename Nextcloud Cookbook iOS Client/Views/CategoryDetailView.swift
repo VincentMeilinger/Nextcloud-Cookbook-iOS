@@ -10,7 +10,7 @@ import SwiftUI
 
 
 
-struct RecipeBookView: View {
+struct CategoryDetailView: View {
     @State var categoryName: String
     @State var searchText: String = ""
     @ObservedObject var viewModel: MainViewModel
@@ -19,10 +19,13 @@ struct RecipeBookView: View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
-                    NavigationLink(destination: RecipeDetailView(viewModel: viewModel, recipe: recipe)) {
+                    NavigationLink() {
+                        RecipeDetailView(viewModel: viewModel, recipe: recipe).id(recipe.recipe_id)
+                    } label: {
                         RecipeCardView(viewModel: viewModel, recipe: recipe)
                     }
                     .buttonStyle(.plain)
+                    
                 }
             }
         }

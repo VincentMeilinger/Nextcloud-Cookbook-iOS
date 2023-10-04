@@ -7,35 +7,29 @@
 
 import SwiftUI
 
+
 struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
     @ObservedObject var userSettings: UserSettings
     
+    @State private var selectedCategory: Category? = nil
     @State private var showEditView: Bool = false
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
     
     var body: some View {
-        NavigationView {
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVGrid(columns: columns, spacing: 0) {
-                    ForEach(viewModel.categories, id: \.name) { category in
-                        if category.recipe_count != 0 {
-                            NavigationLink(
-                                destination: RecipeBookView(
-                                    categoryName: category.name,
-                                    viewModel: viewModel
-                                )
-                            ) {
-                                CategoryCardView(category: category)
-                            }
-                            .buttonStyle(.plain)
-                        }
+        NavigationSplitView {
+            List(viewModel.categories, selection: $selectedCategory) { category in
+                if category.recipe_count != 0 {
+                    NavigationLink(value: category) {
+                        HStack(alignment: .center) {
+                            Image(systemName: "book.closed.fill")
+                            Text(category.name)
+                                .font(.system(size: 20, weight: .light, design: .serif))
+                                .italic()
+                        }.padding(7)
                     }
                 }
             }
-            /*.navigationDestination(isPresented: $showEditView) {
-                RecipeEditView()
-            }*/
             .navigationTitle("Cookbooks")
             .toolbar {
                 Menu {
@@ -68,9 +62,20 @@ struct MainView: View {
                     Image(systemName: "gearshape")
                 }
             }
-            .background(
-                NavigationLink(destination: RecipeEditView(), isActive: $showEditView) { EmptyView() }
-            )
+            .navigationDestination(isPresented: $showEditView) {
+                RecipeEditView(viewModel: viewModel, isPresented: $showEditView)
+            }
+            
+        } detail: {
+            NavigationStack {
+                if let category = selectedCategory {
+                    CategoryDetailView(
+                        categoryName: category.name,
+                        viewModel: viewModel
+                    )
+                    .id(category.id) // Workaround: This is needed to update the detail view when the selection changes
+                }
+            }
             
         }
         .tint(.nextcloudBlue)

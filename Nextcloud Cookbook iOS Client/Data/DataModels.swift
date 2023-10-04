@@ -13,6 +13,10 @@ struct Category: Codable {
     let recipe_count: Int
 }
 
+extension Category: Identifiable, Hashable {
+    var id: String { name }
+}
+
 struct Recipe: Codable {
     let name: String
     let keywords: String
@@ -21,6 +25,10 @@ struct Recipe: Codable {
     let imageUrl: String
     let imagePlaceholderUrl: String
     let recipe_id: Int
+}
+
+extension Recipe: Identifiable, Hashable {
+    var id: String { name }
 }
 
 struct RecipeDetail: Codable {
@@ -139,4 +147,10 @@ struct Ocs: Codable {
 struct MetaData: Codable {
     let status: String
     let statuscode: Int
+}
+
+
+// Networking
+struct ServerMessage: Decodable {
+    let msg: String
 }

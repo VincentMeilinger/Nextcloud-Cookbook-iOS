@@ -16,6 +16,8 @@ struct RecipeDetailView: View {
     @State var recipeImage: UIImage?
     @State var showTitle: Bool = false
     @State var isDownloaded: Bool? = nil
+    @State private var presentEditView: Bool = false
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading) {
@@ -69,6 +71,18 @@ struct RecipeDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(showTitle ? recipe.name : "")
+        .toolbar {
+            if let recipeDetail = recipeDetail {
+                NavigationLink {
+                    RecipeEditView(viewModel: viewModel, recipe: recipeDetail, isPresented: $presentEditView, uploadNew: false).tag("RecipeEditView")
+                } label: {
+                    HStack {
+                        Image(systemName: "pencil")
+                        Text("Edit")
+                    }
+                }
+            }
+        }
         .task {
             recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id)
             recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false)
@@ -78,7 +92,6 @@ struct RecipeDetailView: View {
             recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id, needsUpdate: true)
             recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false, needsUpdate: true)
         }
-        
     }
 }
 
@@ -91,7 +104,7 @@ struct RecipeDurationSection: View {
             if let prepTime = recipeDetail.prepTime {
                 VStack {
                     SecondaryLabel(text: "Prep time")
-                    Text(formatDate(duration: prepTime))
+                    Text(DateFormatter.formatDate(duration: prepTime))
                         .lineLimit(1)
                 }.padding()
             }
@@ -99,7 +112,7 @@ struct RecipeDurationSection: View {
             if let cookTime = recipeDetail.cookTime {
                 VStack {
                     SecondaryLabel(text: "Cook time")
-                    Text(formatDate(duration: cookTime))
+                    Text(DateFormatter.formatDate(duration: cookTime))
                         .lineLimit(1)
                 }.padding()
             }
@@ -107,7 +120,7 @@ struct RecipeDurationSection: View {
             if let totalTime = recipeDetail.totalTime {
                 VStack {
                     SecondaryLabel(text: "Total time")
-                    Text(formatDate(duration: totalTime))
+                    Text(DateFormatter.formatDate(duration: totalTime))
                         .lineLimit(1)
                 }.padding()
             }

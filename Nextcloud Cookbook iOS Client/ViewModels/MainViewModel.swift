@@ -16,7 +16,7 @@ import SwiftUI
     private var imageCache: [Int: RecipeImage] = [:]
     
     let dataStore: DataStore
-    var apiInterface: APIController? = nil
+    var apiController: APIController? = nil
     
     /// The path of an image in storage
     private var localImagePath: (Int, Bool) -> (String) = { recipeId, thumb in
@@ -43,6 +43,7 @@ import SwiftUI
         ) {
             self.categories = categoryList
         }
+        print(self.categories)
     }
     
     /// Try to load the recipe list from store or the server.
@@ -56,7 +57,9 @@ import SwiftUI
             needsUpdate: needsUpdate
         ) {
             recipes[categoryName] = recipeList
+            print(recipeList)
         }
+        
     }
     
     /// Try to load the recipe details from cache. If not found, try to load from store or the server.
@@ -116,8 +119,8 @@ import SwiftUI
         print("loadImage(recipeId: \(recipeId), thumb: \(thumb), needsUpdate: \(needsUpdate))")
         // If the image needs an update, request it from the server and overwrite the stored image
         if needsUpdate {
-            guard let apiInterface = apiInterface else { return nil }
-            if let data = await apiInterface.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
+            guard let apiController = apiController else { return nil }
+            if let data = await apiController.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
                 guard let image = UIImage(data: data) else {
                     imageCache[recipeId] = RecipeImage(imageExists: false)
                     return nil
@@ -154,8 +157,8 @@ import SwiftUI
         
         // Try to load from the server. Store if successfull.
         print("Attempting to load image from server ...")
-        guard let apiInterface = apiInterface else { return nil }
-        if let data = await apiInterface.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
+        guard let apiController = apiController else { return nil }
+        if let data = await apiController.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
             print("Image data received.")
             // Create empty RecipeImage for each recipe even if no image found, so that further server requests are only sent if explicitly requested.
             guard let image = UIImage(data: data) else {
@@ -190,9 +193,9 @@ extension MainViewModel {
                 print("Data found locally.")
                 return data
             } else {
-                guard let apiInterface = apiInterface else { return nil }
+                guard let apiController = apiController else { return nil }
                 let request = RequestWrapper.jsonGetRequest(path: networkPath)
-                let (data, error): (T?, Error?) = await apiInterface.sendDataRequest(request)
+                let (data, error): (T?, Error?) = await apiController.sendDataRequest(request)
                 print(error as Any)
                 if let data = data {
                     await dataStore.save(data: data, toPath: localPath)

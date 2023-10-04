@@ -8,74 +8,120 @@
 import Foundation
 import SwiftUI
 
+struct Keyword: Identifiable {
+    let id = UUID()
+    let name: String
+    
+    init(_ name: String) {
+        self.name = name
+    }
+}
 
 struct KeywordPickerView: View {
     @State var title: String
-    @State var searchSuggestions: [String]
+    @State var searchSuggestions: [Keyword]
     @Binding var selection: [String]
     @State var searchText: String = ""
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120), spacing: 0)]
+    var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 5)]
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             TextField(title, text: $searchText)
                 .textFieldStyle(.roundedBorder)
                 .padding()
-            LazyVGrid(columns: columns, spacing: 5) {
-                if searchText != "" {
-                    HStack {
-                        if selection.contains(searchText) {
-                            Image(systemName: "checkmark.circle.fill")
-                        }
-                        Text(searchText)
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(Color("backgroundHighlight"))
-                    )
-                    .onTapGesture {
-                        if selection.contains(searchText) {
-                            selection.removeAll(where: { s in
-                                s == searchText ? true : false
-                            })
-                        } else {
-                            selection.append(searchText)
-                            searchSuggestions.append(searchText)
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 5) {
+                    if searchText != "" {
+                        KeywordItemView(
+                            keyword: Keyword(searchText),
+                            isSelected: selection.contains(searchText)
+                        ) { keyword in
+                            if selection.contains(keyword.name) {
+                                selection.removeAll(where: { s in
+                                    s == keyword.name ? true : false
+                                })
+                                searchSuggestions.removeAll(where: { s in
+                                    s.name == keyword.name ? true : false
+                                })
+                            } else {
+                                selection.append(keyword.name)
+                            }
                         }
                     }
-                }
-                ForEach(suggestionsFiltered(), id: \.self) { suggestion in
-                    HStack {
-                        if selection.contains(suggestion) {
-                            Image(systemName: "checkmark.circle.fill")
-                        }
-                        Text(suggestion)
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(Color("backgroundHighlight"))
-                    )
-                    .onTapGesture {
-                        if selection.contains(suggestion) {
-                            selection.removeAll(where: { s in
-                                s == suggestion ? true : false
-                            })
-                        } else {
-                            selection.append(suggestion)
+                    ForEach(suggestionsFiltered(), id: \.id) { suggestion in
+                        KeywordItemView(
+                            keyword: suggestion,
+                            isSelected: selection.contains(suggestion.name)
+                        ) { keyword in
+                            if selection.contains(keyword.name) {
+                                selection.removeAll(where: { s in
+                                    s == keyword.name ? true : false
+                                })
+                            } else {
+                                selection.append(keyword.name)
+                            }
                         }
                     }
                 }
+                Divider().padding()
+                HStack {
+                    Text("Selected keywords:")
+                        .font(.headline)
+                        .padding()
+                    Spacer()
+                }
+                LazyVGrid(columns: columns, spacing: 5) {
+                    ForEach(selection, id: \.self) { suggestion in
+                        KeywordItemView(
+                            keyword: Keyword(suggestion),
+                            isSelected: true
+                        ) { keyword in
+                            if selection.contains(keyword.name) {
+                                selection.removeAll(where: { s in
+                                    s == keyword.name ? true : false
+                                })
+                            } else {
+                                selection.append(keyword.name)
+                            }
+                        }
+                    }
+                }
+                Spacer()
             }
-            Spacer()
         }
+        .navigationTitle(title)
     }
     
-    func suggestionsFiltered() -> [String] {
+    func suggestionsFiltered() -> [Keyword] {
         guard searchText != "" else { return searchSuggestions }
         return searchSuggestions.filter { suggestion in
-            suggestion.lowercased().contains(searchText.lowercased())
+            suggestion.name.lowercased().contains(searchText.lowercased())
+        }
+    }
+}
+
+
+
+struct KeywordItemView: View {
+    var keyword: Keyword
+    var isSelected: Bool
+    var tapped: (Keyword) -> ()
+    var body: some View {
+        HStack {
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+            }
+            Text(keyword.name)
+                .lineLimit(2)
+            
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .foregroundStyle(Color("backgroundHighlight"))
+        )
+        .onTapGesture {
+            tapped(keyword)
         }
     }
 }

@@ -11,33 +11,56 @@ import PhotosUI
 
 
 struct RecipeEditView: View {
+    @ObservedObject var viewModel: MainViewModel
     @State var recipe: RecipeDetail = RecipeDetail()
+    @Binding var isPresented: Bool
     
     @State var image: PhotosPickerItem? = nil
     @State var times = [Date.zero, Date.zero, Date.zero]
+    @State var uploadNew: Bool = true
     @State var searchText: String = ""
     @State var keywords: [String] = []
     
-    init(recipe: RecipeDetail? = nil) {
-        self.recipe = recipe ?? RecipeDetail()
-    }
+    @State private var alertMessage: String = ""
+    @State private var presentAlert: Bool = false
     
     var body: some View {
         Form {
             TextField("Title", text: $recipe.name)
-            TextField("Description", text: $recipe.description)
+            Section {
+                TextEditor(text: $recipe.description)
+            } header: {
+                Text("Description")
+            }
+            /*
             PhotosPicker(selection: $image, matching: .images, photoLibrary: .shared()) {
                 Image(systemName: "photo")
                     .symbolRenderingMode(.multicolor)
             }
             .buttonStyle(.borderless)
-            
+            */
             Section() {
+                NavigationLink(recipe.recipeCategory == "" ? "Category" : "Category: \(recipe.recipeCategory)") {
+                    CategoryPickerView(title: "Category", searchSuggestions: [], selection: $recipe.recipeCategory)
+                }
                 NavigationLink("Keywords") {
-                    KeywordPickerView(title: "Keyword", searchSuggestions: [], selection: $keywords)
+                    KeywordPickerView(
+                        title: "Keywords",
+                        searchSuggestions: [
+                            Keyword("Hauptspeisen"),
+                            Keyword("Lecker"),
+                            Keyword("Trinken"),
+                            Keyword("Essen"),
+                            Keyword("Nachspeisen"),
+                            Keyword("Futter"),
+                            Keyword("Apfel"),
+                            Keyword("test")
+                        ],
+                        selection: $keywords
+                    )
                 }
             } header: {
-                Text("Keywords")
+                Text("Discoverability")
             } footer: {
                 ScrollView(.horizontal) {
                     HStack {
@@ -63,7 +86,131 @@ struct RecipeEditView: View {
             EditableListSection(title: "Ingredients", items: $recipe.recipeIngredient)
             EditableListSection(title: "Tools", items: $recipe.tool)
             EditableListSection(title: "Instructions", items: $recipe.recipeInstructions)
-        }.navigationTitle("New Recipe")
+        }.navigationTitle("Edit your recipe")
+        .toolbar {
+            Menu {
+                Button {
+                    print("Delete recipe.")
+                    deleteRecipe()
+                    self.isPresented = false
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                    Text("Delete recipe")
+                        .foregroundStyle(.red)
+                }
+            } label: {
+                Image(systemName: "ellipsis.circle")
+            }
+            Button() {
+                if uploadNew {
+                    uploadNewRecipe()
+                } else {
+                    uploadEditedRecipe()
+                }
+            } label: {
+                Image(systemName: "icloud.and.arrow.up")
+                Text(uploadNew ? "Upload" : "Update")
+                    .bold()
+            }
+        }
+        .onAppear {
+            if uploadNew { return }
+            if let prepTime = recipe.prepTime {
+                self.times[0] = Date.fromPTRepresentation(prepTime)
+            }
+            if let cookTime = recipe.cookTime {
+                self.times[1] = Date.fromPTRepresentation(cookTime)
+            }
+            if let totalTime = recipe.totalTime {
+                self.times[2] = Date.fromPTRepresentation(totalTime)
+            }
+            
+            for keyword in recipe.keywords.components(separatedBy: ",") {
+                keywords.append(keyword)
+            }
+        }
+        .alert(alertMessage, isPresented: $presentAlert) {
+            Button("Ok", role: .cancel) {
+                self.isPresented = false
+            }
+        }
+    }
+    
+    func createRecipe() {
+        print(self.recipe.name)
+        if let date = Date.toPTRepresentation(date: times[0]) {
+            self.recipe.prepTime = date
+        }
+        if let date = Date.toPTRepresentation(date: times[1]) {
+            self.recipe.cookTime = date
+        }
+        if let date = Date.toPTRepresentation(date: times[2]) {
+            self.recipe.totalTime = date
+        }
+        self.recipe.keywords = self.keywords.joined(separator: ",")
+    }
+    
+    func uploadNewRecipe() {
+        print("Uploading new recipe.")
+        createRecipe()
+        let request = RequestWrapper.customRequest(
+            method: .POST,
+            path: .NEW_RECIPE,
+            headerFields: [
+                HeaderField.accept(value: .JSON),
+                HeaderField.ocsRequest(value: true),
+                HeaderField.contentType(value: .JSON)
+            ],
+            body: JSONEncoder.safeEncode(self.recipe)
+        )
+        sendRequest(request)
+    }
+    
+    func uploadEditedRecipe() {
+        print("Uploading changed recipe.")
+        guard let recipeId = Int(recipe.id) else { return }
+        createRecipe()
+        let request = RequestWrapper.customRequest(
+            method: .PUT,
+            path: .RECIPE_DETAIL(recipeId: recipeId),
+            headerFields: [
+                HeaderField.accept(value: .JSON),
+                HeaderField.ocsRequest(value: true),
+                HeaderField.contentType(value: .JSON)
+            ],
+            body: JSONEncoder.safeEncode(self.recipe)
+        )
+        sendRequest(request)
+    }
+    
+    func deleteRecipe() {
+        guard let recipeId = Int(recipe.id) else { return }
+        let request = RequestWrapper.customRequest(
+            method: .DELETE,
+            path: .RECIPE_DETAIL(recipeId: recipeId),
+            headerFields: [
+                HeaderField.accept(value: .JSON),
+                HeaderField.ocsRequest(value: true)
+            ]
+        )
+        sendRequest(request)
+    }
+    
+    func sendRequest(_ request: RequestWrapper) {
+        Task {
+            guard let apiController = viewModel.apiController else { return }
+            let (data, _): (Data?, Error?) = await apiController.sendDataRequest(request)
+            guard let data = data else { return }
+            do {
+                let error = try JSONDecoder().decode(ServerMessage.self, from: data)
+                alertMessage = error.msg
+                presentAlert = true
+            } catch {
+                self.isPresented = false
+                await self.viewModel.loadRecipeList(categoryName: self.recipe.recipeCategory, needsUpdate: true)
+            }
+        }
     }
 }
 

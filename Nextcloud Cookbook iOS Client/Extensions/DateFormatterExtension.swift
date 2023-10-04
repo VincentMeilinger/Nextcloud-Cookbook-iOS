@@ -13,29 +13,45 @@ extension Formatter {
         formatter.unitsStyle = .positional
         return formatter
     }()
-}
-
-func formatDate(duration: String) -> String {
-    var duration = duration
-    if duration.hasPrefix("PT") { duration.removeFirst(2) }
-    var hour: Int = 0, minute: Int = 0
-    if let index = duration.firstIndex(of: "H") {
-        hour = Int(duration[..<index]) ?? 0
-        duration.removeSubrange(...index)
-    }
-    if let index = duration.firstIndex(of: "M") {
-        minute = Int(duration[..<index]) ?? 0
-        duration.removeSubrange(...index)
-    }
     
-    if hour == 0 && minute != 0 {
-        return "\(minute)min"
+    static func formatDate(duration: String) -> String {
+        var duration = duration
+        if duration.hasPrefix("PT") { duration.removeFirst(2) }
+        var hour: Int = 0, minute: Int = 0
+        if let index = duration.firstIndex(of: "H") {
+            hour = Int(duration[..<index]) ?? 0
+            duration.removeSubrange(...index)
+        }
+        if let index = duration.firstIndex(of: "M") {
+            minute = Int(duration[..<index]) ?? 0
+            duration.removeSubrange(...index)
+        }
+        
+        if hour == 0 && minute != 0 {
+            return "\(minute)min"
+        }
+        if hour != 0 && minute == 0 {
+            return "\(hour)h"
+        }
+        if hour != 0 && minute != 0 {
+            return "\(hour)h \(minute)"
+        }
+        return "--"
     }
-    if hour != 0 && minute == 0 {
-        return "\(hour)h"
+
+    static func stringToComponents(duration: String) -> (Int, Int) {
+        var duration = duration
+        if duration.hasPrefix("PT") { duration.removeFirst(2) }
+        var hour: Int = 0, minute: Int = 0
+        if let index = duration.firstIndex(of: "H") {
+            hour = Int(duration[..<index]) ?? 0
+            duration.removeSubrange(...index)
+        }
+        if let index = duration.firstIndex(of: "M") {
+            minute = Int(duration[..<index]) ?? 0
+            duration.removeSubrange(...index)
+        }
+        
+        return (hour, minute)
     }
-    if hour != 0 && minute != 0 {
-        return "\(hour)h \(minute)"
-    }
-    return "--"
 }
