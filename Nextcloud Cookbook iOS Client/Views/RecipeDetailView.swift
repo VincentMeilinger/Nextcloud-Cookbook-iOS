@@ -73,14 +73,18 @@ struct RecipeDetailView: View {
         .navigationTitle(showTitle ? recipe.name : "")
         .toolbar {
             if let recipeDetail = recipeDetail {
-                NavigationLink {
-                    RecipeEditView(viewModel: viewModel, recipe: recipeDetail, isPresented: $presentEditView, uploadNew: false).tag("RecipeEditView")
+                Button {
+                    presentEditView = true
                 } label: {
                     HStack {
-                        Image(systemName: "pencil")
                         Text("Edit")
                     }
                 }
+            }
+        }
+        .sheet(isPresented: $presentEditView) {
+            if let recipeDetail = recipeDetail {
+                RecipeEditView(viewModel: viewModel, recipe: recipeDetail, isPresented: $presentEditView, uploadNew: false)
             }
         }
         .task {

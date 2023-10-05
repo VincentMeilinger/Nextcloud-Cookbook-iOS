@@ -31,19 +31,21 @@ struct CategoryDetailView: View {
         }
         .navigationTitle(categoryName == "*" ? "Other" : categoryName)
         .toolbar {
-            Menu {
-                Button {
-                    print("Downloading all recipes in category \(categoryName) ...")
-                    downloadRecipes()
-                } label: {
-                    HStack {
-                        Text("Download recipes")
-                        Image(systemName: "icloud.and.arrow.down")
+            ToolbarItem(placement: .topBarLeading) {
+                Menu {
+                    Button {
+                        print("Downloading all recipes in category \(categoryName) ...")
+                        downloadRecipes()
+                    } label: {
+                        HStack {
+                            Text("Download recipes")
+                            Image(systemName: "icloud.and.arrow.down")
+                        }
                     }
+                    
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
-                
-            } label: {
-                Image(systemName: "ellipsis.circle")
             }
         }
         .searchable(text: $searchText, prompt: "Search recipes")

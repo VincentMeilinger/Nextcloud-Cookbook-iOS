@@ -34,10 +34,17 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var defaultCategory: String {
+        didSet {
+            UserDefaults.standard.set(defaultCategory, forKey: "defaultCategory")
+        }
+    }
+    
     init() {
         self.username = UserDefaults.standard.object(forKey: "username") as? String ?? ""
         self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
+        self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
     }
 }

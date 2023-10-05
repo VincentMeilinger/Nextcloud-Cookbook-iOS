@@ -19,7 +19,7 @@ extension Category: Identifiable, Hashable {
 
 struct Recipe: Codable {
     let name: String
-    let keywords: String
+    let keywords: String?
     let dateCreated: String
     let dateModified: String
     let imageUrl: String

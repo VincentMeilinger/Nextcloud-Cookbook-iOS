@@ -23,7 +23,7 @@ struct MainView: View {
                     NavigationLink(value: category) {
                         HStack(alignment: .center) {
                             Image(systemName: "book.closed.fill")
-                            Text(category.name)
+                            Text(category.name == "*" ? "Other" : category.name)
                                 .font(.system(size: 20, weight: .light, design: .serif))
                                 .italic()
                         }.padding(7)
@@ -32,39 +32,40 @@ struct MainView: View {
             }
             .navigationTitle("Cookbooks")
             .toolbar {
-                Menu {
-                    Button {
-                        print("Downloading all recipes ...")
-                        Task {
-                            await viewModel.downloadAllRecipes()
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Button {
+                            print("Downloading all recipes ...")
+                            Task {
+                                await viewModel.downloadAllRecipes()
+                            }
+                        } label: {
+                            HStack {
+                                Text("Download all recipes")
+                                Image(systemName: "icloud.and.arrow.down")
+                            }
+                        }
+                        
+                        Button {
+                            print("Create recipe")
+                            showEditView = true
+                        } label: {
+                            HStack {
+                                Text("Create new recipe")
+                                Image(systemName: "plus.circle")
+                            }
                         }
                     } label: {
-                        HStack {
-                            Text("Download all recipes")
-                            Image(systemName: "icloud.and.arrow.down")
-                        }
+                        Image(systemName: "ellipsis.circle")
                     }
-                    
-                    Button {
-                        print("Create recipe")
-                        showEditView = true
-                    } label: {
-                        HStack {
-                            Text("Create new recipe")
-                            Image(systemName: "plus.circle")
-                        }
-                    }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
                 }
-                
-                NavigationLink( destination: SettingsView(userSettings: userSettings, viewModel: viewModel)) {
-                    Image(systemName: "gearshape")
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink( destination: SettingsView(userSettings: userSettings, viewModel: viewModel)) {
+                        Image(systemName: "gearshape")
+                    }
                 }
             }
-            .navigationDestination(isPresented: $showEditView) {
-                RecipeEditView(viewModel: viewModel, isPresented: $showEditView)
-            }
+            
             
         } detail: {
             NavigationStack {
@@ -79,12 +80,17 @@ struct MainView: View {
             
         }
         .tint(.nextcloudBlue)
+        .sheet(isPresented: $showEditView) {
+            RecipeEditView(viewModel: viewModel, isPresented: $showEditView)
+        }
         .task {
             await viewModel.loadCategoryList()
         }
         .refreshable {
             await viewModel.loadCategoryList(needsUpdate: true)
         }
+        
+        // TODO: SET DEFAULT CATEGORY
     }
 }
 

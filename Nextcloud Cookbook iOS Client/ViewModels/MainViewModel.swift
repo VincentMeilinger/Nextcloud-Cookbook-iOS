@@ -47,13 +47,15 @@ import SwiftUI
     }
     
     /// Try to load the recipe list from store or the server.
+    /// - Warning: The category named '\*' is translated into '\_' for network calls and storage requests in this function. This is necessary for the nextcloud cookbook api.
     /// - Parameters
     ///     - categoryName: The name of the category containing the requested list of recipes.
     ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from store first.
     func loadRecipeList(categoryName: String, needsUpdate: Bool = false) async {
+        let categoryString = categoryName == "*" ? "_" : categoryName
         if let recipeList: [Recipe] = await loadObject(
-            localPath: "category_\(categoryName).data",
-            networkPath: .RECIPE_LIST(categoryName: categoryName),
+            localPath: "category_\(categoryString).data",
+            networkPath: .RECIPE_LIST(categoryName: categoryString),
             needsUpdate: needsUpdate
         ) {
             recipes[categoryName] = recipeList
