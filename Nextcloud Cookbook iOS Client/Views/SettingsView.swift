@@ -39,6 +39,23 @@ struct SettingsView: View {
     
     var body: some View {
         Form {
+            Section {
+                Picker("Select a cookbook", selection: $userSettings.defaultCategory) {
+                    Text("")
+                    ForEach(viewModel.categories, id: \.name) { category in
+                        Text(category.name == "*" ? "Other" : category.name)
+                    }
+                }
+                Button {
+                    userSettings.defaultCategory = ""
+                } label: {
+                    Text("Clear default category")
+                }
+            } header: {
+                Text("Default cookbook")
+            } footer: {
+                Text("The selected cookbook will be opened on app launch by default.")
+            }
             Section() {
                 Link("Visit the GitHub page", destination: URL(string: "https://github.com/VincentMeilinger/Nextcloud-Cookbook-iOS")!)
             } header: {

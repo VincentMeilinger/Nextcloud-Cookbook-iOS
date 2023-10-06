@@ -85,6 +85,17 @@ struct MainView: View {
         }
         .task {
             await viewModel.loadCategoryList()
+            if userSettings.defaultCategory != "" {
+                if let cat = viewModel.categories.first(where: { c in
+                    if c.name == userSettings.defaultCategory {
+                        return true
+                    }
+                    return false
+                }) {
+                    self.selectedCategory = cat
+                }
+            }
+            
         }
         .refreshable {
             await viewModel.loadCategoryList(needsUpdate: true)

@@ -31,7 +31,7 @@ struct CategoryDetailView: View {
         }
         .navigationTitle(categoryName == "*" ? "Other" : categoryName)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button {
                         print("Downloading all recipes in category \(categoryName) ...")
