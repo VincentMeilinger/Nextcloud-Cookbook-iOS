@@ -11,6 +11,7 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 - [x] Load recipes from nextcloud instance
 - [x] Offline recipes
 - [ ] Share recipes
+- [ ] Import recipes
 - [x] Recipe search function
 - [x] Add new recipes
 - [x] Edit recipes
