@@ -149,14 +149,34 @@ struct RecipeIngredientSection: View {
                 Spacer()
             }
             ForEach(recipeDetail.recipeIngredient, id: \.self) { ingredient in
-                HStack(alignment: .top) {
-                    Text("\u{2022}")
-                    Text("\(ingredient)")
-                        .multilineTextAlignment(.leading)
-                }
+                IngredientListItem(ingredient: ingredient)
                 .padding(4)
             }
         }.padding()
+    }
+}
+
+struct IngredientListItem: View {
+    @State var ingredient: String
+    @State var isSelected: Bool = false
+    
+    var body: some View {
+        HStack(alignment: .top) {
+            if isSelected {
+                Image(systemName: "checkmark.circle")
+            } else {
+                //Text("\u{2022}")
+                Image(systemName: "circle")
+            }
+            Text("\(ingredient)")
+                .multilineTextAlignment(.leading)
+                .lineLimit(5)
+        }
+        .foregroundStyle(isSelected ? Color.secondary : Color.primary)
+        .onTapGesture {
+            isSelected.toggle()
+        }
+        .animation(.easeInOut, value: isSelected)
     }
 }
 

@@ -72,7 +72,8 @@ struct SettingsView: View {
             } footer: {
                 Text("The selected cookbook will open on app launch by default.")
             }
-            Section() {
+            
+            Section {
                 Link("Visit the GitHub page", destination: URL(string: "https://github.com/VincentMeilinger/Nextcloud-Cookbook-iOS")!)
             } header: {
                 Text("About")
@@ -80,7 +81,7 @@ struct SettingsView: View {
                 Text("If you are interested in contributing to this project or simply wish to review its source code, we encourage you to visit the GitHub repository for this application.")
             }
             
-            Section() {
+            Section {
                 Link("Get support", destination: URL(string: "https://vincentmeilinger.github.io/Nextcloud-Cookbook-Client-Support/")!)
             } header: {
                 Text("Support")
@@ -88,7 +89,7 @@ struct SettingsView: View {
                 Text("If you have any inquiries, feedback, or require assistance, please refer to the support page for contact information.")
             }
             
-            Section() {
+            Section {
                 Button("Log out") {
                     print("Log out.")
                     alertType = .LOG_OUT
