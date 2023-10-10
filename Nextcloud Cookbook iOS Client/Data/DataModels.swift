@@ -115,6 +115,11 @@ struct RecipeImage {
     var full: UIImage?
 }
 
+struct RecipeKeyword: Codable {
+    let name: String
+    let recipe_count: Int
+}
+
 
 
 

@@ -19,15 +19,15 @@ struct CategoryDetailView: View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
-                    NavigationLink() {
-                        RecipeDetailView(viewModel: viewModel, recipe: recipe).id(recipe.recipe_id)
-                    } label: {
+                    NavigationLink(value: recipe) {
                         RecipeCardView(viewModel: viewModel, recipe: recipe)
                     }
                     .buttonStyle(.plain)
-                    
                 }
             }
+        }
+        .navigationDestination(for: Recipe.self) { recipe in
+            RecipeDetailView(viewModel: viewModel, recipe: recipe)//.id(recipe.recipe_id)
         }
         .navigationTitle(categoryName == "*" ? "Other" : categoryName)
         .toolbar {

@@ -30,6 +30,22 @@ fileprivate enum SettingsAlert {
     }
 }
 
+enum SupportedLanguage: String, Codable {
+    case EN = "en",
+         DE = "de"
+    
+    func descriptor() -> String {
+        switch self {
+        case .EN:
+            return "English"
+        case .DE:
+            return "Deutsch"
+        }
+    }
+    
+    static let allValues = [EN, DE]
+}
+
 struct SettingsView: View {
     @ObservedObject var userSettings: UserSettings
     @ObservedObject var viewModel: MainViewModel
@@ -40,21 +56,21 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                Picker("Select a cookbook", selection: $userSettings.defaultCategory) {
-                    Text("")
+                Picker("Select a default cookbook", selection: $userSettings.defaultCategory) {
+                    Text("None").tag("None")
                     ForEach(viewModel.categories, id: \.name) { category in
-                        Text(category.name == "*" ? "Other" : category.name)
+                        Text(category.name == "*" ? "Other" : category.name).tag(category)
                     }
                 }
-                Button {
-                    userSettings.defaultCategory = ""
-                } label: {
-                    Text("Clear default category")
+                Picker("Language", selection: $userSettings.language) {
+                    ForEach(SupportedLanguage.allValues, id: \.self) { lang in
+                        Text(lang.descriptor()).tag(lang.rawValue)
+                    }
                 }
             } header: {
-                Text("Default cookbook")
+                Text("General")
             } footer: {
-                Text("The selected cookbook will be opened on app launch by default.")
+                Text("The selected cookbook will open on app launch by default.")
             }
             Section() {
                 Link("Visit the GitHub page", destination: URL(string: "https://github.com/VincentMeilinger/Nextcloud-Cookbook-iOS")!)
@@ -105,6 +121,7 @@ struct SettingsView: View {
         } message: {
             Text(alertType.getMessage())
         }
+        
     }
     
     func logOut() {
@@ -116,7 +133,7 @@ struct SettingsView: View {
     }
     
     func deleteCache() {
-        //viewModel.deleteAllData()
+        viewModel.deleteAllData()
     }
 }
 

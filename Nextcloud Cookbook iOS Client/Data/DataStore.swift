@@ -56,6 +56,13 @@ class DataStore {
         }
     }
     
+    func delete(path: String) {
+        Task {
+            let fileURL = try Self.fileURL(appending: path)
+            try fileManager.removeItem(at: fileURL)
+        }
+    }
+    
     func recipeDetailExists(recipeId: Int) -> Bool {
         let filePath = "recipe\(recipeId).data"
         guard let folderPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first?.path() else { return false }

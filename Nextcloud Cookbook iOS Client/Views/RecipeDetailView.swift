@@ -107,7 +107,7 @@ struct RecipeDurationSection: View {
         HStack(alignment: .center) {
             if let prepTime = recipeDetail.prepTime {
                 VStack {
-                    SecondaryLabel(text: "Prep time")
+                    SecondaryLabel(text: String(localized: "Prep time"))
                     Text(DateFormatter.formatDate(duration: prepTime))
                         .lineLimit(1)
                 }.padding()
@@ -115,7 +115,7 @@ struct RecipeDurationSection: View {
             
             if let cookTime = recipeDetail.cookTime {
                 VStack {
-                    SecondaryLabel(text: "Cook time")
+                    SecondaryLabel(text: String(localized: "Cook time"))
                     Text(DateFormatter.formatDate(duration: cookTime))
                         .lineLimit(1)
                 }.padding()
@@ -123,7 +123,7 @@ struct RecipeDurationSection: View {
             
             if let totalTime = recipeDetail.totalTime {
                 VStack {
-                    SecondaryLabel(text: "Total time")
+                    SecondaryLabel(text: String(localized: "Total time"))
                     Text(DateFormatter.formatDate(duration: totalTime))
                         .lineLimit(1)
                 }.padding()
@@ -140,11 +140,11 @@ struct RecipeIngredientSection: View {
             Divider()
             HStack {
                 if recipeDetail.recipeYield == 0 {
-                    SecondaryLabel(text: "Ingredients")
+                    SecondaryLabel(text: String(localized: "Ingredients"))
                 } else if recipeDetail.recipeYield == 1 {
-                    SecondaryLabel(text: "Ingredients per serving")
+                    SecondaryLabel(text: String(localized: "Ingredients per serving"))
                 } else {
-                    SecondaryLabel(text: "Ingredients for \(recipeDetail.recipeYield) servings")
+                    SecondaryLabel(text: String(localized: "Ingredients for \(recipeDetail.recipeYield) servings"))
                 }
                 Spacer()
             }
@@ -166,7 +166,7 @@ struct RecipeToolSection: View {
         VStack(alignment: .leading) {
             Divider()
             HStack {
-                SecondaryLabel(text: "Tools")
+                SecondaryLabel(text: String(localized: "Tools"))
                 Spacer()
             }
             ForEach(recipeDetail.tool, id: \.self) { tool in
@@ -187,7 +187,7 @@ struct RecipeInstructionSection: View {
         VStack(alignment: .leading) {
             Divider()
             HStack {
-                SecondaryLabel(text: "Instructions")
+                SecondaryLabel(text: String(localized: "Instructions"))
                 Spacer()
             }
             ForEach(0..<recipeDetail.recipeInstructions.count) { ix in

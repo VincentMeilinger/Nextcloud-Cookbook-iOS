@@ -11,6 +11,8 @@ import SwiftUI
 struct Nextcloud_Cookbook_iOS_ClientApp: App {
     @StateObject var userSettings = UserSettings()
     @StateObject var mainViewModel = MainViewModel()
+    @State(initialValue: "en") var language: String
+    
     var body: some Scene {
         WindowGroup {
             ZStack {
@@ -22,7 +24,14 @@ struct Nextcloud_Cookbook_iOS_ClientApp: App {
                             mainViewModel.apiController = APIController(userSettings: userSettings)
                         }
                 }
-            }.transition(.slide)
+            }
+            .transition(.slide)
+            .onAppear {
+                language = userSettings.language
+                print(userSettings.language)
+            }
+            .environment(\.locale, .init(identifier: language))
         }
+        
     }
 }

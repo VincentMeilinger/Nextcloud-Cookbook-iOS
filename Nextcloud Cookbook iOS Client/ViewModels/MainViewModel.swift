@@ -175,6 +175,17 @@ import SwiftUI
         return nil
     }
     
+    func getKeywords() async -> [String] {
+        if let keywords: [RecipeKeyword] = await self.loadObject(
+            localPath: "keywords.data",
+            networkPath: .KEYWORDS,
+            needsUpdate: true
+        ) {
+            return keywords.map { $0.name }
+        }
+        return []
+    }
+    
     func deleteAllData() {
         if dataStore.clearAll() {
             self.categories = []
@@ -182,6 +193,16 @@ import SwiftUI
             self.imageCache = [:]
             self.recipeDetails = [:]
         }
+    }
+    
+    func deleteRecipe(withId id: Int, categoryName: String) {
+        let path = "recipe\(id).data"
+        dataStore.delete(path: path)
+        guard recipes[categoryName] != nil else { return }
+        recipes[categoryName]!.removeAll(where: { recipe in
+            recipe.recipe_id == id ? true : false
+        })
+        recipeDetails.removeValue(forKey: id)
     }
 }
 

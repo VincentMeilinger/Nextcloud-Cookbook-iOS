@@ -14,6 +14,8 @@ struct MainView: View {
     
     @State private var selectedCategory: Category? = nil
     @State private var showEditView: Bool = false
+    @State private var showSettingsView: Bool = false
+    
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
     
     var body: some View {
@@ -31,6 +33,9 @@ struct MainView: View {
                 }
             }
             .navigationTitle("Cookbooks")
+            .navigationDestination(isPresented: $showSettingsView) {
+                SettingsView(userSettings: userSettings, viewModel: viewModel)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
@@ -47,26 +52,27 @@ struct MainView: View {
                         }
                         
                         Button {
-                            print("Create recipe")
-                            showEditView = true
+                            self.showSettingsView = true
                         } label: {
-                            HStack {
-                                Text("Create new recipe")
-                                Image(systemName: "plus.circle")
-                            }
+                            Text("Settings")
+                            Image(systemName: "gearshape")
                         }
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink( destination: SettingsView(userSettings: userSettings, viewModel: viewModel)) {
-                        Image(systemName: "gearshape")
+                    Button {
+                        print("Create recipe")
+                        showEditView = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                        }
                     }
+                    
                 }
             }
-            
-            
         } detail: {
             NavigationStack {
                 if let category = selectedCategory {
@@ -77,7 +83,6 @@ struct MainView: View {
                     .id(category.id) // Workaround: This is needed to update the detail view when the selection changes
                 }
             }
-            
         }
         .tint(.nextcloudBlue)
         .sheet(isPresented: $showEditView) {

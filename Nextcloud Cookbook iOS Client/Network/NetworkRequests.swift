@@ -19,7 +19,8 @@ enum RequestPath {
          RECIPE_LIST(categoryName: String),
          RECIPE_DETAIL(recipeId: Int),
          NEW_RECIPE,
-         IMAGE(recipeId: Int, thumb: Bool)
+         IMAGE(recipeId: Int, thumb: Bool),
+         KEYWORDS
     
     case LOGINV2REQ,
          CUSTOM(path: String),
@@ -32,6 +33,7 @@ enum RequestPath {
         case .RECIPE_DETAIL(recipeId: let recipeId): return "recipes/\(recipeId)"
         case .IMAGE(recipeId: let recipeId, thumb: let thumb): return "recipes/\(recipeId)/image?size=\(thumb ? "thumb" : "full")"
         case .NEW_RECIPE: return "recipes"
+        case .KEYWORDS: return "keywords"
             
         case .LOGINV2REQ: return "/index.php/login/v2"
         case .CUSTOM(path: let path): return path

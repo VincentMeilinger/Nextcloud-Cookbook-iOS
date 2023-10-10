@@ -8,20 +8,14 @@
 import Foundation
 import SwiftUI
 
-struct Keyword: Identifiable {
-    let id = UUID()
-    let name: String
-    
-    init(_ name: String) {
-        self.name = name
-    }
-}
+
 
 struct KeywordPickerView: View {
     @State var title: String
-    @State var searchSuggestions: [Keyword]
+    @State var searchSuggestions: [String]
     @Binding var selection: [String]
     @State var searchText: String = ""
+    
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 5)]
     
     var body: some View {
@@ -33,32 +27,32 @@ struct KeywordPickerView: View {
                 LazyVGrid(columns: columns, spacing: 5) {
                     if searchText != "" {
                         KeywordItemView(
-                            keyword: Keyword(searchText),
+                            keyword: searchText,
                             isSelected: selection.contains(searchText)
                         ) { keyword in
-                            if selection.contains(keyword.name) {
+                            if selection.contains(keyword) {
                                 selection.removeAll(where: { s in
-                                    s == keyword.name ? true : false
+                                    s == keyword ? true : false
                                 })
                                 searchSuggestions.removeAll(where: { s in
-                                    s.name == keyword.name ? true : false
+                                    s == keyword ? true : false
                                 })
                             } else {
-                                selection.append(keyword.name)
+                                selection.append(keyword)
                             }
                         }
                     }
-                    ForEach(suggestionsFiltered(), id: \.id) { suggestion in
+                    ForEach(suggestionsFiltered(), id: \.self) { suggestion in
                         KeywordItemView(
                             keyword: suggestion,
-                            isSelected: selection.contains(suggestion.name)
+                            isSelected: selection.contains(suggestion)
                         ) { keyword in
-                            if selection.contains(keyword.name) {
+                            if selection.contains(keyword) {
                                 selection.removeAll(where: { s in
-                                    s == keyword.name ? true : false
+                                    s == keyword ? true : false
                                 })
                             } else {
-                                selection.append(keyword.name)
+                                selection.append(keyword)
                             }
                         }
                     }
@@ -73,15 +67,15 @@ struct KeywordPickerView: View {
                 LazyVGrid(columns: columns, spacing: 5) {
                     ForEach(selection, id: \.self) { suggestion in
                         KeywordItemView(
-                            keyword: Keyword(suggestion),
+                            keyword: suggestion,
                             isSelected: true
                         ) { keyword in
-                            if selection.contains(keyword.name) {
+                            if selection.contains(keyword) {
                                 selection.removeAll(where: { s in
-                                    s == keyword.name ? true : false
+                                    s == keyword ? true : false
                                 })
                             } else {
-                                selection.append(keyword.name)
+                                selection.append(keyword)
                             }
                         }
                     }
@@ -90,12 +84,13 @@ struct KeywordPickerView: View {
             }
         }
         .navigationTitle(title)
+        
     }
     
-    func suggestionsFiltered() -> [Keyword] {
+    func suggestionsFiltered() -> [String] {
         guard searchText != "" else { return searchSuggestions }
         return searchSuggestions.filter { suggestion in
-            suggestion.name.lowercased().contains(searchText.lowercased())
+            suggestion.lowercased().contains(searchText.lowercased())
         }
     }
 }
@@ -103,17 +98,18 @@ struct KeywordPickerView: View {
 
 
 struct KeywordItemView: View {
-    var keyword: Keyword
+    var keyword: String
     var isSelected: Bool
-    var tapped: (Keyword) -> ()
+    var tapped: (String) -> ()
+    
     var body: some View {
         HStack {
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
             }
-            Text(keyword.name)
+            Text(keyword)
                 .lineLimit(2)
-            
+            Spacer()
         }
         .padding()
         .background(

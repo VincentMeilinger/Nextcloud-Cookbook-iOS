@@ -65,119 +65,121 @@ struct RecipeEditView: View {
     @State private var times = [Date.zero, Date.zero, Date.zero]
     @State private var searchText: String = ""
     @State private var keywords: [String] = []
+    @State private var keywordSuggestions: [String] = []
     
     @State private var alertMessage: ErrorMessages = .GENERIC
     @State private var presentAlert: Bool = false
     @State private var waitingForUpload: Bool = false
     
     var body: some View {
-        VStack {
-            HStack {
-                Button() {
-                    isPresented = false
-                } label: {
-                    Text("Cancel")
-                        .bold()
-                }
-                if !uploadNew {
-                    Menu {
-                        Button {
-                            print("Delete recipe.")
-                            alertMessage = .CONFIRM_DELETE
-                            presentAlert = true
+        NavigationStack {
+            VStack {
+                HStack {
+                    Button() {
+                        isPresented = false
+                    } label: {
+                        Text("Cancel")
+                            .bold()
+                    }
+                    if !uploadNew {
+                        Menu {
+                            Button {
+                                print("Delete recipe.")
+                                alertMessage = .CONFIRM_DELETE
+                                presentAlert = true
+                            } label: {
+                                Image(systemName: "trash")
+                                    .foregroundStyle(.red)
+                                Text("Delete recipe")
+                                    .foregroundStyle(.red)
+                            }
                         } label: {
-                            Image(systemName: "trash")
-                                .foregroundStyle(.red)
-                            Text("Delete recipe")
-                                .foregroundStyle(.red)
+                            Image(systemName: "ellipsis.circle")
+                                .font(.title3)
+                                .padding()
+                        }
+                    }
+                    Spacer()
+                    Button() {
+                        if uploadNew {
+                            uploadNewRecipe()
+                        } else {
+                            uploadEditedRecipe()
                         }
                     } label: {
-                        Image(systemName: "ellipsis.circle")
-                            .font(.title3)
-                            .padding()
+                        Text("Upload")
+                            .bold()
                     }
-                }
-                Spacer()
-                Button() {
-                    if uploadNew {
-                        uploadNewRecipe()
-                    } else {
-                        uploadEditedRecipe()
-                    }
-                } label: {
-                    Text("Upload")
+                }.padding()
+                HStack {
+                    Text(recipe.name == "" ? String(localized: "New recipe") : recipe.name)
+                        .font(.title)
                         .bold()
+                        .padding()
+                    Spacer()
                 }
-            }.padding()
-            HStack {
-                Text(recipe.name == "" ? "New recipe" : recipe.name)
-                    .font(.title)
-                    .bold()
-                    .padding()
-                Spacer()
-            }
-            Form {
-                TextField("Title", text: $recipe.name)
-                Section {
-                    TextEditor(text: $recipe.description)
-                } header: {
-                    Text("Description")
-                }
-                /*
-                 PhotosPicker(selection: $image, matching: .images, photoLibrary: .shared()) {
-                 Image(systemName: "photo")
-                 .symbolRenderingMode(.multicolor)
-                 }
-                 .buttonStyle(.borderless)
-                 */
-                Section() {
-                    NavigationLink(recipe.recipeCategory == "" ? "Category" : "Category: \(recipe.recipeCategory)") {
-                        CategoryPickerView(title: "Category", searchSuggestions: [], selection: $recipe.recipeCategory)
+                Form {
+                    TextField("Title", text: $recipe.name)
+                    Section {
+                        TextEditor(text: $recipe.description)
+                    } header: {
+                        Text("Description")
                     }
-                    NavigationLink("Keywords") {
-                        KeywordPickerView(
-                            title: "Keywords",
-                            searchSuggestions: [
-                                Keyword("Hauptspeisen"),
-                                Keyword("Lecker"),
-                                Keyword("Trinken"),
-                                Keyword("Essen"),
-                                Keyword("Nachspeisen"),
-                                Keyword("Futter"),
-                                Keyword("Apfel"),
-                                Keyword("test")
-                            ],
-                            selection: $keywords
-                        )
-                    }
-                } header: {
-                    Text("Discoverability")
-                } footer: {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(keywords, id: \.self) { keyword in
-                                Text(keyword)
+                    /*
+                     PhotosPicker(selection: $image, matching: .images, photoLibrary: .shared()) {
+                     Image(systemName: "photo")
+                     .symbolRenderingMode(.multicolor)
+                     }
+                     .buttonStyle(.borderless)
+                     */
+                    Section() {
+                        NavigationLink(recipe.recipeCategory == "" ? "Category" : "Category: \(recipe.recipeCategory)") {
+                            CategoryPickerView(
+                                title: "Category",
+                                searchSuggestions: viewModel.categories.map({ category in
+                                    category.name == "*" ? "Other" : category.name
+                                }),
+                                selection: $recipe.recipeCategory)
+                        }
+                        NavigationLink("Keywords") {
+                            KeywordPickerView(
+                                title: "Keywords",
+                                searchSuggestions: keywordSuggestions,
+                                selection: $keywords
+                            )
+                        }
+                    } header: {
+                        Text("Discoverability")
+                    } footer: {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(keywords, id: \.self) { keyword in
+                                    Text(keyword)
+                                }
                             }
                         }
                     }
-                }
-                
-                Section() {
-                    Picker("Yield/Portions:", selection: $recipe.recipeYield) {
-                        ForEach(0..<99, id: \.self) { i in
-                            Text("\(i)").tag(i)
+                    
+                    Section() {
+                        Picker("Yield/Portions:", selection: $recipe.recipeYield) {
+                            ForEach(0..<99, id: \.self) { i in
+                                Text("\(i)").tag(i)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        DatePicker("Prep time:", selection: $times[0], displayedComponents: .hourAndMinute)
+                        DatePicker("Cook time:", selection: $times[1], displayedComponents: .hourAndMinute)
+                        DatePicker("Total time:", selection: $times[2], displayedComponents: .hourAndMinute)
                     }
-                    .pickerStyle(.menu)
-                    DatePicker("Prep time:", selection: $times[0], displayedComponents: .hourAndMinute)
-                    DatePicker("Cook time:", selection: $times[1], displayedComponents: .hourAndMinute)
-                    DatePicker("Total time:", selection: $times[2], displayedComponents: .hourAndMinute)
+                    
+                    EditableListSection(title: String(localized: "Ingredients"), items: $recipe.recipeIngredient)
+                    EditableListSection(title: String(localized: "Tools"), items: $recipe.tool)
+                    EditableListSection(title: String(localized: "Instructions"), items: $recipe.recipeInstructions)
                 }
-                
-                EditableListSection(title: "Ingredients", items: $recipe.recipeIngredient)
-                EditableListSection(title: "Tools", items: $recipe.tool)
-                EditableListSection(title: "Instructions", items: $recipe.recipeInstructions)
             }
+        }
+        .task {
+            self.keywordSuggestions = await viewModel.getKeywords()
         }
         .onAppear {
             if uploadNew { return }
@@ -301,6 +303,9 @@ struct RecipeEditView: View {
             ]
         )
         sendRequest(request)
+        if let recipeIdInt = Int(recipe.id) {
+            viewModel.deleteRecipe(withId: recipeIdInt, categoryName: recipe.recipeCategory)
+        }
         dismissEditView()
     }
     

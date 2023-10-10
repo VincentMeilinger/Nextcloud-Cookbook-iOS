@@ -40,11 +40,18 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var language: String {
+        didSet {
+            UserDefaults.standard.set(language, forKey: "language")
+        }
+    }
+    
     init() {
         self.username = UserDefaults.standard.object(forKey: "username") as? String ?? ""
         self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
+        self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.EN.rawValue
     }
 }

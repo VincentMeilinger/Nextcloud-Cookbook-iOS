@@ -31,10 +31,6 @@ struct CategoryPickerView: View {
                         Spacer()
                     }
                     .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(Color("backgroundHighlight"))
-                    )
                     .onTapGesture {
                         selection = searchText
                     }
@@ -47,10 +43,6 @@ struct CategoryPickerView: View {
                         Text(suggestion)
                     }
                     .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(Color("backgroundHighlight"))
-                    )
                     .onTapGesture {
                         selection = suggestion
                     }
