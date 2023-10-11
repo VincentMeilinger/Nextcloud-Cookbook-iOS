@@ -11,13 +11,14 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 - [x] Load recipes from nextcloud instance
 - [x] Offline recipes
 - [ ] Share recipes
+- [ ] Import recipes
 - [x] Recipe search function
 - [x] Add new recipes
 - [x] Edit recipes
 - [x] Delete recipes
 - [x] Login with Nextcloud account using two factor authentication
 - [x] Login with Nextcloud account using app-tokens
-- [ ] Support for multiple languages
+- [x] Support for multiple languages
 - [ ] Theming (optional)
 - [ ] MacOS support: (This is almost done. ToDos: UIImage not supported, app layout could be adjusted)
 
