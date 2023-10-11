@@ -33,7 +33,7 @@ struct WelcomeTab: View {
                     .resizable()
                     .frame(width: 120, height: 120)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                Text("Tank you for downloading")
+                Text("Thank you for downloading")
                     .font(.headline)
                 Text("Cookbook Client")
                     .font(.largeTitle)
