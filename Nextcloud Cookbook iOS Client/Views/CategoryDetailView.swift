@@ -14,7 +14,8 @@ struct CategoryDetailView: View {
     @State var categoryName: String
     @State var searchText: String = ""
     @ObservedObject var viewModel: MainViewModel
-        
+    @Binding var showEditView: Bool
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
@@ -33,6 +34,15 @@ struct CategoryDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Button {
+                        print("Add new recipe")
+                        showEditView = true
+                    } label: {
+                        HStack {
+                            Text("Add new recipe")
+                            Image(systemName: "plus.circle.fill")
+                        }
+                    }
                     Button {
                         print("Downloading all recipes in category \(categoryName) ...")
                         downloadRecipes()

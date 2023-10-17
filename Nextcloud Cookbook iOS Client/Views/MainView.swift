@@ -63,14 +63,13 @@ struct MainView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        print("Create recipe")
+                        print("Add new recipe")
                         showEditView = true
                     } label: {
                         HStack {
                             Image(systemName: "plus.circle.fill")
                         }
                     }
-                    
                 }
             }
         } detail: {
@@ -78,7 +77,8 @@ struct MainView: View {
                 if let category = selectedCategory {
                     CategoryDetailView(
                         categoryName: category.name,
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        showEditView: $showEditView
                     )
                     .id(category.id) // Workaround: This is needed to update the detail view when the selection changes
                 }

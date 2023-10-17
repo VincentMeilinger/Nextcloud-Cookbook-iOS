@@ -161,6 +161,22 @@
         }
       }
     },
+    "Add new recipe" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Rezept"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva Receta"
+          }
+        }
+      }
+    },
     "An unknown error occured." : {
       "localizations" : {
         "de" : {
