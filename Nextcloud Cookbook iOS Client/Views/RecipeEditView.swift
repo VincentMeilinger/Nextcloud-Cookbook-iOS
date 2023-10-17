@@ -62,7 +62,9 @@ struct RecipeEditView: View {
     @State var uploadNew: Bool = true
 
     @State private var image: PhotosPickerItem? = nil
-    @State private var times = [Date.zero, Date.zero, Date.zero]
+    @StateObject private var prepDuration: Duration = Duration()
+    @StateObject private var cookDuration: Duration = Duration()
+    @StateObject private var totalDuration: Duration = Duration()
     @State private var searchText: String = ""
     @State private var keywords: [String] = []
     @State private var keywordSuggestions: [String] = []
@@ -112,7 +114,7 @@ struct RecipeEditView: View {
                     }
                 }.padding()
                 HStack {
-                    Text(recipe.name == "" ? String(localized: "New recipe") : recipe.name)
+                    Text(recipe.name == "" ? LocalizedStringKey("New recipe") : LocalizedStringKey(recipe.name))
                         .font(.title)
                         .bold()
                         .padding()
@@ -148,8 +150,6 @@ struct RecipeEditView: View {
                                 selection: $keywords
                             )
                         }
-                    } header: {
-                        Text("Discoverability")
                     } footer: {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
@@ -161,20 +161,20 @@ struct RecipeEditView: View {
                     }
                     
                     Section() {
-                        Picker("Yield/Portions:", selection: $recipe.recipeYield) {
+                        Picker("Servings:", selection: $recipe.recipeYield) {
                             ForEach(0..<99, id: \.self) { i in
                                 Text("\(i)").tag(i)
                             }
                         }
                         .pickerStyle(.menu)
-                        DatePicker("Prep time:", selection: $times[0], displayedComponents: .hourAndMinute)
-                        DatePicker("Cook time:", selection: $times[1], displayedComponents: .hourAndMinute)
-                        DatePicker("Total time:", selection: $times[2], displayedComponents: .hourAndMinute)
+                        DurationPicker(title: LocalizedStringKey("Preparation duration:"), duration: prepDuration)
+                        DurationPicker(title: LocalizedStringKey("Cooking duration:"), duration: cookDuration)
+                        DurationPicker(title: LocalizedStringKey("Total duration:"), duration: totalDuration)
                     }
                     
-                    EditableListSection(title: String(localized: "Ingredients"), items: $recipe.recipeIngredient)
-                    EditableListSection(title: String(localized: "Tools"), items: $recipe.tool)
-                    EditableListSection(title: String(localized: "Instructions"), items: $recipe.recipeInstructions)
+                    EditableListSection(title: LocalizedStringKey("Ingredients"), items: $recipe.recipeIngredient)
+                    EditableListSection(title: LocalizedStringKey("Tools"), items: $recipe.tool)
+                    EditableListSection(title: LocalizedStringKey("Instructions"), items: $recipe.recipeInstructions)
                 }
             }
         }
@@ -184,16 +184,15 @@ struct RecipeEditView: View {
         .onAppear {
             if uploadNew { return }
             if let prepTime = recipe.prepTime {
-                self.times[0] = Date.fromPTRepresentation(prepTime)
+                prepDuration.initFromPT(prepTime)
             }
             if let cookTime = recipe.cookTime {
-                self.times[1] = Date.fromPTRepresentation(cookTime)
+                cookDuration.initFromPT(cookTime)
             }
             if let totalTime = recipe.totalTime {
-                self.times[2] = Date.fromPTRepresentation(totalTime)
+                totalDuration.initFromPT(totalTime)
             }
-            
-            for keyword in recipe.keywords.components(separatedBy: ",") {
+            for keyword in self.recipe.keywords.components(separatedBy: ",") {
                 keywords.append(keyword)
             }
         }
@@ -213,15 +212,10 @@ struct RecipeEditView: View {
     }
     
     func createRecipe() {
-        if let date = Date.toPTRepresentation(date: times[0]) {
-            self.recipe.prepTime = date
-        }
-        if let date = Date.toPTRepresentation(date: times[1]) {
-            self.recipe.cookTime = date
-        }
-        if let date = Date.toPTRepresentation(date: times[2]) {
-            self.recipe.totalTime = date
-        }
+        self.recipe.prepTime = prepDuration.format()
+        self.recipe.cookTime = cookDuration.format()
+        self.recipe.totalTime = totalDuration.format()
+        
         if !self.keywords.isEmpty {
             self.recipe.keywords = self.keywords.joined(separator: ",")
         }
@@ -339,7 +333,7 @@ struct RecipeEditView: View {
 
 
 struct EditableListSection: View {
-    @State var title: String
+    @State var title: LocalizedStringKey
     @Binding var items: [String]
         
     var body: some View {
@@ -383,24 +377,75 @@ struct EditableListSection: View {
 }
 
 
-struct TimePicker: View {
-    @Binding var hours: Int
-    @Binding var minutes: Int
+struct DurationPicker: View {
+    @State var title: LocalizedStringKey
+    @ObservedObject var duration: Duration
 
     var body: some View {
         HStack {
-            Picker("", selection: $hours) {
-                ForEach(0..<99, id: \.self) { i in
-                    Text("\(i) hours").tag(i)
-                }
-            }.pickerStyle(.wheel)
-            Picker("", selection: $minutes) {
-                ForEach(0..<60, id: \.self) { i in
-                    Text("\(i) min").tag(i)
-                }
-            }.pickerStyle(.wheel)
+            Text(title)
+            Spacer()
+            TextField("00", text: $duration.hourComponent)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(.roundedBorder)
+                .multilineTextAlignment(.trailing)
+                .frame(maxWidth: 40)
+            Text(":")
+            TextField("00", text: $duration.minuteComponent)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(.roundedBorder)
+                .frame(maxWidth: 40)
         }
-        .padding(.horizontal)
+        .frame(maxHeight: 40)
+        .clipped()
     }
 }
 
+class Duration: ObservableObject {
+    @Published var minuteComponent: String = "00" {
+        didSet {
+            if minuteComponent.count > 2 {
+                minuteComponent = oldValue
+            } else if minuteComponent.count == 1 {
+                minuteComponent = "0\(minuteComponent)"
+            } else if minuteComponent.count == 0 {
+                minuteComponent = "00"
+            }
+            let filtered = minuteComponent.filter { $0.isNumber }
+            if minuteComponent != filtered {
+                minuteComponent = filtered
+            }
+        }
+    }
+    
+    @Published var hourComponent: String = "00" {
+        didSet {
+            if hourComponent.count > 2 {
+                hourComponent = oldValue
+            } else if hourComponent.count == 1 {
+                hourComponent = "0\(hourComponent)"
+            } else if hourComponent.count == 0 {
+                hourComponent = "00"
+            }
+            let filtered = hourComponent.filter { $0.isNumber }
+            if hourComponent != filtered {
+                hourComponent = filtered
+            }
+        }
+    }
+    
+    func initFromPT(_ PTRepresentation: String) {
+        let hourRegex = /([0-9]{1,2})H/
+        let minuteRegex = /([0-9]{1,2})M/
+        if let match = PTRepresentation.firstMatch(of: hourRegex) {
+            self.hourComponent = String(match.1)
+        }
+        if let match = PTRepresentation.firstMatch(of: minuteRegex) {
+            self.minuteComponent = String(match.1)
+        }
+    }
+    
+    func format() -> String {
+        return "PT\(hourComponent)H\(minuteComponent)M00S"
+    }
+}

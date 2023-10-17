@@ -32,18 +32,20 @@ fileprivate enum SettingsAlert {
 
 enum SupportedLanguage: String, Codable {
     case EN = "en",
-         DE = "de"
-    
+         DE = "de",
+         ES = "es"
     func descriptor() -> String {
         switch self {
         case .EN:
             return "English"
         case .DE:
             return "Deutsch"
+        case .ES:
+            return "Español"
         }
     }
     
-    static let allValues = [EN, DE]
+    static let allValues = [EN, DE, ES]
 }
 
 struct SettingsView: View {
