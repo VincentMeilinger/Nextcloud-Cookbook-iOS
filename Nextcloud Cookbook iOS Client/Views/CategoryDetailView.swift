@@ -28,7 +28,7 @@ struct CategoryDetailView: View {
             }
         }
         .navigationDestination(for: Recipe.self) { recipe in
-            RecipeDetailView(viewModel: viewModel, recipe: recipe)//.id(recipe.recipe_id)
+            RecipeDetailView(viewModel: viewModel, recipe: recipe)
         }
         .navigationTitle(categoryName == "*" ? "Other" : categoryName)
         .toolbar {

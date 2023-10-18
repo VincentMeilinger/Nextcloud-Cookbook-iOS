@@ -100,14 +100,14 @@ struct RecipeDetailView: View {
 }
 
 
-struct RecipeDurationSection: View {
+fileprivate struct RecipeDurationSection: View {
     @State var recipeDetail: RecipeDetail
     
     var body: some View {
         HStack(alignment: .center) {
             if let prepTime = recipeDetail.prepTime {
                 VStack {
-                    SecondaryLabel(text: String(localized: "Prep time"))
+                    SecondaryLabel(text: LocalizedStringKey("Preparation"))
                     Text(DateFormatter.formatDate(duration: prepTime))
                         .lineLimit(1)
                 }.padding()
@@ -115,7 +115,7 @@ struct RecipeDurationSection: View {
             
             if let cookTime = recipeDetail.cookTime {
                 VStack {
-                    SecondaryLabel(text: String(localized: "Cook time"))
+                    SecondaryLabel(text: LocalizedStringKey("Cooking"))
                     Text(DateFormatter.formatDate(duration: cookTime))
                         .lineLimit(1)
                 }.padding()
@@ -123,7 +123,7 @@ struct RecipeDurationSection: View {
             
             if let totalTime = recipeDetail.totalTime {
                 VStack {
-                    SecondaryLabel(text: String(localized: "Total time"))
+                    SecondaryLabel(text: LocalizedStringKey("Total time"))
                     Text(DateFormatter.formatDate(duration: totalTime))
                         .lineLimit(1)
                 }.padding()
@@ -133,18 +133,19 @@ struct RecipeDurationSection: View {
 }
 
 
-struct RecipeIngredientSection: View {
+
+fileprivate struct RecipeIngredientSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
             Divider()
             HStack {
                 if recipeDetail.recipeYield == 0 {
-                    SecondaryLabel(text: String(localized: "Ingredients"))
+                    SecondaryLabel(text: LocalizedStringKey("Ingredients"))
                 } else if recipeDetail.recipeYield == 1 {
-                    SecondaryLabel(text: String(localized: "Ingredients per serving"))
+                    SecondaryLabel(text: LocalizedStringKey("Ingredients per serving"))
                 } else {
-                    SecondaryLabel(text: String(localized: "Ingredients for \(recipeDetail.recipeYield) servings"))
+                    SecondaryLabel(text: LocalizedStringKey("Ingredients for \(recipeDetail.recipeYield) servings"))
                 }
                 Spacer()
             }
@@ -156,7 +157,9 @@ struct RecipeIngredientSection: View {
     }
 }
 
-struct IngredientListItem: View {
+
+
+fileprivate struct IngredientListItem: View {
     @State var ingredient: String
     @State var isSelected: Bool = false
     
@@ -180,13 +183,15 @@ struct IngredientListItem: View {
     }
 }
 
-struct RecipeToolSection: View {
+
+
+fileprivate struct RecipeToolSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
             Divider()
             HStack {
-                SecondaryLabel(text: String(localized: "Tools"))
+                SecondaryLabel(text: LocalizedStringKey("Tools"))
                 Spacer()
             }
             ForEach(recipeDetail.tool, id: \.self) { tool in
@@ -201,13 +206,15 @@ struct RecipeToolSection: View {
     }
 }
 
-struct RecipeInstructionSection: View {
+
+
+fileprivate struct RecipeInstructionSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
             Divider()
             HStack {
-                SecondaryLabel(text: String(localized: "Instructions"))
+                SecondaryLabel(text: LocalizedStringKey("Instructions"))
                 Spacer()
             }
             ForEach(0..<recipeDetail.recipeInstructions.count) { ix in
@@ -222,9 +229,8 @@ struct RecipeInstructionSection: View {
 
 
 
-
-struct SecondaryLabel: View {
-    let text: String
+fileprivate struct SecondaryLabel: View {
+    let text: LocalizedStringKey
     var body: some View {
         Text(text)
             .foregroundColor(.secondary)

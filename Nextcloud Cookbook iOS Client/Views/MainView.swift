@@ -100,13 +100,10 @@ struct MainView: View {
                     self.selectedCategory = cat
                 }
             }
-            
         }
         .refreshable {
             await viewModel.loadCategoryList(needsUpdate: true)
         }
-        
-        // TODO: SET DEFAULT CATEGORY
     }
 }
 

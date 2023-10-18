@@ -10,50 +10,6 @@ import SwiftUI
 import PhotosUI
 
 
-fileprivate enum ErrorMessages: Error {
-    
-    case NO_TITLE,
-         DUPLICATE,
-         UPLOAD_ERROR,
-         CONFIRM_DELETE,
-         GENERIC,
-         CUSTOM(title: LocalizedStringKey, description: LocalizedStringKey)
-    
-    var localizedDescription: LocalizedStringKey {
-        switch self {
-        case .NO_TITLE:
-            return "Please enter a recipe name."
-        case .DUPLICATE:
-            return "A recipe with that name already exists."
-        case .UPLOAD_ERROR:
-            return "Unable to upload your recipe. Please check your internet connection."
-        case .CONFIRM_DELETE:
-            return "This action is not reversible!"
-        case .CUSTOM(title: _, description: let description):
-            return description
-        default:
-            return "An unknown error occured."
-        }
-    }
-    
-    var localizedTitle: LocalizedStringKey {
-        switch self {
-        case .NO_TITLE:
-            return "Missing recipe name."
-        case .DUPLICATE:
-            return "Duplicate recipe."
-        case .UPLOAD_ERROR:
-            return "Network error."
-        case .CONFIRM_DELETE:
-            return "Delete recipe?"
-        case .CUSTOM(title: let title, description: _):
-            return title
-        default:
-            return "Error."
-        }
-    }
-}
-
 
 struct RecipeEditView: View {
     @ObservedObject var viewModel: MainViewModel
@@ -332,7 +288,7 @@ struct RecipeEditView: View {
 
 
 
-struct EditableListSection: View {
+fileprivate struct EditableListSection: View {
     @State var title: LocalizedStringKey
     @Binding var items: [String]
         
@@ -377,7 +333,7 @@ struct EditableListSection: View {
 }
 
 
-struct DurationPicker: View {
+fileprivate struct DurationPicker: View {
     @State var title: LocalizedStringKey
     @ObservedObject var duration: Duration
 
@@ -401,7 +357,9 @@ struct DurationPicker: View {
     }
 }
 
-class Duration: ObservableObject {
+
+
+fileprivate class Duration: ObservableObject {
     @Published var minuteComponent: String = "00" {
         didSet {
             if minuteComponent.count > 2 {
@@ -447,5 +405,51 @@ class Duration: ObservableObject {
     
     func format() -> String {
         return "PT\(hourComponent)H\(minuteComponent)M00S"
+    }
+}
+
+
+
+fileprivate enum ErrorMessages: Error {
+    
+    case NO_TITLE,
+         DUPLICATE,
+         UPLOAD_ERROR,
+         CONFIRM_DELETE,
+         GENERIC,
+         CUSTOM(title: LocalizedStringKey, description: LocalizedStringKey)
+    
+    var localizedDescription: LocalizedStringKey {
+        switch self {
+        case .NO_TITLE:
+            return "Please enter a recipe name."
+        case .DUPLICATE:
+            return "A recipe with that name already exists."
+        case .UPLOAD_ERROR:
+            return "Unable to upload your recipe. Please check your internet connection."
+        case .CONFIRM_DELETE:
+            return "This action is not reversible!"
+        case .CUSTOM(title: _, description: let description):
+            return description
+        default:
+            return "An unknown error occured."
+        }
+    }
+    
+    var localizedTitle: LocalizedStringKey {
+        switch self {
+        case .NO_TITLE:
+            return "Missing recipe name."
+        case .DUPLICATE:
+            return "Duplicate recipe."
+        case .UPLOAD_ERROR:
+            return "Network error."
+        case .CONFIRM_DELETE:
+            return "Delete recipe?"
+        case .CUSTOM(title: let title, description: _):
+            return title
+        default:
+            return "Error."
+        }
     }
 }
