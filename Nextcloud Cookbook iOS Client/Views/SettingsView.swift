@@ -8,45 +8,7 @@
 import Foundation
 import SwiftUI
 
-fileprivate enum SettingsAlert {
-    case LOG_OUT,
-         DELETE_CACHE,
-         NONE
-    
-    func getTitle() -> String {
-        switch self {
-        case .LOG_OUT: return "Log out"
-        case .DELETE_CACHE: return "Delete local data"
-        default: return "Please confirm your action."
-        }
-    }
-    
-    func getMessage() -> String {
-        switch self {
-        case .LOG_OUT: return "Are you sure that you want to log out of your account?"
-        case .DELETE_CACHE: return "Are you sure that you want to delete the downloaded recipes? This action will not affect any recipes stored on your server."
-        default: return ""
-        }
-    }
-}
 
-enum SupportedLanguage: String, Codable {
-    case EN = "en",
-         DE = "de",
-         ES = "es"
-    func descriptor() -> String {
-        switch self {
-        case .EN:
-            return "English"
-        case .DE:
-            return "Deutsch"
-        case .ES:
-            return "Español"
-        }
-    }
-    
-    static let allValues = [EN, DE, ES]
-}
 
 struct SettingsView: View {
     @ObservedObject var userSettings: UserSettings
@@ -58,15 +20,13 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
+                /*Toggle(isOn: $userSettings.downloadRecipes) {
+                    Text("Always download new recipes")
+                }*/
                 Picker("Select a default cookbook", selection: $userSettings.defaultCategory) {
                     Text("None").tag("None")
                     ForEach(viewModel.categories, id: \.name) { category in
                         Text(category.name == "*" ? "Other" : category.name).tag(category)
-                    }
-                }
-                Picker("Language", selection: $userSettings.language) {
-                    ForEach(SupportedLanguage.allValues, id: \.self) { lang in
-                        Text(lang.descriptor()).tag(lang.rawValue)
                     }
                 }
             } header: {
@@ -74,6 +34,17 @@ struct SettingsView: View {
             } footer: {
                 Text("The selected cookbook will open on app launch by default.")
             }
+            
+            Section {
+                Picker("Language", selection: $userSettings.language) {
+                    ForEach(SupportedLanguage.allValues, id: \.self) { lang in
+                        Text(lang.descriptor()).tag(lang.rawValue)
+                    }
+                }
+            } footer: {
+                Text("If \'Same as Device\' is selected and your device language is not supported yet, this option will default to english.")
+            }
+            
             
             Section {
                 Link("Visit the GitHub page", destination: URL(string: "https://github.com/VincentMeilinger/Nextcloud-Cookbook-iOS")!)
@@ -142,3 +113,24 @@ struct SettingsView: View {
 
 
 
+fileprivate enum SettingsAlert {
+    case LOG_OUT,
+         DELETE_CACHE,
+         NONE
+    
+    func getTitle() -> String {
+        switch self {
+        case .LOG_OUT: return "Log out"
+        case .DELETE_CACHE: return "Delete local data"
+        default: return "Please confirm your action."
+        }
+    }
+    
+    func getMessage() -> String {
+        switch self {
+        case .LOG_OUT: return "Are you sure that you want to log out of your account?"
+        case .DELETE_CACHE: return "Are you sure that you want to delete the downloaded recipes? This action will not affect any recipes stored on your server."
+        default: return ""
+        }
+    }
+}

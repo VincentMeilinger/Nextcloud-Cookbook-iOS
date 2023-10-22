@@ -1,5 +1,5 @@
 //
-//  UserDefaults.swift
+//  UserSettings.swift
 //  Nextcloud Cookbook iOS Client
 //
 //  Created by Vincent Meilinger on 15.09.23.
@@ -46,12 +46,19 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var downloadRecipes: Bool {
+        didSet {
+            UserDefaults.standard.set(downloadRecipes, forKey: "downloadRecipes")
+        }
+    }
+    
     init() {
         self.username = UserDefaults.standard.object(forKey: "username") as? String ?? ""
         self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
-        self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.EN.rawValue
+        self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue
+        self.downloadRecipes = UserDefaults.standard.object(forKey: "downloadRecipes") as? Bool ?? false
     }
 }

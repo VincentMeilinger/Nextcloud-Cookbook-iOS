@@ -177,6 +177,22 @@
         }
       }
     },
+    "All" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas"
+          }
+        }
+      }
+    },
     "An unknown error occured." : {
       "localizations" : {
         "de" : {
@@ -257,18 +273,18 @@
         }
       }
     },
-    "Cook time" : {
+    "Connected to server." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kochen"
+            "value" : "Verbindung mit dem Server hergestellt."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duración de cocción"
+            "value" : "Conexión al servidor establecida."
           }
         }
       }
@@ -301,6 +317,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Libros de cocina"
+          }
+        }
+      }
+    },
+    "Cooking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kochen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cocción"
           }
         }
       }
@@ -545,6 +577,22 @@
         }
       }
     },
+    "If 'Same as Device' is selected and your device language is not supported yet, this option will default to english." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn \"Systemsprache\" ausgewählt ist und Ihre Systemsprache noch nicht unterstützt wird, wird standardmäßig Englisch verwendet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si se selecciona 'Idioma del sistema' y el idioma de su dispositivo no es compatible aún, esta opción se establecerá por defecto en inglés."
+          }
+        }
+      }
+    },
     "If you are interested in contributing to this project or simply wish to review its source code, we encourage you to visit the GitHub repository for this application." : {
       "localizations" : {
         "de" : {
@@ -685,6 +733,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cerrar sesión"
+          }
+        }
+      }
+    },
+    "Login failed." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login fehlgeschlagen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio de sesión fallido"
           }
         }
       }
@@ -833,6 +897,22 @@
         }
       }
     },
+    "Please check your credentials and internet connection." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte überprüfen Sie Ihre Anmeldedaten oder Ihre Internetverbindung."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, comprueba tus credenciales de inicio de sesión y la conexión a Internet."
+          }
+        }
+      }
+    },
     "Please enter a recipe name." : {
       "localizations" : {
         "de" : {
@@ -849,7 +929,7 @@
         }
       }
     },
-    "Prep time" : {
+    "Preparation" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -860,7 +940,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duración de preparación"
+            "value" : "Preparación"
           }
         }
       }
@@ -877,6 +957,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duración de preparación:"
+          }
+        }
+      }
+    },
+    "Same as Device" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemsprache"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma del sistema"
+          }
+        }
+      }
+    },
+    "Search recipe" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept suchen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar receta"
           }
         }
       }
@@ -1117,6 +1229,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duración total"
+          }
+        }
+      }
+    },
+    "Unable to connect to server." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung mit dem Server fehlgeschlagen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede conectar al servidor."
           }
         }
       }

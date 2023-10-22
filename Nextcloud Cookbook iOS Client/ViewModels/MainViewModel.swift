@@ -64,6 +64,19 @@ import SwiftUI
         
     }
     
+    func getAllRecipes() async -> [Recipe] {
+        var allRecipes: [Recipe] = []
+        for category in categories {
+            await loadRecipeList(categoryName: category.name)
+            if let recipeArray = recipes[category.name] {
+                allRecipes.append(contentsOf: recipeArray)
+            }
+        }
+        return allRecipes.sorted(by: {
+            $0.name < $1.name
+        })
+    }
+    
     /// Try to load the recipe details from cache. If not found, try to load from store or the server.
     /// - Parameters
     ///     - recipeId: The id of the recipe.
@@ -204,6 +217,22 @@ import SwiftUI
         })
         recipeDetails.removeValue(forKey: id)
     }
+    
+    func checkServerConnection() async -> Bool {
+        guard let apiController = apiController else { return false }
+        let req = RequestWrapper.customRequest(
+            method: .GET,
+            path: .CONFIG,
+            headerFields: [
+                .ocsRequest(value: true),
+                .accept(value: .JSON)
+            ]
+        )
+        if let error = await apiController.sendRequest(req) {
+            return false
+        }
+        return true
+    }
 }
 
 
@@ -225,7 +254,7 @@ extension MainViewModel {
                 }
                 return data
             }
-        }catch {
+        } catch {
            print("An unknown error occurred.")
         }
         return nil

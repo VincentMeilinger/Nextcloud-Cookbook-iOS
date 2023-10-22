@@ -16,11 +16,24 @@ struct RecipeCardView: View {
     
     var body: some View {
         HStack {
-            Image(uiImage: recipeThumb ?? UIImage(named: "cookbook-recipe")!)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+            if let recipeThumb = recipeThumb {
+                Image(uiImage: recipeThumb)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 80, height: 80)
+                    .clipped()
+            } else {
+                ZStack {
+                    Image(systemName: "square.text.square")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundStyle(Color.white)
+                        .padding(10)
+                        
+                }
+                .background(Color("ncblue"))
                 .frame(width: 80, height: 80)
-                .clipped()
+            }
             Text(recipe.name)
                 .font(.headline)
                 

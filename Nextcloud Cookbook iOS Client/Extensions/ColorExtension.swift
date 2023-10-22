@@ -15,4 +15,7 @@ extension Color {
     public static var backgroundHighlight: Color {
         return Color("backgroundHighlight")
     }
+    public static var background: Color {
+        return Color(UIColor.systemBackground)
+    }
 }
