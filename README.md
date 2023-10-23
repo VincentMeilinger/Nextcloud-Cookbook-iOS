@@ -20,7 +20,7 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 - [x] Login with Nextcloud account using app-tokens
 - [x] Support for multiple languages
 - [ ] Theming (optional)
-- [ ] MacOS support: (This is almost done. ToDos: UIImage not supported, app layout could be adjusted)
+- [ ] MacOS support
 
 ## Screenshots
 
