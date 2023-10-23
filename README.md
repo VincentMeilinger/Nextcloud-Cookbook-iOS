@@ -27,6 +27,9 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 ... will follow as soon as there won't be any major user interface changes anymore.
 
 ## Supported Languages
+
+If you wish to see additional languages supported, please don't hesitate to open an Issue. Any help with translation is appreciated.
+
 - [x] English
 - [x] German
 - [x] Spanish
