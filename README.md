@@ -26,6 +26,12 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 
 ... will follow as soon as there won't be any major user interface changes anymore.
 
+## Supported Languages
+- [x] English
+- [x] German
+- [x] Spanish
+- [ ] French
+
 ## Further information
 
 I plan on uploading the app to the App Store for free, but there are still some bugs to fix before that. This app is a hobby project, which is why development progress may be slower than desired. If you are interested in an iOS native CookBook client, you are welcome to contribute! In case you discover any bugs or encounter problems, feel free to point them out by creating an Issue.
