@@ -51,7 +51,6 @@ struct MainView: View {
                     }
                 }
             }
-            
             .navigationTitle("Cookbooks")
             .navigationDestination(isPresented: $showSettingsView) {
                 SettingsView(userSettings: userSettings, viewModel: viewModel)

@@ -31,6 +31,8 @@ extension Recipe: Identifiable, Hashable {
     var id: String { name }
 }
 
+
+
 struct RecipeDetail: Codable {
     var name: String
     var keywords: String
@@ -48,8 +50,9 @@ struct RecipeDetail: Codable {
     var tool: [String]
     var recipeIngredient: [String]
     var recipeInstructions: [String]
+    var nutrition: [String:String]
     
-    init(name: String, keywords: String, dateCreated: String, dateModified: String, imageUrl: String, id: String, prepTime: String? = nil, cookTime: String? = nil, totalTime: String? = nil, description: String, url: String, recipeYield: Int, recipeCategory: String, tool: [String], recipeIngredient: [String], recipeInstructions: [String]) {
+    init(name: String, keywords: String, dateCreated: String, dateModified: String, imageUrl: String, id: String, prepTime: String? = nil, cookTime: String? = nil, totalTime: String? = nil, description: String, url: String, recipeYield: Int, recipeCategory: String, tool: [String], recipeIngredient: [String], recipeInstructions: [String], nutrition: [String:String]) {
         self.name = name
         self.keywords = keywords
         self.dateCreated = dateCreated
@@ -66,6 +69,7 @@ struct RecipeDetail: Codable {
         self.tool = tool
         self.recipeIngredient = recipeIngredient
         self.recipeInstructions = recipeInstructions
+        self.nutrition = nutrition
     }
     
     init() {
@@ -85,35 +89,59 @@ struct RecipeDetail: Codable {
         tool = []
         recipeIngredient = []
         recipeInstructions = []
-    }
-   
-    static func error() -> RecipeDetail {
-        return RecipeDetail(
-            name: "Error: Unable to load recipe.",
-            keywords: "",
-            dateCreated: "",
-            dateModified: "",
-            imageUrl: "", 
-            id: "",
-            prepTime: "",
-            cookTime: "",
-            totalTime: "",
-            description: "",
-            url: "",
-            recipeYield: 0,
-            recipeCategory: "",
-            tool: [],
-            recipeIngredient: [],
-            recipeInstructions: []
-        )
+        nutrition = [:]
     }
 }
+
+extension RecipeDetail {
+    static var error: RecipeDetail {
+         return RecipeDetail(
+             name: "Error: Unable to load recipe.",
+             keywords: "",
+             dateCreated: "",
+             dateModified: "",
+             imageUrl: "",
+             id: "",
+             prepTime: "",
+             cookTime: "",
+             totalTime: "",
+             description: "",
+             url: "",
+             recipeYield: 0,
+             recipeCategory: "",
+             tool: [],
+             recipeIngredient: [],
+             recipeInstructions: [],
+             nutrition: [:]
+         )
+     }
+    
+    func getNutritionList() -> [String]? {
+        var stringList: [String] = []
+        if let value = nutrition["calories"] { stringList.append("Calories: \(value)") }
+        if let value = nutrition["carbohydrateContent"] { stringList.append("Carbohydrates: \(value)") }
+        if let value = nutrition["cholesterolContent"] { stringList.append("Cholesterol: \(value)") }
+        if let value = nutrition["fatContent"] { stringList.append("Fat: \(value)") }
+        if let value = nutrition["saturatedFatContent"] { stringList.append("Saturated fat: \(value)") }
+        if let value = nutrition["unsaturatedFatContent"] { stringList.append("Unsaturated fat: \(value)") }
+        if let value = nutrition["transFatContent"] { stringList.append("Trans fat: \(value)") }
+        if let value = nutrition["fiberContent"] { stringList.append("Fibers: \(value)") }
+        if let value = nutrition["proteinContent"] { stringList.append("Protein: \(value)") }
+        if let value = nutrition["sodiumContent"] { stringList.append("Sodium: \(value)") }
+        if let value = nutrition["sugarContent"] { stringList.append("Sugar: \(value)") }
+        return stringList.isEmpty ? nil : stringList
+    }
+}
+
+
 
 struct RecipeImage {
     var imageExists: Bool = true
     var thumb: UIImage?
     var full: UIImage?
 }
+
+
 
 struct RecipeKeyword: Codable {
     let name: String

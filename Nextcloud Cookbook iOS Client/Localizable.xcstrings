@@ -833,6 +833,12 @@
         }
       }
     },
+    "No keywords." : {
+
+    },
+    "No nutritional information." : {
+
+    },
     "None" : {
       "localizations" : {
         "de" : {
@@ -848,6 +854,12 @@
           }
         }
       }
+    },
+    "Nutrition" : {
+
+    },
+    "Nutrition (%@)" : {
+
     },
     "Ok" : {
       "localizations" : {

@@ -17,6 +17,8 @@ struct RecipeDetailView: View {
     @State var showTitle: Bool = false
     @State var isDownloaded: Bool? = nil
     @State private var presentEditView: Bool = false
+    @State private var presentNutritionPopover: Bool = false
+    @State private var presentKeywordPopover: Bool = false
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -31,7 +33,6 @@ struct RecipeDetailView: View {
                 
                 if let recipeDetail = recipeDetail {
                     LazyVStack (alignment: .leading) {
-                        Divider()
                         HStack {
                             Text(recipeDetail.name)
                                 .font(.title)
@@ -51,18 +52,28 @@ struct RecipeDetailView: View {
                                     .padding()
                             }
                         }
+                        
+                        if recipeDetail.description != "" {
+                            Text(recipeDetail.description)
+                                .padding([.bottom, .horizontal])
+                        }
+                        
                         Divider()
+                        
                         RecipeDurationSection(recipeDetail: recipeDetail)
+                        
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
                             if(!recipeDetail.recipeIngredient.isEmpty) {
                                 RecipeIngredientSection(recipeDetail: recipeDetail)
                             }
                             if(!recipeDetail.tool.isEmpty) {
-                                RecipeToolSection(recipeDetail: recipeDetail)
+                                RecipeListSection(title: "Tools", list: recipeDetail.tool)
                             }
                             if(!recipeDetail.recipeInstructions.isEmpty) {
                                 RecipeInstructionSection(recipeDetail: recipeDetail)
                             }
+                            RecipeNutritionSection(recipeDetail: recipeDetail, presentNutritionPopover: $presentNutritionPopover)
+                            RecipeKeywordSection(recipeDetail: recipeDetail, presentKeywordPopover: $presentKeywordPopover)
                         }
                     }.padding(.horizontal, 5)
                     
@@ -104,9 +115,9 @@ fileprivate struct RecipeDurationSection: View {
     @State var recipeDetail: RecipeDetail
     
     var body: some View {
-        HStack(alignment: .center) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), alignment: .leading)]) {
             if let prepTime = recipeDetail.prepTime {
-                VStack {
+                VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Preparation"))
                     Text(DateFormatter.formatDate(duration: prepTime))
                         .lineLimit(1)
@@ -114,7 +125,7 @@ fileprivate struct RecipeDurationSection: View {
             }
             
             if let cookTime = recipeDetail.cookTime {
-                VStack {
+                VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Cooking"))
                     Text(DateFormatter.formatDate(duration: cookTime))
                         .lineLimit(1)
@@ -122,7 +133,7 @@ fileprivate struct RecipeDurationSection: View {
             }
             
             if let totalTime = recipeDetail.totalTime {
-                VStack {
+                VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Total time"))
                     Text(DateFormatter.formatDate(duration: totalTime))
                         .lineLimit(1)
@@ -134,11 +145,92 @@ fileprivate struct RecipeDurationSection: View {
 
 
 
+fileprivate struct RecipeNutritionSection: View {
+    @State var recipeDetail: RecipeDetail
+    @Binding var presentNutritionPopover: Bool
+    
+    var body: some View {
+        Button {
+            presentNutritionPopover.toggle()
+        } label: {
+            HStack {
+                SecondaryLabel(text: "Nutrition")
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(Color.secondary)
+                    .bold()
+                Spacer()
+            }.padding()
+        }
+        .buttonStyle(.plain)
+        .popover(isPresented: $presentNutritionPopover) {
+            if let nutritionList = recipeDetail.getNutritionList() {
+                ScrollView(showsIndicators: false) {
+                    if let servingSize = recipeDetail.nutrition["servingSize"] {
+                        RecipeListSection(title: "Nutrition (\(servingSize))", list: nutritionList)
+                            .presentationCompactAdaptation(.popover)
+                    } else {
+                        RecipeListSection(title: "Nutrition", list: nutritionList)
+                            .presentationCompactAdaptation(.popover)
+                    }
+                }
+            } else {
+                Text(LocalizedStringKey("No nutritional information."))
+                    .foregroundStyle(Color.secondary)
+                    .bold()
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
+            }
+        }
+    }
+}
+
+
+fileprivate struct RecipeKeywordSection: View {
+    @State var recipeDetail: RecipeDetail
+    @Binding var presentKeywordPopover: Bool
+    
+    var body: some View {
+        Button {
+            presentKeywordPopover.toggle()
+        } label: {
+            HStack {
+                SecondaryLabel(text: "Keywords")
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(Color.secondary)
+                    .bold()
+                Spacer()
+            }.padding()
+        }
+        .buttonStyle(.plain)
+        .popover(isPresented: $presentKeywordPopover) {
+            if let keywords = getKeywords() {
+                ScrollView(showsIndicators: false) {
+                    RecipeListSection(title: "Keywords", list: keywords)
+                        .presentationCompactAdaptation(.popover)
+                }
+            } else {
+                Text(LocalizedStringKey("No keywords."))
+                    .foregroundStyle(Color.secondary)
+                    .bold()
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
+            }
+            
+        }
+    }
+    
+    func getKeywords() -> [String]? {
+        let keywords = recipeDetail.keywords.components(separatedBy: ",")
+        return keywords.isEmpty ? nil : keywords
+    }
+}
+
+
+
 fileprivate struct RecipeIngredientSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
-            Divider()
             HStack {
                 if recipeDetail.recipeYield == 0 {
                     SecondaryLabel(text: LocalizedStringKey("Ingredients"))
@@ -168,9 +260,9 @@ fileprivate struct IngredientListItem: View {
             if isSelected {
                 Image(systemName: "checkmark.circle")
             } else {
-                //Text("\u{2022}")
                 Image(systemName: "circle")
             }
+            
             Text("\(ingredient)")
                 .multilineTextAlignment(.leading)
                 .lineLimit(5)
@@ -185,19 +277,20 @@ fileprivate struct IngredientListItem: View {
 
 
 
-fileprivate struct RecipeToolSection: View {
-    @State var recipeDetail: RecipeDetail
+fileprivate struct RecipeListSection: View {
+    @State var title: LocalizedStringKey
+    @State var list: [String]
+    
     var body: some View {
         VStack(alignment: .leading) {
-            Divider()
             HStack {
-                SecondaryLabel(text: LocalizedStringKey("Tools"))
+                SecondaryLabel(text: title)
                 Spacer()
             }
-            ForEach(recipeDetail.tool, id: \.self) { tool in
+            ForEach(list, id: \.self) { item in
                 HStack(alignment: .top) {
                     Text("\u{2022}")
-                    Text("\(tool)")
+                    Text("\(item)")
                         .multilineTextAlignment(.leading)
                 }
                 .padding(4)
@@ -212,18 +305,35 @@ fileprivate struct RecipeInstructionSection: View {
     @State var recipeDetail: RecipeDetail
     var body: some View {
         VStack(alignment: .leading) {
-            Divider()
             HStack {
                 SecondaryLabel(text: LocalizedStringKey("Instructions"))
                 Spacer()
             }
             ForEach(0..<recipeDetail.recipeInstructions.count) { ix in
-                HStack(alignment: .top) {
-                    Text("\(ix+1).")
-                    Text("\(recipeDetail.recipeInstructions[ix])")
-                }.padding(4)
+                RecipeInstructionListItem(instruction: recipeDetail.recipeInstructions[ix], index: ix+1)
             }
         }.padding()
+    }
+}
+
+
+
+fileprivate struct RecipeInstructionListItem: View {
+    @State var instruction: String
+    @State var index: Int
+    @State var isSelected: Bool = false
+    
+    var body: some View {
+        HStack(alignment: .top) {
+            Text("\(index)")
+                .monospaced()
+            Text(instruction)
+        }.padding(4)
+        .foregroundStyle(isSelected ? Color.secondary : Color.primary)
+        .onTapGesture {
+            isSelected.toggle()
+        }
+        .animation(.easeInOut, value: isSelected)
     }
 }
 

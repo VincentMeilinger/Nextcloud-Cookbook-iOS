@@ -96,7 +96,7 @@ import SwiftUI
             recipeDetails[recipeId] = recipeDetail
             return recipeDetail
         }
-        return RecipeDetail.error()
+        return RecipeDetail.error
     }
     
     func downloadAllRecipes() async {
