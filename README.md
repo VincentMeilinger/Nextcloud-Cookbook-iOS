@@ -20,12 +20,21 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 - [x] Login with Nextcloud account using app-tokens
 - [x] Support for multiple languages
 - [ ] Theming (optional)
-- [ ] MacOS support: (This is almost done. ToDos: UIImage not supported, app layout could be adjusted)
+- [ ] MacOS support
 
 ## Screenshots
 
 ... will follow as soon as there won't be any major user interface changes anymore.
 
+## Supported Languages
+
+If you wish to see additional languages supported, please don't hesitate to open an Issue. Any help with translation is appreciated.
+
+- [x] English
+- [x] German
+- [x] Spanish
+- [ ] French
+
 ## Further information
 
-I plan on uploading the app to the App Store for free, but there are still some bugs to fix before that. This app is a hobby project, which is why development progress may be slower than desired. If you are interested in an iOS native CookBook client, you are welcome to contribute! In case you discover any bugs or encounter problems, feel free to point them out by creating an Issue.
+The app is available on the App Store for free, and will be updated regularly. This app is a hobby project, which is why development progress may be slower than desired. If you are interested in an iOS native CookBook client, you are welcome to contribute! In case you discover any bugs or encounter problems, feel free to point them out by creating an Issue.
