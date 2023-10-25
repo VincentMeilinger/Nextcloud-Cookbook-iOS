@@ -121,6 +121,7 @@
 		A70171752AA8E71900064C43 = {
 			isa = PBXGroup;
 			children = (
+				A781E75E2AE9133B00452F6F /* Screenshots */,
 				A70171802AA8E71900064C43 /* Nextcloud Cookbook iOS Client */,
 				A70171922AA8E72000064C43 /* Nextcloud Cookbook iOS ClientTests */,
 				A701719C2AA8E72000064C43 /* Nextcloud Cookbook iOS ClientUITests */,
@@ -236,6 +237,13 @@
 				A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A781E75E2AE9133B00452F6F /* Screenshots */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Screenshots;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
