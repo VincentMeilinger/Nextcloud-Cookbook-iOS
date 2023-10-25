@@ -12,7 +12,8 @@ enum SupportedLanguage: String, Codable {
     case DEVICE = "device",
          EN = "en",
          DE = "de",
-         ES = "es"
+         ES = "es",
+         FR = "fr"
     
     func descriptor() -> String {
         switch self {
@@ -24,8 +25,10 @@ enum SupportedLanguage: String, Codable {
             return "Deutsch"
         case .ES:
             return "Español"
+        case .FR:
+            return "Français"
         }
     }
     
-    static let allValues = [DEVICE, EN, DE, ES]
+    static let allValues = [DEVICE, EN, DE, ES, FR]
 }

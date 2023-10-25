@@ -326,6 +326,7 @@
 				Base,
 				de,
 				es,
+				fr,
 			);
 			mainGroup = A70171752AA8E71900064C43;
 			productRefGroup = A701717F2AA8E71900064C43 /* Products */;

@@ -14,6 +14,12 @@
             "state" : "translated",
             "value" : ""
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
         }
       }
     },
@@ -26,6 +32,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ":"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : ":"
@@ -46,6 +58,12 @@
             "state" : "translated",
             "value" : "%@"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
         }
       }
     },
@@ -58,6 +76,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld"
@@ -78,6 +102,12 @@
             "state" : "translated",
             "value" : "%lld."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
         }
       }
     },
@@ -90,6 +120,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "•"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "•"
@@ -110,6 +146,12 @@
             "state" : "translated",
             "value" : "00"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "00"
+          }
         }
       }
     },
@@ -125,6 +167,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ya existe una receta con ese nombre."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une recette portant ce nom existe déjà."
           }
         }
       }
@@ -142,6 +190,12 @@
             "state" : "translated",
             "value" : "Acerca de"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos"
+          }
         }
       }
     },
@@ -157,6 +211,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Agregar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter"
           }
         }
       }
@@ -174,6 +234,12 @@
             "state" : "translated",
             "value" : "Nueva Receta"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une nouvelle recette"
+          }
         }
       }
     },
@@ -189,6 +255,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout"
           }
         }
       }
@@ -206,6 +278,12 @@
             "state" : "translated",
             "value" : "Ocurrió un error desconocido."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une erreur inconnue s'est produite."
+          }
         }
       }
     },
@@ -218,6 +296,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Token Login"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Token Login"
@@ -238,6 +322,12 @@
             "state" : "translated",
             "value" : "Cancelar"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
         }
       }
     },
@@ -253,6 +343,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Categoría"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catégorie"
           }
         }
       }
@@ -270,6 +366,12 @@
             "state" : "translated",
             "value" : "Categoría: %@"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catégorie: %@"
+          }
         }
       }
     },
@@ -286,6 +388,12 @@
             "state" : "translated",
             "value" : "Conexión al servidor establecida."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecté au serveur."
+          }
         }
       }
     },
@@ -298,6 +406,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookbook Client"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cookbook Client"
@@ -318,6 +432,12 @@
             "state" : "translated",
             "value" : "Libros de cocina"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Livres de cuisine"
+          }
         }
       }
     },
@@ -333,6 +453,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cocción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de cuisson"
           }
         }
       }
@@ -350,6 +476,12 @@
             "state" : "translated",
             "value" : "Duración de cocción:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de cuisson:"
+          }
         }
       }
     },
@@ -365,6 +497,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Borrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
           }
         }
       }
@@ -382,6 +520,12 @@
             "state" : "translated",
             "value" : "Eliminar datos locales"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer les données locales"
+          }
         }
       }
     },
@@ -397,6 +541,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la recette"
           }
         }
       }
@@ -414,6 +564,12 @@
             "state" : "translated",
             "value" : "¿Eliminar receta?"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la recette?"
+          }
         }
       }
     },
@@ -429,6 +585,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar datos locales no afectará los datos de las recetas almacenados en su servidor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La suppression des données locales n'affectera pas les données des recettes stockées sur votre serveur."
           }
         }
       }
@@ -446,6 +608,12 @@
             "state" : "translated",
             "value" : "Descripción."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
         }
       }
     },
@@ -461,6 +629,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Descargar todas las recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Télécharger toutes les recettes"
           }
         }
       }
@@ -478,6 +652,12 @@
             "state" : "translated",
             "value" : "Descargar recetas"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Télécharger des recettes"
+          }
         }
       }
     },
@@ -493,6 +673,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Receta duplicada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recette en double."
           }
         }
       }
@@ -510,6 +696,12 @@
             "state" : "translated",
             "value" : "Editar"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éditer"
+          }
         }
       }
     },
@@ -525,6 +717,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ingresar la dirección del servidor abrirá un navegador web. Por favor, siga las instrucciones de inicio de sesión proporcionadas allí. Si el navegador no se abre, haga clic en el enlace 'Abrir en el navegador'.\nDespués de iniciar sesión con éxito, regrese a esta aplicación y presione 'Validar'."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'ajout de l'adresse du serveur ouvrira un navigateur web. Suivez les instructions de connexion fournies là-bas. Si le navigateur ne s'ouvre pas, cliquez sur le lien 'Ouvrir dans le navigateur'. Après une connexion réussie, revenez à cette application et appuyez sur 'Valider'."
           }
         }
       }
@@ -542,6 +740,12 @@
             "state" : "translated",
             "value" : "Error."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur."
+          }
         }
       }
     },
@@ -557,6 +761,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "General"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
           }
         }
       }
@@ -574,6 +784,12 @@
             "state" : "translated",
             "value" : "Obtener soporte"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtenir de l'aide"
+          }
         }
       }
     },
@@ -589,6 +805,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Si se selecciona 'Idioma del sistema' y el idioma de su dispositivo no es compatible aún, esta opción se establecerá por defecto en inglés."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous sélectionnez 'Langue du système' et que la langue de votre appareil n'est pas encore prise en charge, cette option sera définie par défaut sur l'anglais."
           }
         }
       }
@@ -606,6 +828,12 @@
             "state" : "translated",
             "value" : "Si estás interesado en contribuir a este proyecto o simplemente deseas revisar su código fuente, te animamos a visitar el repositorio de GitHub de esta aplicación."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous souhaitez contribuer à ce projet ou simplement souhaitez consulter son code source, nous vous encourageons à visiter le référentiel GitHub de cette application."
+          }
         }
       }
     },
@@ -621,6 +849,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Si tienes alguna pregunta, comentarios o necesitas asistencia, por favor consulta la página de soporte para obtener información de contacto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous avez des questions, des commentaires ou avez besoin d'aide, veuillez consulter la page d'assistance pour obtenir les informations de contact."
           }
         }
       }
@@ -638,6 +872,12 @@
             "state" : "translated",
             "value" : "Ingredientes"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingrédients"
+          }
         }
       }
     },
@@ -653,6 +893,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ingredientes para %lld porciones."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingrédients pour %lld portions"
           }
         }
       }
@@ -670,6 +916,12 @@
             "state" : "translated",
             "value" : "Ingredientes por porción"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingrédients par portion"
+          }
         }
       }
     },
@@ -685,6 +937,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instrucciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instructions"
           }
         }
       }
@@ -702,6 +960,12 @@
             "state" : "translated",
             "value" : "Palabras clave"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mots-clés"
+          }
         }
       }
     },
@@ -717,6 +981,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Idioma"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
           }
         }
       }
@@ -734,6 +1004,12 @@
             "state" : "translated",
             "value" : "Cerrar sesión"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déconnexion"
+          }
         }
       }
     },
@@ -749,6 +1025,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inicio de sesión fallido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la connexion."
           }
         }
       }
@@ -766,6 +1048,12 @@
             "state" : "translated",
             "value" : "Método de inicio de sesión"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Méthode de connexion"
+          }
         }
       }
     },
@@ -781,6 +1069,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Falta el nombre de la receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom de la recette manquant."
           }
         }
       }
@@ -798,6 +1092,12 @@
             "state" : "translated",
             "value" : "Error de red."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur réseau."
+          }
         }
       }
     },
@@ -813,6 +1113,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nueva receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle recette"
           }
         }
       }
@@ -830,14 +1136,58 @@
             "state" : "translated",
             "value" : "Nextcloud Login"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nextcloud Login"
+          }
         }
       }
     },
     "No keywords." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Schlagwörter."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin palabras clave."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun mot-clé."
+          }
+        }
+      }
     },
     "No nutritional information." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Nährwertangaben."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin información nutricional."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune information nutritionnelle."
+          }
+        }
+      }
     },
     "None" : {
       "localizations" : {
@@ -852,14 +1202,58 @@
             "state" : "translated",
             "value" : "Ninguno"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun"
+          }
         }
       }
     },
     "Nutrition" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nährwerte"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información nutricional"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutrition"
+          }
+        }
+      }
     },
     "Nutrition (%@)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nährwerte (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información nutricional (%@)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutrition (%@)"
+          }
+        }
+      }
     },
     "Ok" : {
       "localizations" : {
@@ -870,6 +1264,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ok"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ok"
@@ -890,6 +1290,12 @@
             "state" : "translated",
             "value" : "Abrir en el navegador."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir dans le navigateur"
+          }
         }
       }
     },
@@ -905,6 +1311,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autre"
           }
         }
       }
@@ -922,6 +1334,12 @@
             "state" : "translated",
             "value" : "Por favor, comprueba tus credenciales de inicio de sesión y la conexión a Internet."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez vérifier vos identifiants et votre connexion Internet."
+          }
         }
       }
     },
@@ -937,6 +1355,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Por favor, ingrese un nombre de receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez entrer un nom de recette."
           }
         }
       }
@@ -954,6 +1378,12 @@
             "state" : "translated",
             "value" : "Preparación"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préparation"
+          }
         }
       }
     },
@@ -969,6 +1399,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duración de preparación:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée de préparation:"
           }
         }
       }
@@ -986,6 +1422,12 @@
             "state" : "translated",
             "value" : "Idioma del sistema"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue du système"
+          }
         }
       }
     },
@@ -1001,6 +1443,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buscar receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher une recette"
           }
         }
       }
@@ -1018,6 +1466,12 @@
             "state" : "translated",
             "value" : "Buscar recetas"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher des recettes"
+          }
         }
       }
     },
@@ -1033,6 +1487,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleccionar un libro de cocina predeterminado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionner un livre de cuisine par défaut"
           }
         }
       }
@@ -1050,6 +1510,12 @@
             "state" : "translated",
             "value" : "Palabras clave seleccionadas:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mots-clés sélectionnés:"
+          }
         }
       }
     },
@@ -1065,6 +1531,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Porciones:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portions:"
           }
         }
       }
@@ -1082,6 +1554,12 @@
             "state" : "translated",
             "value" : "Configuración"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
+          }
         }
       }
     },
@@ -1097,6 +1575,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enviar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soumettre"
           }
         }
       }
@@ -1114,6 +1598,12 @@
             "state" : "translated",
             "value" : "Ayuda"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
         }
       }
     },
@@ -1129,6 +1619,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gracias por descargar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merci d'avoir téléchargé"
           }
         }
       }
@@ -1146,6 +1642,12 @@
             "state" : "translated",
             "value" : "El libro de cocina seleccionado se abrirá por defecto al iniciar la aplicación."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le livre de cuisine sélectionné s'ouvrira par défaut lors du lancement de l'application."
+          }
         }
       }
     },
@@ -1161,6 +1663,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Esta acción no es reversible!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette action est irréversible!"
           }
         }
       }
@@ -1178,6 +1686,12 @@
             "state" : "translated",
             "value" : "Esta aplicación es un esfuerzo de código abierto. Si estás interesado en sugerir o contribuir con nuevas funciones o te encuentras con algún problema, por favor utiliza el enlace de soporte o visita el repositorio de GitHub en la configuración de la aplicación."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette application est un effort open source. Si vous souhaitez suggérer ou contribuer à de nouvelles fonctionnalités, ou si vous rencontrez des problèmes, veuillez utiliser le lien d'assistance ou visiter GitHub dans les paramètres de l'application."
+          }
         }
       }
     },
@@ -1193,6 +1707,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Título"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre"
           }
         }
       }
@@ -1210,6 +1730,12 @@
             "state" : "translated",
             "value" : "Utensilios de cocina."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustensiles de cuisine"
+          }
         }
       }
     },
@@ -1225,6 +1751,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duración total:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée totale:"
           }
         }
       }
@@ -1242,6 +1774,12 @@
             "state" : "translated",
             "value" : "Duración total"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée totale"
+          }
         }
       }
     },
@@ -1257,6 +1795,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se puede conectar al servidor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connexion au serveur impossible."
           }
         }
       }
@@ -1274,6 +1818,12 @@
             "state" : "translated",
             "value" : "No es posible cargar tu receta. Por favor, verifica tu conexión a internet."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de télécharger votre recette. Veuillez vérifier votre connexion internet."
+          }
         }
       }
     },
@@ -1289,6 +1839,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cargar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Télécharger"
           }
         }
       }
@@ -1306,6 +1862,12 @@
             "state" : "translated",
             "value" : "Validar"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valider"
+          }
         }
       }
     },
@@ -1321,6 +1883,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visita la página de GitHub."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visitez GitHub"
           }
         }
       }
