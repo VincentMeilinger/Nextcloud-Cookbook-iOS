@@ -10,8 +10,6 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 
 - [x] Load recipes from nextcloud instance
 - [x] Offline recipes
-- [ ] Share recipes
-- [ ] Import recipes
 - [x] Recipe search function
 - [x] Add new recipes
 - [x] Edit recipes
@@ -19,12 +17,22 @@ See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextclou
 - [x] Login with Nextcloud account using two factor authentication
 - [x] Login with Nextcloud account using app-tokens
 - [x] Support for multiple languages
+- [ ] Share recipes
+- [ ] Import recipes
 - [ ] Theming (optional)
 - [ ] MacOS support
 
 ## Screenshots
 
-... will follow as soon as there won't be any major user interface changes anymore.
+The following screenshots might not be up to date, since there can always be minor user interface changes.
+
+#### iOS Screenshots
+
+<img src="/Screenshots/iOS_cookbooks.png" alt="/Screenshots/iOS_cookbooks.png" width="200"/> <img src="/Screenshots/iOS_recipes.png" alt="/Screenshots/iOS_recipes.png" width="200"/> <img src="/Screenshots/iOS_recipe_detail_1.png" alt="/Screenshots/iOS_recipe_detail_1.png" width="200"/> <img src="/Screenshots/iOS_recipe_detail_2.png" alt="/Screenshots/iOS_recipe_detail_2.png" width="200"/>
+
+#### iPadOS Screenshots
+
+<img src="/Screenshots/iPadOS_cookbooks_recipes.png" alt="/Screenshots/iPadOS_cookbooks_recipes.png" width="400"/> <img src="/Screenshots/iPadOS_recipe_detail.png" alt="/Screenshots/iPadOS_recipe_detail.png" width="400"/>
 
 ## Supported Languages
 
@@ -33,8 +41,8 @@ If you wish to see additional languages supported, please don't hesitate to open
 - [x] English
 - [x] German
 - [x] Spanish
-- [ ] French
+- [x] French
 
 ## Further information
 
-The app is available on the App Store for free, and will be updated regularly. This app is a hobby project, which is why development progress may be slower than desired. If you are interested in an iOS native CookBook client, you are welcome to contribute! In case you discover any bugs or encounter problems, feel free to point them out by creating an Issue.
+Cookbook Client is available on the App Store for free, and will be updated regularly. This app is a hobby project, which is why development progress may be slower than desired. If you are interested in an iOS native CookBook client, you are welcome to contribute! In case you discover any bugs or encounter problems, feel free to point them out by creating an Issue.
