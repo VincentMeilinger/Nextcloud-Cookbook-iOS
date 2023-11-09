@@ -18,7 +18,6 @@ struct RecipeEditView: View {
     @Binding var isPresented: Bool
     @State var uploadNew: Bool = true
 
-    @State private var image: PhotosPickerItem? = nil
     @StateObject private var prepDuration: Duration = Duration()
     @StateObject private var cookDuration: Duration = Duration()
     @StateObject private var totalDuration: Duration = Duration()
@@ -26,6 +25,8 @@ struct RecipeEditView: View {
     @State private var keywords: [String] = []
     @State private var keywordSuggestions: [String] = []
     
+    @State private var importURL: String = ""
+    @State private var showImportSection: Bool = false
     @State private var waitingForUpload: Bool = false
     
     var body: some View {
@@ -77,19 +78,43 @@ struct RecipeEditView: View {
                     Spacer()
                 }
                 Form {
+                    if showImportSection {
+                        Section {
+                            TextField("URL (e.g. example.com/recipe)", text: $importURL)
+                                .onSubmit {
+                                    do {
+                                        if let recipe = try RecipeScraper().scrape(url: importURL) {
+                                            self.recipe = recipe
+                                        }
+                                    } catch {
+                                        print("Error")
+                                    }
+                                }
+                        } header: {
+                            Text("Import Recipe")
+                        } footer: {
+                            Text("Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings.")
+                        }
+                        
+                    } else {
+                        Section {
+                            Button() {
+                                withAnimation{
+                                    showImportSection = true
+                                }
+                            } label: {
+                                Text("Import recipe from a website")
+                            }
+                        }
+                    }
+                    
                     TextField("Title", text: $recipe.name)
                     Section {
                         TextEditor(text: $recipe.description)
                     } header: {
                         Text("Description")
                     }
-                    /*
-                     PhotosPicker(selection: $image, matching: .images, photoLibrary: .shared()) {
-                     Image(systemName: "photo")
-                     .symbolRenderingMode(.multicolor)
-                     }
-                     .buttonStyle(.borderless)
-                     */
+                    
                     Section() {
                         NavigationLink(recipe.recipeCategory == "" ? "Category" : "Category: \(recipe.recipeCategory)") {
                             CategoryPickerView(

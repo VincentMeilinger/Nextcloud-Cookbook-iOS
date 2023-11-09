@@ -20,11 +20,12 @@ class RecipeScraper {
             
         } else {
             print("ERROR: Bad url.")
+            return nil
         }
 
         guard let html = contents else {
             print("ERROR: no contents")
-            exit(1)
+            return nil
         }
         let doc = try SwiftSoup.parse(html)
         

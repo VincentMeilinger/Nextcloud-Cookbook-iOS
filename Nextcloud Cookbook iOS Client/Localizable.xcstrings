@@ -859,6 +859,12 @@
         }
       }
     },
+    "Import Recipe" : {
+
+    },
+    "Import recipe from a website" : {
+
+    },
     "Ingredients" : {
       "localizations" : {
         "de" : {
@@ -1320,6 +1326,9 @@
           }
         }
       }
+    },
+    "Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings." : {
+
     },
     "Please check your credentials and internet connection." : {
       "localizations" : {
@@ -1848,6 +1857,9 @@
           }
         }
       }
+    },
+    "URL (e.g. example.com/recipe)" : {
+
     },
     "Validate" : {
       "localizations" : {
