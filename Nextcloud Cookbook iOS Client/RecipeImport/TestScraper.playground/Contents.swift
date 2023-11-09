@@ -1,12 +1,5 @@
-//
-//  RecipeScraper.swift
-//  Nextcloud Cookbook iOS Client
-//
-//  Created by Vincent Meilinger on 09.11.23.
-//
-
-import Foundation
 import SwiftSoup
+import Foundation
 
 class RecipeScraper {
     func scrape(url: String) throws -> RecipeDetail? {
@@ -109,4 +102,17 @@ class RecipeScraper {
         }
         return []
     }
+}
+
+
+//let url = "https://www.chefkoch.de/rezepte/1385981243676608/Knusprige-Entenbrust.html"
+let url = "https://www.allrecipes.com/recipe/234620/mascarpone-mashed-potatoes/"
+
+let scraper = RecipeScraper()
+
+do {
+    let recipe = try scraper.scrape(url: url)
+    print(recipe)
+} catch {
+    print("No recipe on this website found.")
 }
