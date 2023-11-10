@@ -9,26 +9,6 @@ import Foundation
 import SwiftUI
 
 
-
-class AlertHandler: ObservableObject {
-    @Published var presentAlert: Bool = false
-    var alert: AlertType = .GENERIC
-    var alertAction: () -> () = {}
-    
-    func present(alert: AlertType, onConfirm: @escaping () -> () = {}) {
-        self.alert = alert
-        self.alertAction = onConfirm
-        self.presentAlert = true
-    }
-    
-    func dismiss() {
-        self.alertAction = {}
-        self.alert = .GENERIC
-    }
-}
-
-
-
 enum AlertButton: LocalizedStringKey, Identifiable {
     var id: Self {
         return self

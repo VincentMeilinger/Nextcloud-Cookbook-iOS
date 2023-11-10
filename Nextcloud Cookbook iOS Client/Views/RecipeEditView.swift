@@ -12,11 +12,14 @@ import PhotosUI
 
 
 struct RecipeEditView: View {
-    @EnvironmentObject var alertHandler: AlertHandler
     @ObservedObject var viewModel: MainViewModel
     @State var recipe: RecipeDetail = RecipeDetail()
     @Binding var isPresented: Bool
     @State var uploadNew: Bool = true
+    
+    @State private var presentAlert = false
+    @State private var alertType: AlertType = .GENERIC
+    @State private var alertAction: () -> () = {}
 
     @StateObject private var prepDuration: Duration = Duration()
     @StateObject private var cookDuration: Duration = Duration()
@@ -43,9 +46,9 @@ struct RecipeEditView: View {
                         Menu {
                             Button {
                                 print("Delete recipe.")
-                                alertHandler.present(alert: .CONFIRM_DELETE) {
-                                    deleteRecipe()
-                                }
+                                alertType = .CONFIRM_DELETE
+                                alertAction = deleteRecipe
+                                presentAlert = true
                             } label: {
                                 Image(systemName: "trash")
                                     .foregroundStyle(.red)
@@ -177,24 +180,22 @@ struct RecipeEditView: View {
                 keywords.append(keyword)
             }
         }
-        .alert(alertHandler.alert.localizedTitle, isPresented: $alertHandler.presentAlert) {
-            ForEach(alertHandler.alert.alertButtons) { buttonType in
+        .alert(alertType.localizedTitle, isPresented: $presentAlert) {
+            ForEach(alertType.alertButtons) { buttonType in
                 if buttonType == .OK {
                     Button(AlertButton.OK.rawValue, role: .cancel) {
-                        alertHandler.alertAction()
-                        alertHandler.dismiss()
+                        alertAction()
                     }
                 } else if buttonType == .CANCEL {
                     Button(AlertButton.CANCEL.rawValue, role: .cancel) { }
                 } else if buttonType == .DELETE {
                     Button(AlertButton.DELETE.rawValue, role: .destructive) {
-                        alertHandler.alertAction()
-                        alertHandler.dismiss()
+                        alertAction()
                     }
                 }
             }
         } message: {
-            Text(alertHandler.alert.localizedDescription)
+            Text(alertType.localizedDescription)
         }
     }
     
@@ -211,7 +212,9 @@ struct RecipeEditView: View {
     func recipeValid() -> Bool {
         // Check if the recipe has a name
         if recipe.name.replacingOccurrences(of: " ", with: "") == "" {
-            alertHandler.present(alert: .NO_TITLE)
+            alertType = .NO_TITLE
+            alertAction = {}
+            presentAlert = true
             return false
         }
         // Check if the recipe has a unique name
@@ -224,7 +227,9 @@ struct RecipeEditView: View {
                     .replacingOccurrences(of: " ", with: "")
                     .lowercased()
                 {
-                    alertHandler.present(alert: .DUPLICATE)
+                    alertType = .DUPLICATE
+                    alertAction = {}
+                    presentAlert = true
                     return false
                 }
             }

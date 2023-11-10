@@ -35,7 +35,7 @@
 		A74D33BE2AF82AAE00D06555 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = A74D33BD2AF82AAE00D06555 /* SwiftSoup */; };
 		A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */; };
 		A76B8A6F2ADFFA8800096CEC /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */; };
-		A76B8A712AE002AE00096CEC /* AlertHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A702AE002AE00096CEC /* AlertHandler.swift */; };
+		A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A702AE002AE00096CEC /* Alerts.swift */; };
 		A7AEAE642AD5521400135378 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A7AEAE632AD5521400135378 /* Localizable.xcstrings */; };
 		A7F3F8E82ACBFC760076C227 /* KeywordPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */; };
 		A7F3F8EA2ACC221C0076C227 /* CategoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */; };
@@ -91,7 +91,7 @@
 		A74D33BF2AF82CB500D06555 /* TestScraper.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = TestScraper.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeScraper.swift; sourceTree = "<group>"; };
 		A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
-		A76B8A702AE002AE00096CEC /* AlertHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHandler.swift; sourceTree = "<group>"; };
+		A76B8A702AE002AE00096CEC /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		A7AEAE632AD5521400135378 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordPickerView.swift; sourceTree = "<group>"; };
 		A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerView.swift; sourceTree = "<group>"; };
@@ -148,14 +148,13 @@
 			isa = PBXGroup;
 			children = (
 				A70171812AA8E71900064C43 /* Nextcloud_Cookbook_iOS_ClientApp.swift */,
-				A76B8A702AE002AE00096CEC /* AlertHandler.swift */,
-				A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */,
 				A70171C72AB4C4A100064C43 /* Data */,
 				A70171BA2AB4980100064C43 /* Views */,
 				A70171B72AB2445700064C43 /* ViewModels */,
 				A70171B22AB211F000064C43 /* Network */,
 				A781E75F2AF8228100452F6F /* RecipeImport */,
 				A703226B2ABAF60D00D7C4ED /* Extensions */,
+				A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */,
 				A7AEAE632AD5521400135378 /* Localizable.xcstrings */,
 				A70171852AA8E71F00064C43 /* Assets.xcassets */,
 				A70171872AA8E71F00064C43 /* Nextcloud_Cookbook_iOS_Client.entitlements */,
@@ -220,6 +219,7 @@
 				A70171CC2AB501B100064C43 /* SettingsView.swift */,
 				A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */,
 				A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */,
+				A76B8A702AE002AE00096CEC /* Alerts.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -404,7 +404,7 @@
 				A70D7CA12AC73CA800D53DBF /* RecipeEditView.swift in Sources */,
 				A70D7CA32AC74B3B00D53DBF /* DateExtension.swift in Sources */,
 				A70171B12AB211DF00064C43 /* CustomError.swift in Sources */,
-				A76B8A712AE002AE00096CEC /* AlertHandler.swift in Sources */,
+				A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */,
 				A70171C42AB4A31200064C43 /* DataStore.swift in Sources */,
 				A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */,
 				A70171B42AB2122900064C43 /* NetworkRequests.swift in Sources */,

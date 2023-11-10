@@ -11,7 +11,6 @@ import SwiftUI
 struct Nextcloud_Cookbook_iOS_ClientApp: App {
     @StateObject var userSettings = UserSettings()
     @StateObject var mainViewModel = MainViewModel()
-    @StateObject var alertHandler = AlertHandler()
     
     var body: some Scene {
         WindowGroup {
@@ -31,7 +30,6 @@ struct Nextcloud_Cookbook_iOS_ClientApp: App {
                 .init(identifier: userSettings.language == 
                       SupportedLanguage.DEVICE.rawValue ? (Locale.current.language.languageCode?.identifier ?? "en") : userSettings.language)
             )
-            .environmentObject(alertHandler)
         }
     }
 }
