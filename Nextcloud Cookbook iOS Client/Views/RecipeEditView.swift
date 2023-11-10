@@ -85,12 +85,14 @@ struct RecipeEditView: View {
                         Section {
                             TextField("URL (e.g. example.com/recipe)", text: $importURL)
                                 .onSubmit {
-                                    do {
-                                        if let recipe = try RecipeScraper().scrape(url: importURL) {
-                                            self.recipe = recipe
+                                    Task {
+                                        do {
+                                            if let recipe = try await RecipeScraper().scrape(url: importURL) {
+                                                self.recipe = recipe
+                                            }
+                                        } catch {
+                                            print("Error")
                                         }
-                                    } catch {
-                                        print("Error")
                                     }
                                 }
                         } header: {

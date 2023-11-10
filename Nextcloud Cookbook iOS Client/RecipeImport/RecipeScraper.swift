@@ -9,7 +9,7 @@ import Foundation
 import SwiftSoup
 
 class RecipeScraper {
-    func scrape(url: String) throws -> RecipeDetail? {
+    func scrape(url: String) async throws -> RecipeDetail? {
         var contents: String? = nil
         if let url = URL(string: url) {
             do {
@@ -107,7 +107,18 @@ class RecipeScraper {
                 entries.append(text)
             }
             return entries
+        } else if let text = dict[key] as? String {
+            return [text]
         }
         return []
+    }
+    
+    private func joinedStringForKey(_ key: String, dict: Dictionary<String, Any>) -> String {
+        if let value = dict[key] as? [String] {
+            return value.joined(separator: ",")
+        } else if let value = dict[key] as? String {
+            return value
+        }
+        return ""
     }
 }

@@ -31,7 +31,6 @@
 		A703226D2ABAF90D00D7C4ED /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703226C2ABAF90D00D7C4ED /* APIController.swift */; };
 		A703226F2ABB1DD700D7C4ED /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */; };
 		A70D7CA12AC73CA800D53DBF /* RecipeEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */; };
-		A70D7CA32AC74B3B00D53DBF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70D7CA22AC74B3B00D53DBF /* DateExtension.swift */; };
 		A74D33BE2AF82AAE00D06555 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = A74D33BD2AF82AAE00D06555 /* SwiftSoup */; };
 		A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */; };
 		A76B8A6F2ADFFA8800096CEC /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */; };
@@ -87,7 +86,6 @@
 		A703226C2ABAF90D00D7C4ED /* APIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditView.swift; sourceTree = "<group>"; };
-		A70D7CA22AC74B3B00D53DBF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A74D33BF2AF82CB500D06555 /* TestScraper.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = TestScraper.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeScraper.swift; sourceTree = "<group>"; };
 		A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
@@ -238,7 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				A70171B82AB399FB00064C43 /* DateFormatterExtension.swift */,
-				A70D7CA22AC74B3B00D53DBF /* DateExtension.swift */,
 				A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */,
 				A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */,
 			);
@@ -402,7 +399,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A70D7CA12AC73CA800D53DBF /* RecipeEditView.swift in Sources */,
-				A70D7CA32AC74B3B00D53DBF /* DateExtension.swift in Sources */,
 				A70171B12AB211DF00064C43 /* CustomError.swift in Sources */,
 				A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */,
 				A70171C42AB4A31200064C43 /* DataStore.swift in Sources */,
