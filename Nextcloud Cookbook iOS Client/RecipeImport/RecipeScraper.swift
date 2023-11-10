@@ -7,25 +7,28 @@
 
 import Foundation
 import SwiftSoup
+import SwiftUI
+
 
 class RecipeScraper {
-    func scrape(url: String) async throws -> RecipeDetail? {
+    func scrape(url: String) async throws -> (RecipeDetail?, RecipeImportError?) {
         var contents: String? = nil
         if let url = URL(string: url) {
             do {
                 contents = try String(contentsOf: url)
             } catch {
                 print("ERROR: Could not load url content.")
+                return (nil, .CHECK_CONNECTION)
             }
             
         } else {
             print("ERROR: Bad url.")
-            return nil
+            return (nil, .BAD_URL)
         }
 
         guard let html = contents else {
             print("ERROR: no contents")
-            return nil
+            return (nil, .WEBSITE_NOT_SUPPORTED)
         }
         let doc = try SwiftSoup.parse(html)
         
@@ -34,11 +37,13 @@ class RecipeScraper {
             for attr in elem.getAttributes()!.asList() {
                 if attr.getValue() == "application/ld+json" {
                     guard let dict = toDict(elem) else { continue }
-                    return getRecipe(fromDict: dict)
+                    if let recipe = getRecipe(fromDict: dict) {
+                        return (recipe, nil)
+                    }
                 }
             }
         }
-        return nil
+        return (nil, .WEBSITE_NOT_SUPPORTED)
     }
     
     
@@ -46,7 +51,6 @@ class RecipeScraper {
         var recipeDict: [String: Any]? = nil
         do {
             let jsonString = try elem.html()
-            //print(json)
             let json = try JSONSerialization.jsonObject(with: jsonString.data(using: .utf8)!, options: .fragmentsAllowed)
             if let recipe = json as? [String : Any] {
                 recipeDict = recipe
@@ -78,7 +82,7 @@ class RecipeScraper {
         var recipeDetail = RecipeDetail()
         recipeDetail.name = recipe["name"] as? String ?? "New Recipe"
         recipeDetail.recipeCategory = recipe["recipeCategory"] as? String ?? ""
-        recipeDetail.keywords = recipe["keywords"] as? String ?? ""
+        recipeDetail.keywords = joinedStringForKey("keywords", dict: recipe)
         recipeDetail.description = recipe["description"] as? String ?? ""
         recipeDetail.dateCreated = recipe["dateCreated"] as? String ?? ""
         recipeDetail.dateModified = recipe["dateModified"] as? String ?? ""
@@ -90,14 +94,16 @@ class RecipeScraper {
         recipeDetail.recipeInstructions = stringArrayForKey("recipeInstructions", dict: recipe)
         recipeDetail.recipeYield = recipe["recipeYield"] as? Int ?? 0
         recipeDetail.recipeIngredient = recipe["recipeIngredient"] as? [String] ?? []
-        recipeDetail.tool = recipe["tool"] as? [String] ?? []
+        recipeDetail.tool = stringArrayForKey("tool", dict: recipe)
         recipeDetail.nutrition = recipe["nutrition"] as? [String:String] ?? [:]
-        
+        print(recipeDetail)
         return recipeDetail
     }
     
     private func stringArrayForKey(_ key: String, dict: Dictionary<String, Any>) -> [String] {
-        if let value = dict[key] as? [String] {
+        if let text = dict[key] as? String {
+            return [text]
+        } else if let value = dict[key] as? [String] {
             return value
         } else if let orderedList = dict[key] as? [Any] {
             var entries: [String] = []
@@ -107,8 +113,6 @@ class RecipeScraper {
                 entries.append(text)
             }
             return entries
-        } else if let text = dict[key] as? String {
-            return [text]
         }
         return []
     }

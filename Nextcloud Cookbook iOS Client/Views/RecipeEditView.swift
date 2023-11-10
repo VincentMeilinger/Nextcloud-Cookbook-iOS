@@ -13,12 +13,16 @@ import PhotosUI
 
 struct RecipeEditView: View {
     @ObservedObject var viewModel: MainViewModel
-    @State var recipe: RecipeDetail = RecipeDetail()
+    @State var recipe: RecipeDetail = RecipeDetail() {
+        didSet {
+            prepareView()
+        }
+    }
     @Binding var isPresented: Bool
     @State var uploadNew: Bool = true
     
     @State private var presentAlert = false
-    @State private var alertType: AlertType = .GENERIC
+    @State private var alertType: UserAlert = RecipeCreationError.GENERIC
     @State private var alertAction: () -> () = {}
 
     @StateObject private var prepDuration: Duration = Duration()
@@ -46,7 +50,7 @@ struct RecipeEditView: View {
                         Menu {
                             Button {
                                 print("Delete recipe.")
-                                alertType = .CONFIRM_DELETE
+                                alertType = RecipeCreationError.CONFIRM_DELETE
                                 alertAction = deleteRecipe
                                 presentAlert = true
                             } label: {
@@ -87,8 +91,14 @@ struct RecipeEditView: View {
                                 .onSubmit {
                                     Task {
                                         do {
-                                            if let recipe = try await RecipeScraper().scrape(url: importURL) {
-                                                self.recipe = recipe
+                                            let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: importURL)
+                                            if let scrapedRecipe = scrapedRecipe {
+                                                self.recipe = scrapedRecipe
+                                            }
+                                            if let error = error {
+                                                self.alertType = error
+                                                self.alertAction = {}
+                                                self.presentAlert = true
                                             }
                                         } catch {
                                             print("Error")
@@ -168,19 +178,7 @@ struct RecipeEditView: View {
             self.keywordSuggestions = await viewModel.getKeywords()
         }
         .onAppear {
-            if uploadNew { return }
-            if let prepTime = recipe.prepTime {
-                prepDuration.initFromPT(prepTime)
-            }
-            if let cookTime = recipe.cookTime {
-                cookDuration.initFromPT(cookTime)
-            }
-            if let totalTime = recipe.totalTime {
-                totalDuration.initFromPT(totalTime)
-            }
-            for keyword in self.recipe.keywords.components(separatedBy: ",") {
-                keywords.append(keyword)
-            }
+            prepareView()
         }
         .alert(alertType.localizedTitle, isPresented: $presentAlert) {
             ForEach(alertType.alertButtons) { buttonType in
@@ -214,7 +212,7 @@ struct RecipeEditView: View {
     func recipeValid() -> Bool {
         // Check if the recipe has a name
         if recipe.name.replacingOccurrences(of: " ", with: "") == "" {
-            alertType = .NO_TITLE
+            alertType = RecipeCreationError.NO_TITLE
             alertAction = {}
             presentAlert = true
             return false
@@ -229,7 +227,7 @@ struct RecipeEditView: View {
                     .replacingOccurrences(of: " ", with: "")
                     .lowercased()
                 {
-                    alertType = .DUPLICATE
+                    alertType = RecipeCreationError.DUPLICATE
                     alertAction = {}
                     presentAlert = true
                     return false
@@ -315,6 +313,22 @@ struct RecipeEditView: View {
             await self.viewModel.loadRecipeList(categoryName: self.recipe.recipeCategory, needsUpdate: true)
         }
         self.isPresented = false
+    }
+    
+    func prepareView() {
+        if uploadNew { return }
+        if let prepTime = recipe.prepTime {
+            prepDuration.initFromPT(prepTime)
+        }
+        if let cookTime = recipe.cookTime {
+            cookDuration.initFromPT(cookTime)
+        }
+        if let totalTime = recipe.totalTime {
+            totalDuration.initFromPT(totalTime)
+        }
+        for keyword in self.recipe.keywords.components(separatedBy: ",") {
+            keywords.append(keyword)
+        }
     }
 }
 

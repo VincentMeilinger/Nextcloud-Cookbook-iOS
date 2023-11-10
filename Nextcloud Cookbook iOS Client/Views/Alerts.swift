@@ -9,6 +9,12 @@ import Foundation
 import SwiftUI
 
 
+protocol UserAlert: Error { 
+    var localizedTitle: LocalizedStringKey { get }
+    var localizedDescription: LocalizedStringKey { get }
+    var alertButtons: [AlertButton] { get }
+}
+
 enum AlertButton: LocalizedStringKey, Identifiable {
     var id: Self {
         return self
@@ -19,7 +25,7 @@ enum AlertButton: LocalizedStringKey, Identifiable {
 
 
 
-enum AlertType: Error {
+enum RecipeCreationError: UserAlert {
     
     case NO_TITLE,
          DUPLICATE,
@@ -77,3 +83,29 @@ enum AlertType: Error {
     }
 }
 
+
+enum RecipeImportError: UserAlert {
+    case BAD_URL,
+         CHECK_CONNECTION,
+         WEBSITE_NOT_SUPPORTED
+    
+    var localizedDescription: LocalizedStringKey {
+        switch self {
+        case .BAD_URL: return "Please check the entered URL."
+        case .CHECK_CONNECTION: return "Unable to load website content. Please check your internet connection."
+        case .WEBSITE_NOT_SUPPORTED: return "This website might not be currently supported. If this appears incorrect, you can use the support options in the app settings to raise awareness about this issue."
+        }
+    }
+    
+    var localizedTitle: LocalizedStringKey {
+        switch self {
+        case .BAD_URL: return "Bad URL"
+        case .CHECK_CONNECTION: return "Connection error"
+        case .WEBSITE_NOT_SUPPORTED: return "Parsing error"
+        }
+    }
+    
+    var alertButtons: [AlertButton] {
+        return [.OK]
+    }
+}
