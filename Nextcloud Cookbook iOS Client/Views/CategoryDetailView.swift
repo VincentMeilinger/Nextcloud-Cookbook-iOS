@@ -33,6 +33,7 @@ struct CategoryDetailView: View {
         .navigationTitle(categoryName == "*" ? "Other" : categoryName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
+            
                 Menu {
                     Button {
                         print("Add new recipe")

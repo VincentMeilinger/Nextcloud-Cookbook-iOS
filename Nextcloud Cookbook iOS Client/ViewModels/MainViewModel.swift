@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import UIKit
 import SwiftUI
+import UIKit
+
 
 @MainActor class MainViewModel: ObservableObject {
     @Published var categories: [Category] = []
