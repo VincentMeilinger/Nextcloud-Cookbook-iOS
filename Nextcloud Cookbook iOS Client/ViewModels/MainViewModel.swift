@@ -7,9 +7,8 @@
 
 import Foundation
 import SwiftUI
-#if !os(macOS)
 import UIKit
-#endif
+
 
 @MainActor class MainViewModel: ObservableObject {
     @Published var categories: [Category] = []
