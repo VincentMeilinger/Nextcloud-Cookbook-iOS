@@ -22,10 +22,12 @@ You can download the app from the AppStore:
 - [x] Login with Nextcloud account using two factor authentication
 - [x] Login with Nextcloud account using app-tokens
 - [x] Support for multiple languages
+- [x] MacOS support (through Mac Catalyst)
+- [x] Light and dark mode support
 - [ ] Share recipes
 - [ ] Import recipes
-- [ ] Theming (optional)
-- [ ] MacOS support
+
+
 
 ## Screenshots
 
