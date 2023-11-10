@@ -367,13 +367,17 @@ fileprivate struct DurationPicker: View {
             Text(title)
             Spacer()
             TextField("00", text: $duration.hourComponent)
+                #if !os(macOS)
                 .keyboardType(.decimalPad)
+                #endif
                 .textFieldStyle(.roundedBorder)
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: 40)
             Text(":")
             TextField("00", text: $duration.minuteComponent)
+                #if !os(macOS)
                 .keyboardType(.decimalPad)
+                #endif
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: 40)
         }
