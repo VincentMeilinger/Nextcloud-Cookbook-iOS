@@ -91,6 +91,16 @@ struct RecipeDetail: Codable {
         recipeInstructions = []
         nutrition = [:]
     }
+    
+    func getKeywordsArray() -> [String] {
+        return keywords.components(separatedBy: ",")
+    }
+    
+    mutating func setKeywordsFromArray(_ keywordsArray: [String]) {
+        if !self.keywords.isEmpty {
+            self.keywords = keywordsArray.joined(separator: ",")
+        }
+    }
 }
 
 extension RecipeDetail {

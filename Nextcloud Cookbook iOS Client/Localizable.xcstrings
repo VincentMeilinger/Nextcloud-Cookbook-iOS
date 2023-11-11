@@ -23,6 +23,9 @@
         }
       }
     },
+    "-" : {
+
+    },
     ":" : {
       "localizations" : {
         "de" : {
@@ -88,6 +91,22 @@
           }
         }
       }
+    },
+    "%lld h" : {
+
+    },
+    "%lld h, %lld min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld h, %2$lld min"
+          }
+        }
+      }
+    },
+    "%lld min" : {
+
     },
     "%lld." : {
       "localizations" : {

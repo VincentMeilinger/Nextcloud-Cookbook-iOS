@@ -18,7 +18,6 @@
 		A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171AE2AB2116B00064C43 /* NetworkHandler.swift */; };
 		A70171B12AB211DF00064C43 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171B02AB211DF00064C43 /* CustomError.swift */; };
 		A70171B42AB2122900064C43 /* NetworkRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171B32AB2122900064C43 /* NetworkRequests.swift */; };
-		A70171B92AB399FB00064C43 /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171B82AB399FB00064C43 /* DateFormatterExtension.swift */; };
 		A70171BE2AB4987900064C43 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171BD2AB4987900064C43 /* CategoryDetailView.swift */; };
 		A70171C02AB498A900064C43 /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171BF2AB498A900064C43 /* RecipeDetailView.swift */; };
 		A70171C22AB498C600064C43 /* RecipeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171C12AB498C600064C43 /* RecipeCardView.swift */; };
@@ -35,6 +34,7 @@
 		A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */; };
 		A76B8A6F2ADFFA8800096CEC /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */; };
 		A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A702AE002AE00096CEC /* Alerts.swift */; };
+		A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */; };
 		A7AEAE642AD5521400135378 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A7AEAE632AD5521400135378 /* Localizable.xcstrings */; };
 		A7F3F8E82ACBFC760076C227 /* KeywordPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */; };
 		A7F3F8EA2ACC221C0076C227 /* CategoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */; };
@@ -73,7 +73,6 @@
 		A70171AE2AB2116B00064C43 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		A70171B02AB211DF00064C43 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		A70171B32AB2122900064C43 /* NetworkRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequests.swift; sourceTree = "<group>"; };
-		A70171B82AB399FB00064C43 /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		A70171BD2AB4987900064C43 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
 		A70171BF2AB498A900064C43 /* RecipeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailView.swift; sourceTree = "<group>"; };
 		A70171C12AB498C600064C43 /* RecipeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardView.swift; sourceTree = "<group>"; };
@@ -90,6 +89,7 @@
 		A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeScraper.swift; sourceTree = "<group>"; };
 		A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
 		A76B8A702AE002AE00096CEC /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationComponents.swift; sourceTree = "<group>"; };
 		A7AEAE632AD5521400135378 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordPickerView.swift; sourceTree = "<group>"; };
 		A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerView.swift; sourceTree = "<group>"; };
@@ -228,6 +228,7 @@
 				A70171C32AB4A31200064C43 /* DataStore.swift */,
 				A70171C52AB4C43A00064C43 /* DataModels.swift */,
 				A70171CA2AB4CD1700064C43 /* UserSettings.swift */,
+				A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -235,7 +236,6 @@
 		A703226B2ABAF60D00D7C4ED /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				A70171B82AB399FB00064C43 /* DateFormatterExtension.swift */,
 				A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */,
 				A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */,
 			);
@@ -404,10 +404,10 @@
 				A70171C42AB4A31200064C43 /* DataStore.swift in Sources */,
 				A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */,
 				A70171B42AB2122900064C43 /* NetworkRequests.swift in Sources */,
-				A70171B92AB399FB00064C43 /* DateFormatterExtension.swift in Sources */,
 				A70171BE2AB4987900064C43 /* CategoryDetailView.swift in Sources */,
 				A70171C62AB4C43A00064C43 /* DataModels.swift in Sources */,
 				A7F3F8E82ACBFC760076C227 /* KeywordPickerView.swift in Sources */,
+				A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */,
 				A70171C02AB498A900064C43 /* RecipeDetailView.swift in Sources */,
 				A7F3F8EA2ACC221C0076C227 /* CategoryPickerView.swift in Sources */,
 				A70171CD2AB501B100064C43 /* SettingsView.swift in Sources */,

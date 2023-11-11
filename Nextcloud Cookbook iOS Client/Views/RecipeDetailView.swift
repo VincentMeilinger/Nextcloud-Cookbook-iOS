@@ -119,7 +119,7 @@ fileprivate struct RecipeDurationSection: View {
             if let prepTime = recipeDetail.prepTime {
                 VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Preparation"))
-                    Text(DateFormatter.formatDate(duration: prepTime))
+                    Text(DurationComponents.ptToText(prepTime))
                         .lineLimit(1)
                 }.padding()
             }
@@ -127,7 +127,7 @@ fileprivate struct RecipeDurationSection: View {
             if let cookTime = recipeDetail.cookTime {
                 VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Cooking"))
-                    Text(DateFormatter.formatDate(duration: cookTime))
+                    Text(DurationComponents.ptToText(cookTime))
                         .lineLimit(1)
                 }.padding()
             }
@@ -135,7 +135,7 @@ fileprivate struct RecipeDurationSection: View {
             if let totalTime = recipeDetail.totalTime {
                 VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Total time"))
-                    Text(DateFormatter.formatDate(duration: totalTime))
+                    Text(DurationComponents.ptToText(totalTime))
                         .lineLimit(1)
                 }.padding()
             }

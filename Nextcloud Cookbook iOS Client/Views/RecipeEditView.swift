@@ -13,11 +13,7 @@ import PhotosUI
 
 struct RecipeEditView: View {
     @ObservedObject var viewModel: MainViewModel
-    @State var recipe: RecipeDetail = RecipeDetail() {
-        didSet {
-            prepareView()
-        }
-    }
+    @State var recipe: RecipeDetail = RecipeDetail()
     @Binding var isPresented: Bool
     @State var uploadNew: Bool = true
     
@@ -25,9 +21,9 @@ struct RecipeEditView: View {
     @State private var alertType: UserAlert = RecipeCreationError.GENERIC
     @State private var alertAction: () -> () = {}
 
-    @StateObject private var prepDuration: Duration = Duration()
-    @StateObject private var cookDuration: Duration = Duration()
-    @StateObject private var totalDuration: Duration = Duration()
+    @StateObject private var prepDuration: DurationComponents = DurationComponents()
+    @StateObject private var cookDuration: DurationComponents = DurationComponents()
+    @StateObject private var totalDuration: DurationComponents = DurationComponents()
     @State private var searchText: String = ""
     @State private var keywords: [String] = []
     @State private var keywordSuggestions: [String] = []
@@ -94,6 +90,7 @@ struct RecipeEditView: View {
                                             let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: importURL)
                                             if let scrapedRecipe = scrapedRecipe {
                                                 self.recipe = scrapedRecipe
+                                                prepareView()
                                             }
                                             if let error = error {
                                                 self.alertType = error
@@ -200,13 +197,10 @@ struct RecipeEditView: View {
     }
     
     func createRecipe() {
-        self.recipe.prepTime = prepDuration.format()
-        self.recipe.cookTime = cookDuration.format()
-        self.recipe.totalTime = totalDuration.format()
-        
-        if !self.keywords.isEmpty {
-            self.recipe.keywords = self.keywords.joined(separator: ",")
-        }
+        self.recipe.prepTime = prepDuration.toPTString()
+        self.recipe.cookTime = cookDuration.toPTString()
+        self.recipe.totalTime = totalDuration.toPTString()
+        self.recipe.setKeywordsFromArray(keywords)
     }
     
     func recipeValid() -> Bool {
@@ -316,19 +310,16 @@ struct RecipeEditView: View {
     }
     
     func prepareView() {
-        if uploadNew { return }
         if let prepTime = recipe.prepTime {
-            prepDuration.initFromPT(prepTime)
+            prepDuration.fromPTString(prepTime)
         }
         if let cookTime = recipe.cookTime {
-            cookDuration.initFromPT(cookTime)
+            cookDuration.fromPTString(cookTime)
         }
         if let totalTime = recipe.totalTime {
-            totalDuration.initFromPT(totalTime)
+            totalDuration.fromPTString(totalTime)
         }
-        for keyword in self.recipe.keywords.components(separatedBy: ",") {
-            keywords.append(keyword)
-        }
+        self.keywords = recipe.getKeywordsArray()
     }
 }
 
@@ -381,7 +372,7 @@ fileprivate struct EditableListSection: View {
 
 fileprivate struct DurationPicker: View {
     @State var title: LocalizedStringKey
-    @ObservedObject var duration: Duration
+    @ObservedObject var duration: DurationComponents
 
     var body: some View {
         HStack {
@@ -405,54 +396,7 @@ fileprivate struct DurationPicker: View {
 
 
 
-fileprivate class Duration: ObservableObject {
-    @Published var minuteComponent: String = "00" {
-        didSet {
-            if minuteComponent.count > 2 {
-                minuteComponent = oldValue
-            } else if minuteComponent.count == 1 {
-                minuteComponent = "0\(minuteComponent)"
-            } else if minuteComponent.count == 0 {
-                minuteComponent = "00"
-            }
-            let filtered = minuteComponent.filter { $0.isNumber }
-            if minuteComponent != filtered {
-                minuteComponent = filtered
-            }
-        }
-    }
-    
-    @Published var hourComponent: String = "00" {
-        didSet {
-            if hourComponent.count > 2 {
-                hourComponent = oldValue
-            } else if hourComponent.count == 1 {
-                hourComponent = "0\(hourComponent)"
-            } else if hourComponent.count == 0 {
-                hourComponent = "00"
-            }
-            let filtered = hourComponent.filter { $0.isNumber }
-            if hourComponent != filtered {
-                hourComponent = filtered
-            }
-        }
-    }
-    
-    func initFromPT(_ PTRepresentation: String) {
-        let hourRegex = /([0-9]{1,2})H/
-        let minuteRegex = /([0-9]{1,2})M/
-        if let match = PTRepresentation.firstMatch(of: hourRegex) {
-            self.hourComponent = String(match.1)
-        }
-        if let match = PTRepresentation.firstMatch(of: minuteRegex) {
-            self.minuteComponent = String(match.1)
-        }
-    }
-    
-    func format() -> String {
-        return "PT\(hourComponent)H\(minuteComponent)M00S"
-    }
-}
+
 
 
 
