@@ -80,7 +80,13 @@ struct MainView: View {
             }
             .tint(.nextcloudBlue)
             .sheet(isPresented: $showEditView) {
-                RecipeEditView(viewModel: viewModel, isPresented: $showEditView)
+                RecipeEditView(viewModel:
+                    RecipeEditViewModel(
+                        mainViewModel: viewModel,
+                        isPresented: $showEditView,
+                        uploadNew: true
+                    )
+                )
             }
             .task {
                 self.serverConnection = await viewModel.checkServerConnection()

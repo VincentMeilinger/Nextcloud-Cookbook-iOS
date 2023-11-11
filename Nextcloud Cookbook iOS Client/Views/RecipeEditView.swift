@@ -12,43 +12,25 @@ import PhotosUI
 
 
 struct RecipeEditView: View {
-    @ObservedObject var viewModel: MainViewModel
-    @State var recipe: RecipeDetail = RecipeDetail()
-    @Binding var isPresented: Bool
-    @State var uploadNew: Bool = true
-    
-    @State private var presentAlert = false
-    @State private var alertType: UserAlert = RecipeCreationError.GENERIC
-    @State private var alertAction: () -> () = {}
-
-    @StateObject private var prepDuration: DurationComponents = DurationComponents()
-    @StateObject private var cookDuration: DurationComponents = DurationComponents()
-    @StateObject private var totalDuration: DurationComponents = DurationComponents()
-    @State private var searchText: String = ""
-    @State private var keywords: [String] = []
-    @State private var keywordSuggestions: [String] = []
-    
-    @State private var importURL: String = ""
-    @State private var showImportSection: Bool = false
-    @State private var waitingForUpload: Bool = false
+    @ObservedObject var viewModel: RecipeEditViewModel    
     
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
                     Button() {
-                        isPresented = false
+                        viewModel.isPresented.wrappedValue = false
                     } label: {
                         Text("Cancel")
                             .bold()
                     }
-                    if !uploadNew {
+                    if !viewModel.uploadNew {
                         Menu {
                             Button {
                                 print("Delete recipe.")
-                                alertType = RecipeCreationError.CONFIRM_DELETE
-                                alertAction = deleteRecipe
-                                presentAlert = true
+                                viewModel.alertType = RecipeCreationError.CONFIRM_DELETE
+                                viewModel.alertAction = viewModel.deleteRecipe
+                                viewModel.presentAlert = true
                             } label: {
                                 Image(systemName: "trash")
                                     .foregroundStyle(.red)
@@ -63,10 +45,10 @@ struct RecipeEditView: View {
                     }
                     Spacer()
                     Button() {
-                        if uploadNew {
-                            uploadNewRecipe()
+                        if viewModel.uploadNew {
+                            viewModel.uploadNewRecipe()
                         } else {
-                            uploadEditedRecipe()
+                            viewModel.uploadEditedRecipe()
                         }
                     } label: {
                         Text("Upload")
@@ -74,34 +56,24 @@ struct RecipeEditView: View {
                     }
                 }.padding()
                 HStack {
-                    Text(recipe.name == "" ? LocalizedStringKey("New recipe") : LocalizedStringKey(recipe.name))
+                    Text(viewModel.recipe.name == "" ? LocalizedStringKey("New recipe") : LocalizedStringKey(viewModel.recipe.name))
                         .font(.title)
                         .bold()
                         .padding()
                     Spacer()
                 }
                 Form {
-                    if showImportSection {
+                    if viewModel.showImportSection {
                         Section {
-                            TextField("URL (e.g. example.com/recipe)", text: $importURL)
+                            TextField("URL (e.g. example.com/recipe)", text: $viewModel.importURL)
                                 .onSubmit {
-                                    Task {
-                                        do {
-                                            let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: importURL)
-                                            if let scrapedRecipe = scrapedRecipe {
-                                                self.recipe = scrapedRecipe
-                                                prepareView()
-                                            }
-                                            if let error = error {
-                                                self.alertType = error
-                                                self.alertAction = {}
-                                                self.presentAlert = true
-                                            }
-                                        } catch {
-                                            print("Error")
-                                        }
-                                    }
+                                    viewModel.importRecipe()
                                 }
+                            Button {
+                                viewModel.importRecipe()
+                            } label: {
+                                Text("Import")
+                            }
                         } header: {
                             Text("Import Recipe")
                         } footer: {
@@ -112,7 +84,7 @@ struct RecipeEditView: View {
                         Section {
                             Button() {
                                 withAnimation{
-                                    showImportSection = true
+                                    viewModel.showImportSection = true
                                 }
                             } label: {
                                 Text("Import recipe from a website")
@@ -120,33 +92,33 @@ struct RecipeEditView: View {
                         }
                     }
                     
-                    TextField("Title", text: $recipe.name)
+                    TextField("Title", text: $viewModel.recipe.name)
                     Section {
-                        TextEditor(text: $recipe.description)
+                        TextEditor(text: $viewModel.recipe.description)
                     } header: {
                         Text("Description")
                     }
                     
                     Section() {
-                        NavigationLink(recipe.recipeCategory == "" ? "Category" : "Category: \(recipe.recipeCategory)") {
+                        NavigationLink(viewModel.recipe.recipeCategory == "" ? "Category" : "Category: \(viewModel.recipe.recipeCategory)") {
                             CategoryPickerView(
                                 title: "Category",
-                                searchSuggestions: viewModel.categories.map({ category in
+                                searchSuggestions: viewModel.mainViewModel.categories.map({ category in
                                     category.name == "*" ? "Other" : category.name
                                 }),
-                                selection: $recipe.recipeCategory)
+                                selection: $viewModel.recipe.recipeCategory)
                         }
                         NavigationLink("Keywords") {
                             KeywordPickerView(
                                 title: "Keywords",
-                                searchSuggestions: keywordSuggestions,
-                                selection: $keywords
+                                searchSuggestions: viewModel.keywordSuggestions,
+                                selection: $viewModel.keywords
                             )
                         }
                     } footer: {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
-                                ForEach(keywords, id: \.self) { keyword in
+                                ForEach(viewModel.keywords, id: \.self) { keyword in
                                     Text(keyword)
                                 }
                             }
@@ -154,172 +126,46 @@ struct RecipeEditView: View {
                     }
                     
                     Section() {
-                        Picker("Servings:", selection: $recipe.recipeYield) {
+                        Picker("Servings:", selection: $viewModel.recipe.recipeYield) {
                             ForEach(0..<99, id: \.self) { i in
                                 Text("\(i)").tag(i)
                             }
                         }
                         .pickerStyle(.menu)
-                        DurationPicker(title: LocalizedStringKey("Preparation duration:"), duration: prepDuration)
-                        DurationPicker(title: LocalizedStringKey("Cooking duration:"), duration: cookDuration)
-                        DurationPicker(title: LocalizedStringKey("Total duration:"), duration: totalDuration)
+                        DurationPicker(title: LocalizedStringKey("Preparation duration:"), duration: viewModel.prepDuration)
+                        DurationPicker(title: LocalizedStringKey("Cooking duration:"), duration: viewModel.cookDuration)
+                        DurationPicker(title: LocalizedStringKey("Total duration:"), duration: viewModel.totalDuration)
                     }
                     
-                    EditableListSection(title: LocalizedStringKey("Ingredients"), items: $recipe.recipeIngredient)
-                    EditableListSection(title: LocalizedStringKey("Tools"), items: $recipe.tool)
-                    EditableListSection(title: LocalizedStringKey("Instructions"), items: $recipe.recipeInstructions)
+                    EditableListSection(title: LocalizedStringKey("Ingredients"), items: $viewModel.recipe.recipeIngredient)
+                    EditableListSection(title: LocalizedStringKey("Tools"), items: $viewModel.recipe.tool)
+                    EditableListSection(title: LocalizedStringKey("Instructions"), items: $viewModel.recipe.recipeInstructions)
                 }
             }
         }
         .task {
-            self.keywordSuggestions = await viewModel.getKeywords()
+            viewModel.keywordSuggestions = await viewModel.mainViewModel.getKeywords()
         }
         .onAppear {
-            prepareView()
+            viewModel.prepareView()
         }
-        .alert(alertType.localizedTitle, isPresented: $presentAlert) {
-            ForEach(alertType.alertButtons) { buttonType in
+        .alert(viewModel.alertType.localizedTitle, isPresented: $viewModel.presentAlert) {
+            ForEach(viewModel.alertType.alertButtons) { buttonType in
                 if buttonType == .OK {
                     Button(AlertButton.OK.rawValue, role: .cancel) {
-                        alertAction()
+                        viewModel.alertAction()
                     }
                 } else if buttonType == .CANCEL {
                     Button(AlertButton.CANCEL.rawValue, role: .cancel) { }
                 } else if buttonType == .DELETE {
                     Button(AlertButton.DELETE.rawValue, role: .destructive) {
-                        alertAction()
+                        viewModel.alertAction()
                     }
                 }
             }
         } message: {
-            Text(alertType.localizedDescription)
+            Text(viewModel.alertType.localizedDescription)
         }
-    }
-    
-    func createRecipe() {
-        self.recipe.prepTime = prepDuration.toPTString()
-        self.recipe.cookTime = cookDuration.toPTString()
-        self.recipe.totalTime = totalDuration.toPTString()
-        self.recipe.setKeywordsFromArray(keywords)
-    }
-    
-    func recipeValid() -> Bool {
-        // Check if the recipe has a name
-        if recipe.name.replacingOccurrences(of: " ", with: "") == "" {
-            alertType = RecipeCreationError.NO_TITLE
-            alertAction = {}
-            presentAlert = true
-            return false
-        }
-        // Check if the recipe has a unique name
-        for recipeList in viewModel.recipes.values {
-            for r in recipeList {
-                if r.name
-                    .replacingOccurrences(of: " ", with: "")
-                    .lowercased() ==
-                    recipe.name
-                    .replacingOccurrences(of: " ", with: "")
-                    .lowercased()
-                {
-                    alertType = RecipeCreationError.DUPLICATE
-                    alertAction = {}
-                    presentAlert = true
-                    return false
-                }
-            }
-        }
-        
-        return true
-    }
-    
-    func uploadNewRecipe() {
-        print("Uploading new recipe.")
-        waitingForUpload = true
-        createRecipe()
-        guard recipeValid() else { return }
-        let request = RequestWrapper.customRequest(
-            method: .POST,
-            path: .NEW_RECIPE,
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true),
-                HeaderField.contentType(value: .JSON)
-            ],
-            body: JSONEncoder.safeEncode(self.recipe)
-        )
-        sendRequest(request)
-        dismissEditView()
-    }
-    
-    func uploadEditedRecipe() {
-        waitingForUpload = true
-        print("Uploading changed recipe.")
-        guard let recipeId = Int(recipe.id) else { return }
-        createRecipe()
-        let request = RequestWrapper.customRequest(
-            method: .PUT,
-            path: .RECIPE_DETAIL(recipeId: recipeId),
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true),
-                HeaderField.contentType(value: .JSON)
-            ],
-            body: JSONEncoder.safeEncode(self.recipe)
-        )
-        sendRequest(request)
-        dismissEditView()
-    }
-    
-    func deleteRecipe() {
-        guard let recipeId = Int(recipe.id) else { return }
-        let request = RequestWrapper.customRequest(
-            method: .DELETE,
-            path: .RECIPE_DETAIL(recipeId: recipeId),
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true)
-            ]
-        )
-        sendRequest(request)
-        if let recipeIdInt = Int(recipe.id) {
-            viewModel.deleteRecipe(withId: recipeIdInt, categoryName: recipe.recipeCategory)
-        }
-        dismissEditView()
-    }
-    
-    func sendRequest(_ request: RequestWrapper) {
-        Task {
-            guard let apiController = viewModel.apiController else { return }
-            let (data, _): (Data?, Error?) = await apiController.sendDataRequest(request)
-            guard let data = data else { return }
-            do {
-                let error = try JSONDecoder().decode(ServerMessage.self, from: data)
-                // TODO: Better error handling (Show error to user!)
-            } catch {
-                
-            }
-        }
-    }
-    
-    func dismissEditView() {
-        Task {
-            await self.viewModel.loadCategoryList(needsUpdate: true)
-            await self.viewModel.loadRecipeList(categoryName: self.recipe.recipeCategory, needsUpdate: true)
-        }
-        self.isPresented = false
-    }
-    
-    func prepareView() {
-        if let prepTime = recipe.prepTime {
-            prepDuration.fromPTString(prepTime)
-        }
-        if let cookTime = recipe.cookTime {
-            cookDuration.fromPTString(cookTime)
-        }
-        if let totalTime = recipe.totalTime {
-            totalDuration.fromPTString(totalTime)
-        }
-        self.keywords = recipe.getKeywordsArray()
     }
 }
 

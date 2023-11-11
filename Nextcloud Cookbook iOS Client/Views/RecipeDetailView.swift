@@ -95,7 +95,14 @@ struct RecipeDetailView: View {
         }
         .sheet(isPresented: $presentEditView) {
             if let recipeDetail = recipeDetail {
-                RecipeEditView(viewModel: viewModel, recipe: recipeDetail, isPresented: $presentEditView, uploadNew: false)
+                RecipeEditView(viewModel:
+                    RecipeEditViewModel(
+                        mainViewModel: viewModel,
+                        recipeDetail: recipeDetail,
+                        isPresented: $presentEditView,
+                        uploadNew: false
+                    )
+                )
             }
         }
         .task {
