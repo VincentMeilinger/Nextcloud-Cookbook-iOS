@@ -24,7 +24,14 @@
       }
     },
     "-" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        }
+      }
     },
     ":" : {
       "localizations" : {
@@ -93,7 +100,14 @@
       }
     },
     "%lld h" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h"
+          }
+        }
+      }
     },
     "%lld h, %lld min" : {
       "localizations" : {
@@ -102,11 +116,24 @@
             "state" : "new",
             "value" : "%1$lld h, %2$lld min"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h, %2$lld min"
+          }
         }
       }
     },
     "%lld min" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
+        }
+      }
     },
     "%lld." : {
       "localizations" : {
@@ -329,7 +356,14 @@
       }
     },
     "Bad URL" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL incorrect"
+          }
+        }
+      }
     },
     "Cancel" : {
       "localizations" : {
@@ -420,7 +454,14 @@
       }
     },
     "Connection error" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de connexion"
+          }
+        }
+      }
     },
     "Cookbook Client" : {
       "localizations" : {
@@ -885,13 +926,34 @@
       }
     },
     "Import" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer"
+          }
+        }
+      }
     },
     "Import Recipe" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer une recette"
+          }
+        }
+      }
     },
     "Import recipe from a website" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer une recette depuis un site web"
+          }
+        }
+      }
     },
     "Ingredients" : {
       "localizations" : {
@@ -1356,13 +1418,34 @@
       }
     },
     "Parsing error" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur d'analyse"
+          }
+        }
+      }
     },
     "Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings." : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collez l'URL d'une recette que vous souhaitez importer ci-dessus, et nous tenterons de remplir les champs pour vous. Cette fonctionnalité ne fonctionne pas avec tous les sites web. Si votre site préféré n'est pas pris en charge, n'hésitez pas à nous contacter pour obtenir de l'aide. Vous pouvez trouver les coordonnées dans les paramètres de l'application."
+          }
+        }
+      }
     },
     "Please check the entered URL." : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez vérifier l'URL saisie."
+          }
+        }
+      }
     },
     "Please check your credentials and internet connection." : {
       "localizations" : {
@@ -1739,7 +1822,14 @@
       }
     },
     "This website might not be currently supported. If this appears incorrect, you can use the support options in the app settings to raise awareness about this issue." : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce site web pourrait ne pas être pris en charge actuellement. Si cela semble incorrect, vous pouvez utiliser les options de support dans les paramètres de l'application pour signaler ce problème."
+          }
+        }
+      }
     },
     "Title" : {
       "localizations" : {
@@ -1852,7 +1942,14 @@
       }
     },
     "Unable to load website content. Please check your internet connection." : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de télécharger le contenu du site web. Veuillez vérifier votre connexion Internet."
+          }
+        }
+      }
     },
     "Unable to upload your recipe. Please check your internet connection." : {
       "localizations" : {
@@ -1899,7 +1996,14 @@
       }
     },
     "URL (e.g. example.com/recipe)" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL (par exemple, example.com/recette)"
+          }
+        }
+      }
     },
     "Validate" : {
       "localizations" : {

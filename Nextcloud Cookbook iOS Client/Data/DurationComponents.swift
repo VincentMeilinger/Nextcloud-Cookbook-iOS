@@ -71,7 +71,7 @@ class DurationComponents: ObservableObject {
         }
     }
     
-    static func ptToText(_ ptString: String) -> String {
+    static func ptToText(_ ptString: String) -> String? {
         let hourRegex = /([0-9]{1,2})H/
         let minuteRegex = /([0-9]{1,2})M/
         
@@ -93,7 +93,7 @@ class DurationComponents: ObservableObject {
         } else if intHour != 0 && intMinute == 0 {
             return "\(intHour) h"
         } else {
-            return "-"
+            return nil
         }
     }
 }

@@ -66,9 +66,6 @@ struct RecipeEditView: View {
                     if viewModel.showImportSection {
                         Section {
                             TextField("URL (e.g. example.com/recipe)", text: $viewModel.importURL)
-                                .onSubmit {
-                                    viewModel.importRecipe()
-                                }
                             Button {
                                 viewModel.importRecipe()
                             } label: {

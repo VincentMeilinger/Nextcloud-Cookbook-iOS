@@ -83,7 +83,7 @@ struct RecipeDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(showTitle ? recipe.name : "")
         .toolbar {
-            if let recipeDetail = recipeDetail {
+            if recipeDetail != nil {
                 Button {
                     presentEditView = true
                 } label: {
@@ -123,26 +123,26 @@ fileprivate struct RecipeDurationSection: View {
     
     var body: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), alignment: .leading)]) {
-            if let prepTime = recipeDetail.prepTime {
+            if let prepTime = recipeDetail.prepTime, let time = DurationComponents.ptToText(prepTime) {
                 VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Preparation"))
-                    Text(DurationComponents.ptToText(prepTime))
+                    Text(time)
                         .lineLimit(1)
                 }.padding()
             }
             
-            if let cookTime = recipeDetail.cookTime {
+            if let cookTime = recipeDetail.cookTime, let time = DurationComponents.ptToText(cookTime) {
                 VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Cooking"))
-                    Text(DurationComponents.ptToText(cookTime))
+                    Text(time)
                         .lineLimit(1)
                 }.padding()
             }
             
-            if let totalTime = recipeDetail.totalTime {
+            if let totalTime = recipeDetail.totalTime, let time = DurationComponents.ptToText(totalTime) {
                 VStack(alignment: .leading) {
                     SecondaryLabel(text: LocalizedStringKey("Total time"))
-                    Text(DurationComponents.ptToText(totalTime))
+                    Text(time)
                         .lineLimit(1)
                 }.padding()
             }
