@@ -25,6 +25,12 @@
     },
     "-" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -101,6 +107,12 @@
     },
     "%lld h" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -111,6 +123,12 @@
     },
     "%lld h, %lld min" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h, %2$lld min"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -127,6 +145,12 @@
     },
     "%lld min" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -357,6 +381,12 @@
     },
     "Bad URL" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link fehlerhaft"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -455,6 +485,12 @@
     },
     "Connection error" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindungsfehler"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -927,6 +963,12 @@
     },
     "Import" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importieren"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -937,6 +979,12 @@
     },
     "Import Recipe" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept importieren"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -947,6 +995,12 @@
     },
     "Import recipe from a website" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept von einer Website importieren"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1419,6 +1473,12 @@
     },
     "Parsing error" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decodierung fehlgeschlagen"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1429,6 +1489,12 @@
     },
     "Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügen Sie hier den Link einer Website ein, von der Sie ein Rezept importieren möchten. Dies funktioniert nicht mit allen Seiten. Falls eine Seite nicht unterstützt wird, kontaktieren Sie uns gerne um uns darauf Aufmerksam zu machen."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1439,6 +1505,12 @@
     },
     "Please check the entered URL." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte überprüfen Sie die eingegebenen Link."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1823,6 +1895,12 @@
     },
     "This website might not be currently supported. If this appears incorrect, you can use the support options in the app settings to raise awareness about this issue." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Website wird möglicherweise noch nicht unterstützt. Falls Sie das ändern möchten, können Sie uns gerne darauf aufmerksam machen."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1943,6 +2021,12 @@
     },
     "Unable to load website content. Please check your internet connection." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Inhalt der Website konnte nicht geladen werden. Bitte überprüfen Sie Ihre Internetverbindung."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1997,6 +2081,12 @@
     },
     "URL (e.g. example.com/recipe)" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL (z.B. beispiel.com/rezept)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
