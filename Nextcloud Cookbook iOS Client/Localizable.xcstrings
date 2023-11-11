@@ -31,6 +31,12 @@
             "value" : "-"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -113,6 +119,12 @@
             "value" : "%lld h"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -135,6 +147,12 @@
             "value" : "%1$lld h, %2$lld min"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h, %2$lld min"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -146,6 +164,12 @@
     "%lld min" : {
       "localizations" : {
         "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld min"
@@ -387,6 +411,12 @@
             "value" : "Link fehlerhaft"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL incorrecta"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -489,6 +519,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbindungsfehler"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de conexión"
           }
         },
         "fr" : {
@@ -969,6 +1005,12 @@
             "value" : "Importieren"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -985,6 +1027,12 @@
             "value" : "Rezept importieren"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar Receta"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -999,6 +1047,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rezept von einer Website importieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar receta desde un sitio web"
           }
         },
         "fr" : {
@@ -1479,6 +1533,12 @@
             "value" : "Decodierung fehlgeschlagen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de análisis"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1495,6 +1555,12 @@
             "value" : "Fügen Sie hier den Link einer Website ein, von der Sie ein Rezept importieren möchten. Dies funktioniert nicht mit allen Seiten. Falls eine Seite nicht unterstützt wird, kontaktieren Sie uns gerne um uns darauf Aufmerksam zu machen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pega la URL de una receta que te gustaría importar arriba, y trataremos de completar los campos por ti. Esta función no funciona con todos los sitios web. Si tu sitio favorito no es compatible, no dudes en pedir ayuda. Puedes encontrar los detalles de contacto en la configuración de la aplicación."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1509,6 +1575,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bitte überprüfen Sie die eingegebenen Link."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, verifica la URL ingresada."
           }
         },
         "fr" : {
@@ -1901,6 +1973,12 @@
             "value" : "Diese Website wird möglicherweise noch nicht unterstützt. Falls Sie das ändern möchten, können Sie uns gerne darauf aufmerksam machen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este sitio web podría no estar actualmente admitido. Si esto parece incorrecto, puedes utilizar las opciones de soporte en la configuración de la aplicación para dar a conocer este problema."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2027,6 +2105,12 @@
             "value" : "Der Inhalt der Website konnte nicht geladen werden. Bitte überprüfen Sie Ihre Internetverbindung."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede cargar el contenido del sitio web. Por favor, verifica tu conexión a Internet."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2085,6 +2169,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL (z.B. beispiel.com/rezept)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL (por ejemplo, ejemplo.com/receta)"
           }
         },
         "fr" : {
