@@ -65,16 +65,16 @@ struct RecipeEditView: View {
                 Form {
                     if viewModel.showImportSection {
                         Section {
-                            TextField("URL (e.g. example.com/recipe)", text: $viewModel.importURL)
+                            TextField(LocalizedStringKey("URL (e.g. example.com/recipe)"), text: $viewModel.importURL)
                             Button {
                                 viewModel.importRecipe()
                             } label: {
-                                Text("Import")
+                                Text(LocalizedStringKey("Import"))
                             }
                         } header: {
-                            Text("Import Recipe")
+                            Text(LocalizedStringKey("Import Recipe"))
                         } footer: {
-                            Text("Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings.")
+                            Text(LocalizedStringKey("Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings."))
                         }
                         
                     } else {

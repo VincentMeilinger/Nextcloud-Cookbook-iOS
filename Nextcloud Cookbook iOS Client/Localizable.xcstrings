@@ -1046,19 +1046,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rezept von einer Website importieren"
+            "value" : "Rezept von einer Website importieren (Experimentell)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import recipe from a website (Experimental)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importar receta desde un sitio web"
+            "value" : "Importar receta desde un sitio web (Experimental)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importer une recette depuis un site web"
+            "value" : "Importer une recette depuis un site web (Expérimental)"
           }
         }
       }
