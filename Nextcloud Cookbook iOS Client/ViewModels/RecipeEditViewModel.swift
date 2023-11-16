@@ -26,7 +26,7 @@ import SwiftUI
     
     @Published var presentAlert = false
     var alertType: UserAlert = RecipeCreationError.GENERIC
-    var alertAction: @MainActor () -> () = {}
+    var alertAction: @MainActor () async -> (RequestAlert) = { return .REQUEST_DROPPED }
     
     var uploadNew: Bool = true
     var waitingForUpload: Bool = false
@@ -57,7 +57,7 @@ import SwiftUI
         // Check if the recipe has a name
         if recipe.name.replacingOccurrences(of: " ", with: "") == "" {
             alertType = RecipeCreationError.NO_TITLE
-            alertAction = {}
+            alertAction = {return .REQUEST_DROPPED}
             presentAlert = true
             return false
         }
@@ -72,7 +72,7 @@ import SwiftUI
                     .lowercased()
                 {
                     alertType = RecipeCreationError.DUPLICATE
-                    alertAction = {}
+                    alertAction = {return .REQUEST_DROPPED}
                     presentAlert = true
                     return false
                 }
@@ -111,8 +111,8 @@ import SwiftUI
     
     func dismissEditView() {
         Task {
-            await mainViewModel.loadCategoryList(needsUpdate: true)
-            await mainViewModel.loadRecipeList(categoryName: recipe.recipeCategory, needsUpdate: true)
+            await mainViewModel.loadCategories() //loadCategoryList(needsUpdate: true)
+            await mainViewModel.getCategory(named: recipe.recipeCategory)//.loadRecipeList(categoryName: recipe.recipeCategory, needsUpdate: true)
         }
         isPresented.wrappedValue = false
     }
@@ -140,7 +140,7 @@ import SwiftUI
                 }
                 if let error = error {
                     self.alertType = error
-                    self.alertAction = {}
+                    self.alertAction = {return .REQUEST_DROPPED}
                     self.presentAlert = true
                 }
             } catch {

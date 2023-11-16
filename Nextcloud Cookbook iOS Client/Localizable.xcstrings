@@ -293,6 +293,12 @@
         }
       }
     },
+    "Action completed." : {
+
+    },
+    "Action delayed" : {
+
+    },
     "Add" : {
       "localizations" : {
         "de" : {
@@ -623,6 +629,9 @@
         }
       }
     },
+    "Could not establish a connection to the server. The action will be retried upon reconnection." : {
+
+    },
     "Delete" : {
       "localizations" : {
         "de" : {
@@ -864,6 +873,9 @@
           }
         }
       }
+    },
+    "Error" : {
+
     },
     "Error." : {
       "localizations" : {
@@ -1861,6 +1873,9 @@
         }
       }
     },
+    "Success" : {
+
+    },
     "Support" : {
       "localizations" : {
         "de" : {
@@ -2080,6 +2095,9 @@
           }
         }
       }
+    },
+    "Unable to complete action." : {
+
     },
     "Unable to connect to server." : {
       "localizations" : {

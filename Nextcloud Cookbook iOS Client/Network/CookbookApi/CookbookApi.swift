@@ -49,7 +49,8 @@ protocol CookbookApi {
     /// - Returns: A NetworkError if the request fails. Nil otherwise.
     static func createRecipe(
         from serverAdress: String,
-        auth: String
+        auth: String,
+        recipe: RecipeDetail
     ) async -> (NetworkError?)
     
     /// Get the recipe with the specified id.
@@ -94,7 +95,7 @@ protocol CookbookApi {
     static func getCategories(
         from serverAdress: String,
         auth: String
-    ) async -> ([String]?, NetworkError?)
+    ) async -> ([Category]?, NetworkError?)
     
     /// Get all recipes of a specified category.
     /// - Parameters:
@@ -184,4 +185,7 @@ protocol CookbookApi {
         auth: String
     ) async -> (NetworkError?)
 }
+
+
+
 

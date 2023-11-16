@@ -10,7 +10,6 @@ import SwiftUI
 @main
 struct Nextcloud_Cookbook_iOS_ClientApp: App {
     @StateObject var userSettings = UserSettings()
-    @StateObject var mainViewModel = MainViewModel()
     
     var body: some Scene {
         WindowGroup {
@@ -18,10 +17,7 @@ struct Nextcloud_Cookbook_iOS_ClientApp: App {
                 if userSettings.onboarding {
                     OnboardingView(userSettings: userSettings)
                 } else {
-                    MainView(viewModel: mainViewModel, userSettings: userSettings)
-                        .onAppear {
-                            mainViewModel.apiController = APIController(userSettings: userSettings)
-                        }
+                    MainView(userSettings: userSettings)
                 }
             }
             .transition(.slide)

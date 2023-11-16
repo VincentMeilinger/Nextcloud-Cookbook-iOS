@@ -13,14 +13,12 @@ class UserSettings: ObservableObject {
     @Published var username: String {
         didSet {
             UserDefaults.standard.set(username, forKey: "username")
-            self.authString = setAuthString()
         }
     }
     
     @Published var token: String {
         didSet {
             UserDefaults.standard.set(token, forKey: "token")
-            self.authString = setAuthString()
         }
     }
     
@@ -69,6 +67,14 @@ class UserSettings: ObservableObject {
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue
         self.downloadRecipes = UserDefaults.standard.object(forKey: "downloadRecipes") as? Bool ?? false
+        
+        if authString == "" {
+            if token != "" && username != "" {
+                let loginString = "\(self.username):\(self.token)"
+                let loginData = loginString.data(using: String.Encoding.utf8)!
+                authString = loginData.base64EncodedString()
+            }
+        }
     }
     
     func setAuthString() -> String {

@@ -45,10 +45,12 @@ struct RecipeEditView: View {
                     }
                     Spacer()
                     Button() {
-                        if viewModel.uploadNew {
-                            viewModel.uploadNewRecipe()
-                        } else {
-                            viewModel.uploadEditedRecipe()
+                        Task {
+                            if viewModel.uploadNew {
+                                await viewModel.uploadNewRecipe()
+                            } else {
+                                await viewModel.uploadEditedRecipe()
+                            }
                         }
                     } label: {
                         Text("Upload")
@@ -150,13 +152,17 @@ struct RecipeEditView: View {
             ForEach(viewModel.alertType.alertButtons) { buttonType in
                 if buttonType == .OK {
                     Button(AlertButton.OK.rawValue, role: .cancel) {
-                        viewModel.alertAction()
+                        Task {
+                            await viewModel.alertAction()
+                        }
                     }
                 } else if buttonType == .CANCEL {
                     Button(AlertButton.CANCEL.rawValue, role: .cancel) { }
                 } else if buttonType == .DELETE {
                     Button(AlertButton.DELETE.rawValue, role: .destructive) {
-                        viewModel.alertAction()
+                        Task {
+                            await viewModel.alertAction()
+                        }
                     }
                 }
             }

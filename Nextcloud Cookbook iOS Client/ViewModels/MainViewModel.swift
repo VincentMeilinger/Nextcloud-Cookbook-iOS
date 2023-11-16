@@ -11,33 +11,30 @@ import UIKit
 
 
 @MainActor class MainViewModel: ObservableObject {
+    @AppStorage("authString") var authString = ""
+    @AppStorage("serverAddress") var serverAdress = ""
+    let api: CookbookApi.Type
+    
     @Published var categories: [Category] = []
     @Published var recipes: [String: [Recipe]] = [:]
-    private var recipeDetails: [Int: RecipeDetail] = [:]
+    @Published var recipeDetails: [Int: RecipeDetail] = [:]
     private var imageCache: [Int: RecipeImage] = [:]
     private var requestQueue: [RequestWrapper] = []
+    private var serverConnection: Bool = false
     
     let dataStore: DataStore
-    var apiController: APIController? = nil
     
-    /// The path of an image in storage
-    private var localImagePath: (Int, Bool) -> (String) = { recipeId, thumb in
-        return "image\(recipeId)_\(thumb ? "thumb" : "full")"
-    }
     
-    /// The path of an image on the server
-    private var networkImagePath: (Int, Bool) -> (String) = { recipeId, thumb in
-        return "recipes/\(recipeId)/image?size=\(thumb ? "thumb" : "full")"
-    }
-    
-    init() {
+    init(apiVersion api: CookbookApi.Type = CookbookApiV1.self) {
+        print("Created MainViewModel")
+        self.api = api
         self.dataStore = DataStore()
     }
     
     /// Try to load the category list from store or the server.
     /// - Parameters
     ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from store first.
-    func loadCategoryList(needsUpdate: Bool = false) async {
+    /*func loadCategoryList(needsUpdate: Bool = false) async {
         if let categoryList: [Category] = await loadObject(
             localPath: "categories.data",
             networkPath: .CATEGORIES,
@@ -46,6 +43,23 @@ import UIKit
             self.categories = categoryList
         }
         print(self.categories)
+    }*/
+    
+    func loadCategories() async {
+        let (categories, _) = await api.getCategories(
+            from: serverAdress,
+            auth: authString
+        )
+        if let categories = categories {
+            self.categories = categories
+            await saveLocal(categories, path: "categories.data")
+            serverConnection = true
+        } else {
+            if let categories: [Category] = await loadLocal(path: "categories.data") {
+                self.categories = categories
+            }
+            serverConnection = false
+        }
     }
     
     /// Try to load the recipe list from store or the server.
@@ -53,7 +67,7 @@ import UIKit
     /// - Parameters
     ///     - categoryName: The name of the category containing the requested list of recipes.
     ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from store first.
-    func loadRecipeList(categoryName: String, needsUpdate: Bool = false) async {
+    /*func loadRecipeList(categoryName: String, needsUpdate: Bool = false) async {
         let categoryString = categoryName == "*" ? "_" : categoryName
         if let recipeList: [Recipe] = await loadObject(
             localPath: "category_\(categoryString).data",
@@ -64,13 +78,48 @@ import UIKit
             print(recipeList)
         }
         
+    }*/
+    func getCategory(named name: String) async {
+        let categoryString = name == "*" ? "_" : name
+        let (recipes, _) = await api.getCategory(
+            from: serverAdress,
+            auth: authString,
+            named: name
+        )
+        if let recipes = recipes {
+            self.recipes[name] = recipes
+        } else {
+            if let recipes: [Recipe] = await loadLocal(path: "category_\(categoryString).data") {
+                self.recipes[name] = recipes
+            }
+        }
     }
     
-    func getAllRecipes() async -> [Recipe] {
+    /*func getAllRecipes() async -> [Recipe] {
         var allRecipes: [Recipe] = []
         for category in categories {
             await loadRecipeList(categoryName: category.name)
             if let recipeArray = recipes[category.name] {
+                allRecipes.append(contentsOf: recipeArray)
+            }
+        }
+        return allRecipes.sorted(by: {
+            $0.name < $1.name
+        })
+    }*/
+    func getRecipes() async -> [Recipe] {
+        let (recipes, error) = await api.getRecipes(
+            from: serverAdress,
+            auth: authString
+        )
+        if let recipes = recipes {
+            return recipes
+        } else if let error = error {
+            print(error)
+        }
+        var allRecipes: [Recipe] = []
+        for category in categories {
+            if let recipeArray = self.recipes[category.name] {
                 allRecipes.append(contentsOf: recipeArray)
             }
         }
@@ -84,7 +133,7 @@ import UIKit
     ///     - recipeId: The id of the recipe.
     ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from cache/store first.
     /// - Returns: RecipeDetail struct. If not found locally, and unable to load from server, a RecipeDetail struct containing an error message.
-    func loadRecipeDetail(recipeId: Int, needsUpdate: Bool = false) async -> RecipeDetail {
+    /*func loadRecipeDetail(recipeId: Int, needsUpdate: Bool = false) async -> RecipeDetail {
         if !needsUpdate {
             if let recipeDetail = recipeDetails[recipeId] {
                 return recipeDetail
@@ -99,18 +148,45 @@ import UIKit
             return recipeDetail
         }
         return RecipeDetail.error
+    }*/
+    func getRecipe(id: Int) async -> RecipeDetail {
+        let (recipe, error) = await api.getRecipe(
+            from: serverAdress,
+            auth: authString,
+            id: id
+        )
+        if let recipe = recipe {
+            return recipe
+        } else if let error = error {
+            print(error)
+        }
+        guard let recipe: RecipeDetail = await loadLocal(path: "recipe\(id).data") else {
+            return RecipeDetail.error
+        }
+        return recipe
     }
     
     func downloadAllRecipes() async {
         for category in categories {
-            await loadRecipeList(categoryName: category.name, needsUpdate: true)
+            await getCategory(named: category.name)
             guard let recipeList = recipes[category.name] else { continue }
             for recipe in recipeList {
-                let _ = await loadRecipeDetail(recipeId: recipe.recipe_id, needsUpdate: true)
-                let _ = await loadImage(recipeId: recipe.recipe_id, thumb: true)
+                let recipeDetail = await getRecipe(id: recipe.recipe_id)
+                await saveLocal(recipeDetail, path: "recipe\(recipe.recipe_id).data")
+                
+                let thumbnail = await getImage(id: recipe.recipe_id, size: .THUMB, needsUpdate: true)
+                guard let thumbnail = thumbnail else { continue }
+                guard let thumbnailData = thumbnail.pngData() else { continue }
+                await saveLocal(thumbnailData.base64EncodedString(), path: "image\(recipe.recipe_id)_thumb")
+                
+                let image = await getImage(id: recipe.recipe_id, size: .FULL, needsUpdate: true)
+                guard let image = image else { continue }
+                guard let imageData = image.pngData() else { continue }
+                await saveLocal(imageData.base64EncodedString(), path: "image\(recipe.recipe_id)_full")
             }
         }
     }
+    
     
     /// Check if recipeDetail is stored locally, either in cache or on disk
     /// - Parameters
@@ -132,7 +208,7 @@ import UIKit
     ///     - full: If true, load the full resolution image. Otherwise, load a thumbnail-sized image.
     ///     - needsUpdate: Determines wether the image should be loaded directly from the server, or if it should be loaded from cache/store first.
     /// - Returns: The image if found locally or on the server, otherwise nil.
-    func loadImage(recipeId: Int, thumb: Bool, needsUpdate: Bool = false) async -> UIImage? {
+    /*func loadImage(recipeId: Int, thumb: Bool, needsUpdate: Bool = false) async -> UIImage? {
         print("loadImage(recipeId: \(recipeId), thumb: \(thumb), needsUpdate: \(needsUpdate))")
         // If the image needs an update, request it from the server and overwrite the stored image
         if needsUpdate {
@@ -151,6 +227,9 @@ import UIKit
             }
         }
         
+    
+    
+    
         // Check imageExists flag to detect if we attempted to load a non-existing image before.
         // This allows us to avoid sending requests to the server if we already know the recipe has no image.
         if imageCache[recipeId] != nil {
@@ -188,15 +267,43 @@ import UIKit
         }
         imageCache[recipeId] = RecipeImage(imageExists: false)
         return nil
+    }*/
+    func getImage(id: Int, size: RecipeImage.RecipeImageSize, needsUpdate: Bool) async -> UIImage? {
+        if !needsUpdate, let image = await imageFromStore(id: id, size: size) {
+            return image
+        }
+        let (image, _) = await api.getImage(
+            from: serverAdress,
+            auth: authString,
+            id: id,
+            size: size
+        )
+        if let image = image { return image }
+        return await imageFromStore(id: id, size: size)
     }
     
-    func getKeywords() async -> [String] {
+    /*func getKeywords() async -> [String] {
         if let keywords: [RecipeKeyword] = await self.loadObject(
             localPath: "keywords.data",
             networkPath: .KEYWORDS,
             needsUpdate: true
         ) {
             return keywords.map { $0.name }
+        }
+        return []
+    }*/
+    func getKeywords() async -> [String] {
+        let (tags, error) = await api.getTags(
+            from: serverAdress,
+            auth: authString
+        )
+        if let tags = tags {
+            return tags
+        } else if let error = error {
+            print(error)
+        }
+        if let keywords: [String] = await loadLocal(path: "keywords.data") {
+            return keywords
         }
         return []
     }
@@ -211,7 +318,7 @@ import UIKit
         }
     }
     
-    func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert {
+    /*func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert {
         let request = RequestWrapper.customRequest(
             method: .DELETE,
             path: .RECIPE_DETAIL(recipeId: id),
@@ -235,9 +342,29 @@ import UIKit
             requestQueue.append(request)
             return .REQUEST_DELAYED
         }
+    }*/
+    func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert {
+        let (error) = await api.deleteRecipe(
+            from: serverAdress,
+            auth: authString,
+            id: id
+        )
+        
+        if let error = error {
+            return .REQUEST_DROPPED
+        }
+        let path = "recipe\(id).data"
+        dataStore.delete(path: path)
+        if recipes[categoryName] != nil {
+            recipes[categoryName]!.removeAll(where: { recipe in
+                recipe.recipe_id == id ? true : false
+            })
+            recipeDetails.removeValue(forKey: id)
+        }
+        return .REQUEST_SUCCESS
     }
     
-    func checkServerConnection() async -> Bool {
+    /*func checkServerConnection() async -> Bool {
         guard let apiController = apiController else { return false }
         let req = RequestWrapper.customRequest(
             method: .GET,
@@ -251,9 +378,21 @@ import UIKit
             return false
         }
         return true
+    }*/
+    func checkServerConnection() async -> Bool {
+        let (categories, _) = await api.getCategories(
+            from: serverAdress,
+            auth: authString
+        )
+        if let categories = categories {
+            self.categories = categories
+            await saveLocal(categories, path: "categories.data")
+            return true
+        }
+        return false
     }
     
-    func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert {
+    /*func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert {
         var path: RequestPath? = nil
         if createNew {
             path = .NEW_RECIPE
@@ -280,9 +419,21 @@ import UIKit
             requestQueue.append(request)
             return .REQUEST_DELAYED
         }
+    }*/
+    func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert {
+        let error = await api.createRecipe(
+            from: serverAdress,
+            auth: authString,
+            recipe: recipeDetail
+        )
+        
+        if let error = error {
+            return .REQUEST_DROPPED
+        }
+        return .REQUEST_SUCCESS
     }
     
-    func sendRequest(_ request: RequestWrapper) async -> Bool {
+    /*func sendRequest(_ request: RequestWrapper) async -> Bool {
         guard let apiController = apiController else { return false }
         let (data, _): (Data?, Error?) = await apiController.sendDataRequest(request)
         guard let data = data else { return false }
@@ -299,14 +450,27 @@ import UIKit
             print("Could not decode server response")
         }
         return false
-    }
+    }*/
 }
 
 
 
 
 extension MainViewModel {
-    private func loadObject<T: Codable>(localPath: String, networkPath: RequestPath, needsUpdate: Bool = false) async -> T? {
+    func loadLocal<T: Codable>(path: String) async -> T? {
+        do {
+            return try await dataStore.load(fromPath: path)
+        } catch (let error) {
+            print(error)
+            return nil
+        }
+    }
+    
+    func saveLocal<T: Codable>(_ object: T, path: String) async {
+        guard let data = JSONEncoder.safeEncode(object) else { return }
+        await dataStore.save(data: data, toPath: path)
+    }
+    /*private func loadObject<T: Codable>(localPath: String, networkPath: RequestPath, needsUpdate: Bool = false) async -> T? {
         do {
             if !needsUpdate, let data: T = try await dataStore.load(fromPath: localPath) {
                 print("Data found locally.")
@@ -350,10 +514,10 @@ extension MainViewModel {
         }
         return nil
     }
-    
-    private func imageFromStore(recipeId: Int, thumb: Bool) async -> UIImage? {
+    */
+    private func imageFromStore(id: Int, size: RecipeImage.RecipeImageSize) async -> UIImage? {
         do {
-            let localPath = localImagePath(recipeId, thumb)
+            let localPath = "image\(id)_\(size == .FULL ? "full" : "thumb")"
             if let data: String = try await dataStore.load(fromPath: localPath) {
                 guard let dataDecoded = Data(base64Encoded: data) else { return nil }
                 let image = UIImage(data: dataDecoded)

@@ -40,8 +40,9 @@ struct ApiRequest {
         Logger.network.debug("\(method.rawValue) \(path) sending ...")
         
         // Prepare URL
-        let urlString = serverAddress + cookbookPath + path
-        Logger.network.debug("Full path: \(urlString)")
+        let urlString = "https://" + serverAddress + cookbookPath + path
+        print("Full path: \(urlString)")
+        //Logger.network.debug("Full path: \(urlString)")
         guard let urlStringSanitized = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return (nil, .unknownError) }
         guard let url = URL(string: urlStringSanitized) else { return (nil, .unknownError) }
         
@@ -76,6 +77,9 @@ struct ApiRequest {
         do {
             (data, response) = try await URLSession.shared.data(for: request)
             Logger.network.debug("\(method.rawValue) \(path) SUCCESS!")
+            if let data = data {
+                print(data, String(data: data, encoding: .utf8))
+            }
             return (data, nil)
         } catch {
             let error = decodeURLResponse(response: response as? HTTPURLResponse)

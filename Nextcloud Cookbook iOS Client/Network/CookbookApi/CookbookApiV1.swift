@@ -43,13 +43,18 @@ class CookbookApiV1: CookbookApi {
         return (JSONDecoder.safeDecode(data), nil)
     }
     
-    static func createRecipe(from serverAdress: String, auth: String) async -> (NetworkError?) {
+    static func createRecipe(from serverAdress: String, auth: String, recipe: RecipeDetail) async -> (NetworkError?) {
+        guard let recipeData = JSONEncoder.safeEncode(recipe) else {
+            return .dataError
+        }
+        
         let request = ApiRequest(
             serverAdress: serverAdress,
             path: "/api/v1/recipes",
             method: .POST,
             authString: auth,
-            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
+            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)],
+            body: recipeData
         )
         
         let (data, error) = await request.send()
@@ -119,7 +124,7 @@ class CookbookApiV1: CookbookApi {
         return nil
     }
     
-    static func getCategories(from serverAdress: String, auth: String) async -> ([String]?, NetworkError?) {
+    static func getCategories(from serverAdress: String, auth: String) async -> ([Category]?, NetworkError?) {
         let request = ApiRequest(
             serverAdress: serverAdress,
             path: "/api/v1/categories",
