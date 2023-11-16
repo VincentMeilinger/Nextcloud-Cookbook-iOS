@@ -15,6 +15,7 @@ import UIKit
     @Published var recipes: [String: [Recipe]] = [:]
     private var recipeDetails: [Int: RecipeDetail] = [:]
     private var imageCache: [Int: RecipeImage] = [:]
+    private var requestQueue: [RequestWrapper] = []
     
     let dataStore: DataStore
     var apiController: APIController? = nil
@@ -206,17 +207,34 @@ import UIKit
             self.recipes = [:]
             self.imageCache = [:]
             self.recipeDetails = [:]
+            self.requestQueue = []
         }
     }
     
-    func deleteRecipe(withId id: Int, categoryName: String) {
+    func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert {
+        let request = RequestWrapper.customRequest(
+            method: .DELETE,
+            path: .RECIPE_DETAIL(recipeId: id),
+            headerFields: [
+                HeaderField.accept(value: .JSON),
+                HeaderField.ocsRequest(value: true)
+            ]
+        )
+        
         let path = "recipe\(id).data"
         dataStore.delete(path: path)
-        guard recipes[categoryName] != nil else { return }
-        recipes[categoryName]!.removeAll(where: { recipe in
-            recipe.recipe_id == id ? true : false
-        })
-        recipeDetails.removeValue(forKey: id)
+        if recipes[categoryName] != nil {
+            recipes[categoryName]!.removeAll(where: { recipe in
+                recipe.recipe_id == id ? true : false
+            })
+            recipeDetails.removeValue(forKey: id)
+        }
+        if await sendRequest(request) {
+            return .REQUEST_SUCCESS
+        } else {
+            requestQueue.append(request)
+            return .REQUEST_DELAYED
+        }
     }
     
     func checkServerConnection() async -> Bool {
@@ -233,6 +251,54 @@ import UIKit
             return false
         }
         return true
+    }
+    
+    func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert {
+        var path: RequestPath? = nil
+        if createNew {
+            path = .NEW_RECIPE
+        } else if let recipeId = Int(recipeDetail.id) {
+            path = .RECIPE_DETAIL(recipeId: recipeId)
+        }
+        
+        guard let path = path else { return .REQUEST_DROPPED }
+        
+        let request = RequestWrapper.customRequest(
+            method: createNew ? .POST : .PUT,
+            path: path,
+            headerFields: [
+                HeaderField.accept(value: .JSON),
+                HeaderField.ocsRequest(value: true),
+                HeaderField.contentType(value: .JSON)
+            ],
+            body: JSONEncoder.safeEncode(recipeDetail)
+        )
+        
+        if await sendRequest(request) {
+            return .REQUEST_SUCCESS
+        } else {
+            requestQueue.append(request)
+            return .REQUEST_DELAYED
+        }
+    }
+    
+    func sendRequest(_ request: RequestWrapper) async -> Bool {
+        guard let apiController = apiController else { return false }
+        let (data, _): (Data?, Error?) = await apiController.sendDataRequest(request)
+        guard let data = data else { return false }
+        do {
+            let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+            if let recipeId = json as? Int {
+                return true
+            } else if let message = json as? [String : Any] {
+                print("Server message: ", message["msg"] ?? "-")
+                return false
+            }
+            // TODO: Better error handling (Show error to user!)
+        } catch {
+            print("Could not decode server response")
+        }
+        return false
     }
 }
 

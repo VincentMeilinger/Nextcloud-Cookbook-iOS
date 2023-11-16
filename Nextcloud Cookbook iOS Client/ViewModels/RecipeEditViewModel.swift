@@ -82,74 +82,32 @@ import SwiftUI
         return true
     }
     
-    func uploadNewRecipe() {
+    func uploadNewRecipe() async -> RequestAlert {
         print("Uploading new recipe.")
         waitingForUpload = true
         createRecipe()
-        guard recipeValid() else { return }
-        let request = RequestWrapper.customRequest(
-            method: .POST,
-            path: .NEW_RECIPE,
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true),
-                HeaderField.contentType(value: .JSON)
-            ],
-            body: JSONEncoder.safeEncode(self.recipe)
-        )
-        sendRequest(request)
-        dismissEditView()
+        guard recipeValid() else { return .REQUEST_DROPPED }
+        
+        return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: true)
     }
     
-    func uploadEditedRecipe() {
+    func uploadEditedRecipe() async -> RequestAlert {
         waitingForUpload = true
         print("Uploading changed recipe.")
-        guard let recipeId = Int(recipe.id) else { return }
+        guard let recipeId = Int(recipe.id) else { return .REQUEST_DROPPED }
         createRecipe()
-        let request = RequestWrapper.customRequest(
-            method: .PUT,
-            path: .RECIPE_DETAIL(recipeId: recipeId),
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true),
-                HeaderField.contentType(value: .JSON)
-            ],
-            body: JSONEncoder.safeEncode(self.recipe)
-        )
-        sendRequest(request)
-        dismissEditView()
+        
+        return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: false)
     }
     
-    func deleteRecipe() {
-        guard let recipeId = Int(recipe.id) else { return }
-        let request = RequestWrapper.customRequest(
-            method: .DELETE,
-            path: .RECIPE_DETAIL(recipeId: recipeId),
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true)
-            ]
-        )
-        sendRequest(request)
-        if let recipeIdInt = Int(recipe.id) {
-            mainViewModel.deleteRecipe(withId: recipeIdInt, categoryName: recipe.recipeCategory)
+    func deleteRecipe() async -> RequestAlert {
+        guard let id = Int(recipe.id) else {
+            return .REQUEST_DROPPED
         }
-        dismissEditView()
+        return await mainViewModel.deleteRecipe(withId: id, categoryName: recipe.recipeCategory)
     }
     
-    func sendRequest(_ request: RequestWrapper) {
-        Task {
-            guard let apiController = mainViewModel.apiController else { return }
-            let (data, _): (Data?, Error?) = await apiController.sendDataRequest(request)
-            guard let data = data else { return }
-            do {
-                let error = try JSONDecoder().decode(ServerMessage.self, from: data)
-                // TODO: Better error handling (Show error to user!)
-            } catch {
-                
-            }
-        }
-    }
+    
     
     func dismissEditView() {
         Task {
