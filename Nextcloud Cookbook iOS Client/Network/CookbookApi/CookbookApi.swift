@@ -72,7 +72,8 @@ protocol CookbookApi {
     /// - Returns: A NetworkError if the request fails. Nil otherwise.
     static func updateRecipe(
         from serverAdress: String,
-        auth: String, id: Int
+        auth: String, 
+        recipe: RecipeDetail
     ) async -> (NetworkError?)
     
     /// Delete the recipe with the specified id.

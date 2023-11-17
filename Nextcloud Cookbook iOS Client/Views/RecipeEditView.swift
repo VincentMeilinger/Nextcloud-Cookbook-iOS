@@ -143,7 +143,7 @@ struct RecipeEditView: View {
             }
         }
         .task {
-            viewModel.keywordSuggestions = await viewModel.mainViewModel.getKeywords()
+            viewModel.keywordSuggestions = await viewModel.mainViewModel.getKeywords(fetchMode: .preferServer)
         }
         .onAppear {
             viewModel.prepareView()

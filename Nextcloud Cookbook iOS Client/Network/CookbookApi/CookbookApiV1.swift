@@ -86,13 +86,17 @@ class CookbookApiV1: CookbookApi {
         return (JSONDecoder.safeDecode(data), nil)
     }
     
-    static func updateRecipe(from serverAdress: String, auth: String, id: Int) async -> (NetworkError?) {
+    static func updateRecipe(from serverAdress: String, auth: String, recipe: RecipeDetail) async -> (NetworkError?) {
+        guard let recipeData = JSONEncoder.safeEncode(recipe) else {
+            return .dataError
+        }
         let request = ApiRequest(
             serverAdress: serverAdress,
-            path: "/api/v1/recipes/\(id)",
+            path: "/api/v1/recipes/\(recipe.id)",
             method: .PUT,
             authString: auth,
-            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
+            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)],
+            body: recipeData
         )
         
         let (data, error) = await request.send()

@@ -61,10 +61,10 @@ struct CategoryDetailView: View {
         }
         .searchable(text: $searchText, prompt: "Search recipes")
         .task {
-            await viewModel.getCategory(named: categoryName)//.loadRecipeList(categoryName: categoryName)
+            await viewModel.getCategory(named: categoryName, fetchMode: .preferLocal)
         }
         .refreshable {
-            await viewModel.getCategory(named: categoryName)//.loadRecipeList(categoryName: categoryName, needsUpdate: true)
+            await viewModel.getCategory(named: categoryName, fetchMode: .preferServer)
         }
     }
     
@@ -81,15 +81,15 @@ struct CategoryDetailView: View {
         if let recipes = viewModel.recipes[categoryName] {
             Task {
                 for recipe in recipes {
-                    let recipeDetail = await viewModel.getRecipe(id: recipe.recipe_id)
+                    let recipeDetail = await viewModel.getRecipe(id: recipe.recipe_id, fetchMode: .onlyServer)
                     await viewModel.saveLocal(recipeDetail, path: "recipe\(recipe.recipe_id).data")
                     
-                    let thumbnail = await viewModel.getImage(id: recipe.recipe_id, size: .THUMB, needsUpdate: true)
+                    let thumbnail = await viewModel.getImage(id: recipe.recipe_id, size: .THUMB, fetchMode: .onlyServer)
                     guard let thumbnail = thumbnail else { continue }
                     guard let thumbnailData = thumbnail.pngData() else { continue }
                     await viewModel.saveLocal(thumbnailData.base64EncodedString(), path: "image\(recipe.recipe_id)_thumb")
                     
-                    let image = await viewModel.getImage(id: recipe.recipe_id, size: .FULL, needsUpdate: true)
+                    let image = await viewModel.getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .onlyServer)
                     guard let image = image else { continue }
                     guard let imageData = image.pngData() else { continue }
                     await viewModel.saveLocal(imageData.base64EncodedString(), path: "image\(recipe.recipe_id)_full")

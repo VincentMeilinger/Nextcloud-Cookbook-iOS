@@ -13,17 +13,15 @@ import UIKit
 @MainActor class MainViewModel: ObservableObject {
     @AppStorage("authString") var authString = ""
     @AppStorage("serverAddress") var serverAdress = ""
-    let api: CookbookApi.Type
+    
     
     @Published var categories: [Category] = []
     @Published var recipes: [String: [Recipe]] = [:]
     @Published var recipeDetails: [Int: RecipeDetail] = [:]
-    private var imageCache: [Int: RecipeImage] = [:]
     private var requestQueue: [RequestWrapper] = []
-    private var serverConnection: Bool = false
     
-    let dataStore: DataStore
-    
+    private let api: CookbookApi.Type
+    private let dataStore: DataStore
     
     init(apiVersion api: CookbookApi.Type = CookbookApiV1.self) {
         print("Created MainViewModel")
@@ -31,21 +29,19 @@ import UIKit
         self.dataStore = DataStore()
     }
     
-    /// Try to load the category list from store or the server.
-    /// - Parameters
-    ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from store first.
-    /*func loadCategoryList(needsUpdate: Bool = false) async {
-        if let categoryList: [Category] = await loadObject(
-            localPath: "categories.data",
-            networkPath: .CATEGORIES,
-            needsUpdate: needsUpdate
-        ) {
-            self.categories = categoryList
-        }
-        print(self.categories)
-    }*/
+    enum FetchMode {
+        case preferLocal, preferServer, onlyLocal, onlyServer
+    }
     
-    func loadCategories() async {
+    
+    /**
+     Asynchronously loads and updates the list of categories.
+
+     This function attempts to fetch the list of categories from the server. If the server connection is successful, it updates the `categories` property in the `MainViewModel` instance and saves the categories locally. If the server connection fails, it attempts to load the categories from local storage.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+    */
+    func getCategories() async {
         let (categories, _) = await api.getCategories(
             from: serverAdress,
             auth: authString
@@ -53,60 +49,76 @@ import UIKit
         if let categories = categories {
             self.categories = categories
             await saveLocal(categories, path: "categories.data")
-            serverConnection = true
         } else {
+            // If there's no server connection, try loading categories from local storage
             if let categories: [Category] = await loadLocal(path: "categories.data") {
                 self.categories = categories
             }
-            serverConnection = false
         }
     }
     
-    /// Try to load the recipe list from store or the server.
-    /// - Warning: The category named '\*' is translated into '\_' for network calls and storage requests in this function. This is necessary for the nextcloud cookbook api.
-    /// - Parameters
-    ///     - categoryName: The name of the category containing the requested list of recipes.
-    ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from store first.
-    /*func loadRecipeList(categoryName: String, needsUpdate: Bool = false) async {
-        let categoryString = categoryName == "*" ? "_" : categoryName
-        if let recipeList: [Recipe] = await loadObject(
-            localPath: "category_\(categoryString).data",
-            networkPath: .RECIPE_LIST(categoryName: categoryString),
-            needsUpdate: needsUpdate
-        ) {
-            recipes[categoryName] = recipeList
-            print(recipeList)
-        }
-        
-    }*/
-    func getCategory(named name: String) async {
-        let categoryString = name == "*" ? "_" : name
-        let (recipes, _) = await api.getCategory(
-            from: serverAdress,
-            auth: authString,
-            named: name
-        )
-        if let recipes = recipes {
-            self.recipes[name] = recipes
-        } else {
+    
+    /**
+     Fetches recipes for a specified category from either the server or local storage.
+
+     - Parameters:
+       - name: The name of the category. Use "*" to fetch recipes without assigned categories.
+       - needsUpdate: If true, recipes will be loaded from the server directly; otherwise, they will be loaded from local storage first.
+
+     This function asynchronously retrieves recipes for the specified category from the server or local storage based on the provided parameters. If `needsUpdate` is true, the function fetches recipes from the server and updates the local storage. If `needsUpdate` is false, it attempts to load recipes from local storage.
+
+     - Note: The category name "*" is used for all uncategorized recipes.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+    */
+    func getCategory(named name: String, fetchMode: FetchMode) async {
+        func getLocal() async -> Bool {
             if let recipes: [Recipe] = await loadLocal(path: "category_\(categoryString).data") {
                 self.recipes[name] = recipes
+                return true
             }
+            return false
+        }
+        
+        func getServer() async -> Bool {
+            let (recipes, _) = await api.getCategory(
+                from: serverAdress,
+                auth: authString,
+                named: name
+            )
+            if let recipes = recipes {
+                self.recipes[name] = recipes
+                return true
+            }
+            return false
+        }
+        
+        let categoryString = name == "*" ? "_" : name
+        switch fetchMode {
+        case .preferLocal:
+            if await getLocal() { return }
+            if await getServer() { return }
+        case .preferServer:
+            if await getServer() { return }
+            if await getLocal() { return }
+        case .onlyLocal:
+            if await getLocal() { return }
+        case .onlyServer:
+            if await getServer() { return }
         }
     }
     
-    /*func getAllRecipes() async -> [Recipe] {
-        var allRecipes: [Recipe] = []
-        for category in categories {
-            await loadRecipeList(categoryName: category.name)
-            if let recipeArray = recipes[category.name] {
-                allRecipes.append(contentsOf: recipeArray)
-            }
-        }
-        return allRecipes.sorted(by: {
-            $0.name < $1.name
-        })
-    }*/
+    /**
+     Asynchronously retrieves all recipes either from the server or the locally cached data.
+
+     This function attempts to fetch all recipes from the server using the provided `api`. If the server connection is successful, it returns the fetched recipes. If the server connection fails, it falls back to combining locally cached recipes from different categories.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance, and categories have been previously loaded.
+
+     Example usage:
+     ```swift
+     let recipes = await mainViewModel.getRecipes()
+    */
     func getRecipes() async -> [Recipe] {
         let (recipes, error) = await api.getRecipes(
             from: serverAdress,
@@ -128,58 +140,85 @@ import UIKit
         })
     }
     
-    /// Try to load the recipe details from cache. If not found, try to load from store or the server.
-    /// - Parameters
-    ///     - recipeId: The id of the recipe.
-    ///     - needsUpdate: If true, the recipe will be loaded from the server directly, otherwise it will be loaded from cache/store first.
-    /// - Returns: RecipeDetail struct. If not found locally, and unable to load from server, a RecipeDetail struct containing an error message.
-    /*func loadRecipeDetail(recipeId: Int, needsUpdate: Bool = false) async -> RecipeDetail {
-        if !needsUpdate {
-            if let recipeDetail = recipeDetails[recipeId] {
-                return recipeDetail
+    /**
+     Asynchronously retrieves a recipe detail either from the server or locally cached data.
+
+     This function attempts to fetch a recipe detail with the specified `id` from the server using the provided `api`. If the server connection is successful, it returns the fetched recipe detail. If the server connection fails, it falls back to loading the recipe detail from local storage.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+
+     - Parameters:
+       - id: The identifier of the recipe to retrieve.
+
+     Example usage:
+     ```swift
+     let recipeDetail = await mainViewModel.getRecipe(id: 123)
+    */
+    func getRecipe(id: Int, fetchMode: FetchMode) async -> RecipeDetail {
+        func getLocal() async -> RecipeDetail? {
+            if let recipe: RecipeDetail = await loadLocal(path: "recipe\(id).data") {
+                return recipe
             }
+            return nil
         }
-        if let recipeDetail: RecipeDetail = await loadObject(
-            localPath: "recipe\(recipeId).data",
-            networkPath: .RECIPE_DETAIL(recipeId: recipeId),
-            needsUpdate: needsUpdate
-        ) {
-            recipeDetails[recipeId] = recipeDetail
-            return recipeDetail
+        
+        func getServer() async -> RecipeDetail? {
+            let (recipe, error) = await api.getRecipe(
+                from: serverAdress,
+                auth: authString,
+                id: id
+            )
+            if let recipe = recipe {
+                return recipe
+            } else if let error = error {
+                print(error)
+            }
+            return nil
         }
-        return RecipeDetail.error
-    }*/
-    func getRecipe(id: Int) async -> RecipeDetail {
-        let (recipe, error) = await api.getRecipe(
-            from: serverAdress,
-            auth: authString,
-            id: id
-        )
-        if let recipe = recipe {
-            return recipe
-        } else if let error = error {
-            print(error)
+        
+        switch fetchMode {
+        case .preferLocal:
+            if let recipe = await getLocal() { return recipe }
+            if let recipe = await getServer() { return recipe }
+        case .preferServer:
+            if let recipe = await getServer() { return recipe }
+            if let recipe = await getLocal() { return recipe }
+        case .onlyLocal:
+            if let recipe = await getLocal() { return recipe }
+        case .onlyServer:
+            if let recipe = await getServer() { return recipe }
         }
-        guard let recipe: RecipeDetail = await loadLocal(path: "recipe\(id).data") else {
-            return RecipeDetail.error
-        }
-        return recipe
+        return .error
     }
     
+    
+    
+    
+    /**
+     Asynchronously downloads and saves details, thumbnails, and full images for all recipes.
+
+     This function iterates through all loaded categories, fetches and updates the recipes from the server, and then downloads and saves details, thumbnails, and full images for each recipe.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+
+     Example usage:
+     ```swift
+     await mainViewModel.downloadAllRecipes()
+    */
     func downloadAllRecipes() async {
         for category in categories {
-            await getCategory(named: category.name)
+            await getCategory(named: category.name, fetchMode: .onlyServer)
             guard let recipeList = recipes[category.name] else { continue }
             for recipe in recipeList {
-                let recipeDetail = await getRecipe(id: recipe.recipe_id)
+                let recipeDetail = await getRecipe(id: recipe.recipe_id, fetchMode: .onlyServer)
                 await saveLocal(recipeDetail, path: "recipe\(recipe.recipe_id).data")
                 
-                let thumbnail = await getImage(id: recipe.recipe_id, size: .THUMB, needsUpdate: true)
+                let thumbnail = await getImage(id: recipe.recipe_id, size: .THUMB, fetchMode: .onlyServer)
                 guard let thumbnail = thumbnail else { continue }
                 guard let thumbnailData = thumbnail.pngData() else { continue }
                 await saveLocal(thumbnailData.base64EncodedString(), path: "image\(recipe.recipe_id)_thumb")
                 
-                let image = await getImage(id: recipe.recipe_id, size: .FULL, needsUpdate: true)
+                let image = await getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .onlyServer)
                 guard let image = image else { continue }
                 guard let imageData = image.pngData() else { continue }
                 await saveLocal(imageData.base64EncodedString(), path: "image\(recipe.recipe_id)_full")
@@ -201,109 +240,88 @@ import UIKit
         return false
     }
     
-    
-    /// Try to load the recipe image from cache. If not found, try to load from store or the server.
-    /// - Parameters
-    ///     - recipeId: The id of a recipe.
-    ///     - full: If true, load the full resolution image. Otherwise, load a thumbnail-sized image.
-    ///     - needsUpdate: Determines wether the image should be loaded directly from the server, or if it should be loaded from cache/store first.
-    /// - Returns: The image if found locally or on the server, otherwise nil.
-    /*func loadImage(recipeId: Int, thumb: Bool, needsUpdate: Bool = false) async -> UIImage? {
-        print("loadImage(recipeId: \(recipeId), thumb: \(thumb), needsUpdate: \(needsUpdate))")
-        // If the image needs an update, request it from the server and overwrite the stored image
-        if needsUpdate {
-            guard let apiController = apiController else { return nil }
-            if let data = await apiController.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
-                guard let image = UIImage(data: data) else {
-                    imageCache[recipeId] = RecipeImage(imageExists: false)
-                    return nil
-                }
-                await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, thumb))
-                imageToCache(image: image, recipeId: recipeId, thumb: thumb)
-                return image
-            } else {
-                imageCache[recipeId] = RecipeImage(imageExists: false)
-                return nil
-            }
+    /**
+     Asynchronously retrieves and returns an image for a recipe with the specified ID and size.
+
+     This function attempts to fetch an image for a recipe with the specified `id` and `size` from the server using the provided `api`. If the server connection is successful, it returns the fetched image. If the server connection fails or `needsUpdate` is false, it attempts to load the image from local storage.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+
+     - Parameters:
+       - id: The identifier of the recipe associated with the image.
+       - size: The size of the desired image (thumbnail or full).
+       - needsUpdate: If true, the image will be loaded from the server directly; otherwise, it will be loaded from local storage.
+
+     Example usage:
+     ```swift
+     let thumbnail = await mainViewModel.getImage(id: 123, size: .THUMB, needsUpdate: true)
+    */
+    func getImage(id: Int, size: RecipeImage.RecipeImageSize, fetchMode: FetchMode) async -> UIImage? {
+        func getLocal() async -> UIImage? {
+            return await imageFromStore(id: id, size: size)
         }
         
-    
-    
-    
-        // Check imageExists flag to detect if we attempted to load a non-existing image before.
-        // This allows us to avoid sending requests to the server if we already know the recipe has no image.
-        if imageCache[recipeId] != nil {
-            guard imageCache[recipeId]!.imageExists else { return nil }
+        func getServer() async -> UIImage? {
+            let (image, _) = await api.getImage(
+                from: serverAdress,
+                auth: authString,
+                id: id,
+                size: size
+            )
+            if let image = image { return image }
+            return nil
         }
         
-        // Try to load image from cache
-        print("Attempting to load image from cache ...")
-        if let image = imageFromCache(recipeId: recipeId, thumb: thumb) {
-            print("Image found in cache.")
-            return image
+        switch fetchMode {
+        case .preferLocal:
+            if let image = await getLocal() { return image }
+            if let image = await getServer() { return image }
+        case .preferServer:
+            if let image = await getServer() { return image }
+            if let image = await getLocal() { return image }
+        case .onlyLocal:
+            if let image = await getLocal() { return image }
+        case .onlyServer:
+            if let image = await getServer() { return image }
         }
-        
-        // Try to load from store
-        print("Attempting to load image from local storage ...")
-        if let image = await imageFromStore(recipeId: recipeId, thumb: thumb) {
-            print("Image found in local storage.")
-            imageToCache(image: image, recipeId: recipeId, thumb: thumb)
-            return image
-        }
-        
-        // Try to load from the server. Store if successfull.
-        print("Attempting to load image from server ...")
-        guard let apiController = apiController else { return nil }
-        if let data = await apiController.imageDataFromServer(recipeId: recipeId, thumb: thumb) {
-            print("Image data received.")
-            // Create empty RecipeImage for each recipe even if no image found, so that further server requests are only sent if explicitly requested.
-            guard let image = UIImage(data: data) else {
-                imageCache[recipeId] = RecipeImage(imageExists: false)
-                return nil
-            }
-            await dataStore.save(data: data.base64EncodedString(), toPath: localImagePath(recipeId, thumb))
-            imageToCache(image: image, recipeId: recipeId, thumb: thumb)
-            return image
-        }
-        imageCache[recipeId] = RecipeImage(imageExists: false)
         return nil
-    }*/
-    func getImage(id: Int, size: RecipeImage.RecipeImageSize, needsUpdate: Bool) async -> UIImage? {
-        if !needsUpdate, let image = await imageFromStore(id: id, size: size) {
-            return image
-        }
-        let (image, _) = await api.getImage(
-            from: serverAdress,
-            auth: authString,
-            id: id,
-            size: size
-        )
-        if let image = image { return image }
-        return await imageFromStore(id: id, size: size)
     }
     
-    /*func getKeywords() async -> [String] {
-        if let keywords: [RecipeKeyword] = await self.loadObject(
-            localPath: "keywords.data",
-            networkPath: .KEYWORDS,
-            needsUpdate: true
-        ) {
-            return keywords.map { $0.name }
+    /**
+     Asynchronously retrieves and returns a list of keywords (tags).
+
+     This function attempts to fetch a list of keywords from the server using the provided `api`. If the server connection is successful, it returns the fetched keywords. If the server connection fails, it attempts to load the keywords from local storage.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+
+     Example usage:
+     ```swift
+     let keywords = await mainViewModel.getKeywords()
+    */
+    func getKeywords(fetchMode: FetchMode) async -> [String] {
+        func getLocal() async -> [String]? {
+            return await loadLocal(path: "keywords.data")
         }
-        return []
-    }*/
-    func getKeywords() async -> [String] {
-        let (tags, error) = await api.getTags(
-            from: serverAdress,
-            auth: authString
-        )
-        if let tags = tags {
+        
+        func getServer() async -> [String]? {
+            let (tags, _) = await api.getTags(
+                from: serverAdress,
+                auth: authString
+            )
             return tags
-        } else if let error = error {
-            print(error)
         }
-        if let keywords: [String] = await loadLocal(path: "keywords.data") {
-            return keywords
+
+        switch fetchMode {
+        case .preferLocal:
+            if let keywords = await getLocal() { return keywords }
+            if let keywords = await getServer() { return keywords }
+        case .preferServer:
+            if let keywords = await getServer() { return keywords }
+            if let keywords = await getLocal() { return keywords }
+        case .onlyLocal:
+            if let keywords = await getLocal() { return keywords }
+        case .onlyServer:
+            if let keywords = await getServer() { return keywords }
         }
         return []
     }
@@ -312,37 +330,26 @@ import UIKit
         if dataStore.clearAll() {
             self.categories = []
             self.recipes = [:]
-            self.imageCache = [:]
             self.recipeDetails = [:]
             self.requestQueue = []
         }
     }
     
-    /*func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert {
-        let request = RequestWrapper.customRequest(
-            method: .DELETE,
-            path: .RECIPE_DETAIL(recipeId: id),
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true)
-            ]
-        )
-        
-        let path = "recipe\(id).data"
-        dataStore.delete(path: path)
-        if recipes[categoryName] != nil {
-            recipes[categoryName]!.removeAll(where: { recipe in
-                recipe.recipe_id == id ? true : false
-            })
-            recipeDetails.removeValue(forKey: id)
-        }
-        if await sendRequest(request) {
-            return .REQUEST_SUCCESS
-        } else {
-            requestQueue.append(request)
-            return .REQUEST_DELAYED
-        }
-    }*/
+    /**
+     Asynchronously deletes a recipe with the specified ID from the server and local storage.
+
+     This function attempts to delete a recipe with the specified `id` from the server using the provided `api`. If the server connection is successful, it proceeds to delete the local copy of the recipe and its details. If the server connection fails, it returns `RequestAlert.REQUEST_DROPPED`.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+
+     - Parameters:
+       - id: The identifier of the recipe to delete.
+       - categoryName: The name of the category to which the recipe belongs.
+
+     Example usage:
+     ```swift
+     let requestResult = await mainViewModel.deleteRecipe(withId: 123, categoryName: "Desserts")
+    */
     func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert {
         let (error) = await api.deleteRecipe(
             from: serverAdress,
@@ -364,21 +371,17 @@ import UIKit
         return .REQUEST_SUCCESS
     }
     
-    /*func checkServerConnection() async -> Bool {
-        guard let apiController = apiController else { return false }
-        let req = RequestWrapper.customRequest(
-            method: .GET,
-            path: .CONFIG,
-            headerFields: [
-                .ocsRequest(value: true),
-                .accept(value: .JSON)
-            ]
-        )
-        if let error = await apiController.sendRequest(req) {
-            return false
-        }
-        return true
-    }*/
+    /**
+     Asynchronously checks the server connection by attempting to fetch categories.
+
+     This function attempts to fetch categories from the server using the provided `api` to check the server connection status. If the server connection is successful, it updates the `categories` property in the `MainViewModel` instance and saves the categories locally. If the server connection fails, it returns `false`.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+
+     Example usage:
+     ```swift
+     let isConnected = await mainViewModel.checkServerConnection()
+    */
     func checkServerConnection() async -> Bool {
         let (categories, _) = await api.getCategories(
             from: serverAdress,
@@ -392,65 +395,41 @@ import UIKit
         return false
     }
     
-    /*func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert {
-        var path: RequestPath? = nil
-        if createNew {
-            path = .NEW_RECIPE
-        } else if let recipeId = Int(recipeDetail.id) {
-            path = .RECIPE_DETAIL(recipeId: recipeId)
-        }
-        
-        guard let path = path else { return .REQUEST_DROPPED }
-        
-        let request = RequestWrapper.customRequest(
-            method: createNew ? .POST : .PUT,
-            path: path,
-            headerFields: [
-                HeaderField.accept(value: .JSON),
-                HeaderField.ocsRequest(value: true),
-                HeaderField.contentType(value: .JSON)
-            ],
-            body: JSONEncoder.safeEncode(recipeDetail)
-        )
-        
-        if await sendRequest(request) {
-            return .REQUEST_SUCCESS
-        } else {
-            requestQueue.append(request)
-            return .REQUEST_DELAYED
-        }
-    }*/
+    /**
+     Asynchronously uploads a recipe to the server.
+
+     This function attempts to create or update a recipe on the server using the provided `api`. If the server connection is successful, it uploads the provided `recipeDetail`. If the server connection fails, it returns `RequestAlert.REQUEST_DROPPED`.
+
+     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+
+     - Parameters:
+       - recipeDetail: The detailed information of the recipe to upload.
+       - createNew: If true, creates a new recipe on the server; otherwise, updates an existing one.
+
+     Example usage:
+     ```swift
+     let uploadResult = await mainViewModel.uploadRecipe(recipeDetail: myRecipeDetail, createNew: true)
+    */
     func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert {
-        let error = await api.createRecipe(
-            from: serverAdress,
-            auth: authString,
-            recipe: recipeDetail
-        )
-        
+        var error: NetworkError? = nil
+        if createNew {
+            error = await api.createRecipe(
+                from: serverAdress,
+                auth: authString,
+                recipe: recipeDetail
+            )
+        } else {
+            error = await api.updateRecipe(
+                from: serverAdress,
+                auth: authString,
+                recipe: recipeDetail
+            )
+        }
         if let error = error {
             return .REQUEST_DROPPED
         }
         return .REQUEST_SUCCESS
     }
-    
-    /*func sendRequest(_ request: RequestWrapper) async -> Bool {
-        guard let apiController = apiController else { return false }
-        let (data, _): (Data?, Error?) = await apiController.sendDataRequest(request)
-        guard let data = data else { return false }
-        do {
-            let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-            if let recipeId = json as? Int {
-                return true
-            } else if let message = json as? [String : Any] {
-                print("Server message: ", message["msg"] ?? "-")
-                return false
-            }
-            // TODO: Better error handling (Show error to user!)
-        } catch {
-            print("Could not decode server response")
-        }
-        return false
-    }*/
 }
 
 
@@ -470,51 +449,7 @@ extension MainViewModel {
         guard let data = JSONEncoder.safeEncode(object) else { return }
         await dataStore.save(data: data, toPath: path)
     }
-    /*private func loadObject<T: Codable>(localPath: String, networkPath: RequestPath, needsUpdate: Bool = false) async -> T? {
-        do {
-            if !needsUpdate, let data: T = try await dataStore.load(fromPath: localPath) {
-                print("Data found locally.")
-                return data
-            } else {
-                guard let apiController = apiController else { return nil }
-                let request = RequestWrapper.jsonGetRequest(path: networkPath)
-                let (data, error): (T?, Error?) = await apiController.sendDataRequest(request)
-                print(error as Any)
-                if let data = data {
-                    await dataStore.save(data: data, toPath: localPath)
-                }
-                return data
-            }
-        } catch {
-           print("An unknown error occurred.")
-        }
-        return nil
-    }
     
-    private func imageToCache(image: UIImage, recipeId: Int, thumb: Bool) {
-        if imageCache[recipeId] == nil {
-            imageCache[recipeId] = RecipeImage(imageExists: true)
-        }
-        if thumb {
-            imageCache[recipeId]!.imageExists = true
-            imageCache[recipeId]!.thumb = image
-        } else {
-            imageCache[recipeId]!.imageExists = true
-            imageCache[recipeId]!.full = image
-        }
-    }
-    
-    private func imageFromCache(recipeId: Int, thumb: Bool) -> UIImage? {
-        if imageCache[recipeId] != nil {
-            if thumb {
-                return imageCache[recipeId]!.thumb
-            } else {
-                return imageCache[recipeId]!.full
-            }
-        }
-        return nil
-    }
-    */
     private func imageFromStore(id: Int, size: RecipeImage.RecipeImageSize) async -> UIImage? {
         do {
             let localPath = "image\(id)_\(size == .FULL ? "full" : "thumb")"

@@ -111,8 +111,8 @@ import SwiftUI
     
     func dismissEditView() {
         Task {
-            await mainViewModel.loadCategories() //loadCategoryList(needsUpdate: true)
-            await mainViewModel.getCategory(named: recipe.recipeCategory)//.loadRecipeList(categoryName: recipe.recipeCategory, needsUpdate: true)
+            await mainViewModel.getCategories()
+            await mainViewModel.getCategory(named: recipe.recipeCategory, fetchMode: .preferServer)
         }
         isPresented.wrappedValue = false
     }

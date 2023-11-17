@@ -90,7 +90,7 @@ struct MainView: View {
             }
             .task {
                 self.serverConnection = await viewModel.checkServerConnection()
-                await viewModel.loadCategories()//viewModel.loadCategoryList()
+                await viewModel.getCategories()//viewModel.loadCategoryList()
                 // Open detail view for default category
                 if userSettings.defaultCategory != "" {
                     if let cat = viewModel.categories.first(where: { c in
@@ -105,7 +105,7 @@ struct MainView: View {
             }
             .refreshable {
                 self.serverConnection = await viewModel.checkServerConnection()
-                await viewModel.loadCategories()//loadCategoryList(needsUpdate: true)
+                await viewModel.getCategories()//loadCategoryList(needsUpdate: true)
             }
             
         }
