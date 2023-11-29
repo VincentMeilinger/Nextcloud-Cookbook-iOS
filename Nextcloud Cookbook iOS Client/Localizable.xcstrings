@@ -844,6 +844,7 @@
       }
     },
     "Entering the server address will open a web browser. Please follow the login instructions provided there. If the browser does not open, click the link 'Open in browser'\nAfter a successfull login, return to this application and press 'Validate'." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -952,6 +953,9 @@
           }
         }
       }
+    },
+    "If the login button does not open your browser, copy the following link and paste it in your browser manually:" : {
+
     },
     "If you are interested in contributing to this project or simply wish to review its source code, we encourage you to visit the GitHub repository for this application." : {
       "localizations" : {
@@ -1223,6 +1227,9 @@
         }
       }
     },
+    "Login" : {
+
+    },
     "Login failed." : {
       "localizations" : {
         "de" : {
@@ -1266,6 +1273,9 @@
           }
         }
       }
+    },
+    "Make sure to enter the server address in the form 'example.com'. Currently, only servers using the 'https' protocol are supported." : {
+
     },
     "Missing recipe name." : {
       "localizations" : {
@@ -1488,6 +1498,7 @@
       }
     },
     "Open in browser" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1685,6 +1696,9 @@
         }
       }
     },
+    "Pull to refresh." : {
+
+    },
     "Same as Device" : {
       "localizations" : {
         "de" : {
@@ -1839,6 +1853,9 @@
         }
       }
     },
+    "Show help" : {
+
+    },
     "Submit" : {
       "localizations" : {
         "de" : {
@@ -1904,6 +1921,9 @@
           }
         }
       }
+    },
+    "The 'Login' button will open a web browser. Please follow the login instructions provided there.\nAfter a successful login, return to this application and press 'Validate'." : {
+
     },
     "The selected cookbook will open on app launch by default." : {
       "localizations" : {
