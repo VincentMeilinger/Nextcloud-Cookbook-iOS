@@ -61,4 +61,6 @@ class UserSettings: ObservableObject {
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue
         self.downloadRecipes = UserDefaults.standard.object(forKey: "downloadRecipes") as? Bool ?? false
     }
+    
+    
 }
