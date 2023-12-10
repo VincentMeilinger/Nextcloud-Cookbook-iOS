@@ -106,13 +106,13 @@ struct RecipeDetailView: View {
             }
         }
         .task {
-            recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id)
-            recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false)
+            recipeDetail = await viewModel.getRecipe(id: recipe.recipe_id, fetchMode: .preferLocal)//loadRecipeDetail(recipeId: recipe.recipe_id)
+            recipeImage = await viewModel.getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .preferLocal)//.loadImage(recipeId: recipe.recipe_id, thumb: false)
             self.isDownloaded = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
         }
         .refreshable {
-            recipeDetail = await viewModel.loadRecipeDetail(recipeId: recipe.recipe_id, needsUpdate: true)
-            recipeImage = await viewModel.loadImage(recipeId: recipe.recipe_id, thumb: false, needsUpdate: true)
+            recipeDetail = await viewModel.getRecipe(id: recipe.recipe_id, fetchMode: .preferServer)
+            recipeImage = await viewModel.getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .preferServer)
         }
     }
 }

@@ -14,35 +14,7 @@ enum RequestMethod: String {
          DELETE = "DELETE"
 }
 
-enum RequestPath {
-    case CATEGORIES,
-         RECIPE_LIST(categoryName: String),
-         RECIPE_DETAIL(recipeId: Int),
-         NEW_RECIPE,
-         IMAGE(recipeId: Int, thumb: Bool),
-         CONFIG,
-         KEYWORDS
-    
-    case LOGINV2REQ,
-         CUSTOM(path: String),
-         NONE
-    
-    var stringValue: String {
-        switch self {
-        case .CATEGORIES: return "categories"
-        case .RECIPE_LIST(categoryName: let name): return "category/\(name)"
-        case .RECIPE_DETAIL(recipeId: let recipeId): return "recipes/\(recipeId)"
-        case .IMAGE(recipeId: let recipeId, thumb: let thumb): return "recipes/\(recipeId)/image?size=\(thumb ? "thumb" : "full")"
-        case .NEW_RECIPE: return "recipes"
-        case .CONFIG: return "config"
-        case .KEYWORDS: return "keywords"
-            
-        case .LOGINV2REQ: return "/index.php/login/v2"
-        case .CUSTOM(path: let path): return path
-        case .NONE: return ""
-        }
-    }
-}
+
 
 enum ContentType: String {
     case JSON = "application/json", 
@@ -72,6 +44,37 @@ struct HeaderField {
     
     static func contentType(value: ContentType) -> HeaderField {
         return HeaderField(_field: "Content-Type", _value: value.rawValue)
+    }
+}
+
+
+enum RequestPath {
+    case CATEGORIES,
+         RECIPE_LIST(categoryName: String),
+         RECIPE_DETAIL(recipeId: Int),
+         NEW_RECIPE,
+         IMAGE(recipeId: Int, thumb: Bool),
+         CONFIG,
+         KEYWORDS
+    
+    case LOGINV2REQ,
+         CUSTOM(path: String),
+         NONE
+    
+    var stringValue: String {
+        switch self {
+        case .CATEGORIES: return "categories"
+        case .RECIPE_LIST(categoryName: let name): return "category/\(name)"
+        case .RECIPE_DETAIL(recipeId: let recipeId): return "recipes/\(recipeId)"
+        case .IMAGE(recipeId: let recipeId, thumb: let thumb): return "recipes/\(recipeId)/image?size=\(thumb ? "thumb" : "full")"
+        case .NEW_RECIPE: return "recipes"
+        case .CONFIG: return "config"
+        case .KEYWORDS: return "keywords"
+            
+        case .LOGINV2REQ: return "/index.php/login/v2"
+        case .CUSTOM(path: let path): return path
+        case .NONE: return ""
+        }
     }
 }
 

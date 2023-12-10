@@ -11,11 +11,9 @@ extension JSONDecoder {
     static func safeDecode<T: Decodable>(_ data: Data) -> T? {
         let decoder = JSONDecoder()
         do {
-            print("Decoding type ", T.self, " ...")
             return try decoder.decode(T.self, from: data)
         } catch (let error) {
-            print("JSONDecoder - safeDecode(): Failed to decode data.")
-            print("Error: ", error)
+            print(error)
             return nil
         }
     }

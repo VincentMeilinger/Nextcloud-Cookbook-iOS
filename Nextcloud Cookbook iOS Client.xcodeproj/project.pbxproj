@@ -36,8 +36,11 @@
 		A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A702AE002AE00096CEC /* Alerts.swift */; };
 		A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */; };
 		A79AA8E22AFF8C14007D25F2 /* RecipeEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */; };
-		A79AA8F12B0D0B74007D25F2 /* V2LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8F02B0D0B74007D25F2 /* V2LoginView.swift */; };
-		A79AA8F32B0D0E1E007D25F2 /* TokenLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8F22B0D0E1D007D25F2 /* TokenLoginView.swift */; };
+		A79AA8E42B02A962007D25F2 /* CookbookApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E32B02A961007D25F2 /* CookbookApi.swift */; };
+		A79AA8E62B02C3CB007D25F2 /* LoggerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E52B02C3CB007D25F2 /* LoggerExtension.swift */; };
+		A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */; };
+		A79AA8EB2B062E15007D25F2 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */; };
+		A79AA8ED2B063AD5007D25F2 /* NextcloudApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */; };
 		A7AEAE642AD5521400135378 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A7AEAE632AD5521400135378 /* Localizable.xcstrings */; };
 		A7F3F8E82ACBFC760076C227 /* KeywordPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */; };
 		A7F3F8EA2ACC221C0076C227 /* CategoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */; };
@@ -94,8 +97,11 @@
 		A76B8A702AE002AE00096CEC /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationComponents.swift; sourceTree = "<group>"; };
 		A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditViewModel.swift; sourceTree = "<group>"; };
-		A79AA8F02B0D0B74007D25F2 /* V2LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V2LoginView.swift; sourceTree = "<group>"; };
-		A79AA8F22B0D0E1D007D25F2 /* TokenLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenLoginView.swift; sourceTree = "<group>"; };
+		A79AA8E32B02A961007D25F2 /* CookbookApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbookApi.swift; sourceTree = "<group>"; };
+		A79AA8E52B02C3CB007D25F2 /* LoggerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerExtension.swift; sourceTree = "<group>"; };
+		A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbookApiV1.swift; sourceTree = "<group>"; };
+		A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextcloudApi.swift; sourceTree = "<group>"; };
 		A7AEAE632AD5521400135378 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordPickerView.swift; sourceTree = "<group>"; };
 		A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerView.swift; sourceTree = "<group>"; };
@@ -195,6 +201,8 @@
 		A70171B22AB211F000064C43 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				A79AA8EE2B063B33007D25F2 /* NextcloudApi */,
+				A79AA8E72B062DB6007D25F2 /* CookbookApi */,
 				A703226C2ABAF90D00D7C4ED /* APIController.swift */,
 				A70171B32AB2122900064C43 /* NetworkRequests.swift */,
 				A70171AE2AB2116B00064C43 /* NetworkHandler.swift */,
@@ -220,7 +228,7 @@
 				A70171C12AB498C600064C43 /* RecipeCardView.swift */,
 				A70171BF2AB498A900064C43 /* RecipeDetailView.swift */,
 				A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */,
-				A79AA8EF2B0D0B5F007D25F2 /* Onboarding */,
+				A70171C82AB4CBB400064C43 /* OnboardingView.swift */,
 				A70171CC2AB501B100064C43 /* SettingsView.swift */,
 				A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */,
 				A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */,
@@ -245,6 +253,7 @@
 			children = (
 				A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */,
 				A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */,
+				A79AA8E52B02C3CB007D25F2 /* LoggerExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -265,14 +274,22 @@
 			path = RecipeImport;
 			sourceTree = "<group>";
 		};
-		A79AA8EF2B0D0B5F007D25F2 /* Onboarding */ = {
+		A79AA8E72B062DB6007D25F2 /* CookbookApi */ = {
 			isa = PBXGroup;
 			children = (
-				A70171C82AB4CBB400064C43 /* OnboardingView.swift */,
-				A79AA8F02B0D0B74007D25F2 /* V2LoginView.swift */,
-				A79AA8F22B0D0E1D007D25F2 /* TokenLoginView.swift */,
+				A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */,
+				A79AA8E32B02A961007D25F2 /* CookbookApi.swift */,
+				A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */,
 			);
-			path = Onboarding;
+			path = CookbookApi;
+			sourceTree = "<group>";
+		};
+		A79AA8EE2B063B33007D25F2 /* NextcloudApi */ = {
+			isa = PBXGroup;
+			children = (
+				A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */,
+			);
+			path = NextcloudApi;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -419,28 +436,31 @@
 				A70D7CA12AC73CA800D53DBF /* RecipeEditView.swift in Sources */,
 				A70171B12AB211DF00064C43 /* CustomError.swift in Sources */,
 				A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */,
+				A79AA8E62B02C3CB007D25F2 /* LoggerExtension.swift in Sources */,
 				A70171C42AB4A31200064C43 /* DataStore.swift in Sources */,
+				A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */,
 				A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */,
 				A70171B42AB2122900064C43 /* NetworkRequests.swift in Sources */,
 				A70171BE2AB4987900064C43 /* CategoryDetailView.swift in Sources */,
 				A70171C62AB4C43A00064C43 /* DataModels.swift in Sources */,
+				A79AA8EB2B062E15007D25F2 /* ApiRequest.swift in Sources */,
 				A7F3F8E82ACBFC760076C227 /* KeywordPickerView.swift in Sources */,
 				A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */,
 				A70171C02AB498A900064C43 /* RecipeDetailView.swift in Sources */,
 				A7F3F8EA2ACC221C0076C227 /* CategoryPickerView.swift in Sources */,
+				A79AA8E42B02A962007D25F2 /* CookbookApi.swift in Sources */,
 				A70171CD2AB501B100064C43 /* SettingsView.swift in Sources */,
-				A79AA8F32B0D0E1E007D25F2 /* TokenLoginView.swift in Sources */,
 				A70171C22AB498C600064C43 /* RecipeCardView.swift in Sources */,
 				A70171842AA8E71900064C43 /* MainView.swift in Sources */,
 				A70171CB2AB4CD1700064C43 /* UserSettings.swift in Sources */,
 				A703226A2ABAF49800D7C4ED /* JSONCoderExtension.swift in Sources */,
 				A703226D2ABAF90D00D7C4ED /* APIController.swift in Sources */,
+				A79AA8ED2B063AD5007D25F2 /* NextcloudApi.swift in Sources */,
 				A70171822AA8E71900064C43 /* Nextcloud_Cookbook_iOS_ClientApp.swift in Sources */,
 				A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */,
 				A70171AD2AA8EF4700064C43 /* MainViewModel.swift in Sources */,
 				A76B8A6F2ADFFA8800096CEC /* SupportedLanguage.swift in Sources */,
 				A70171C92AB4CBB400064C43 /* OnboardingView.swift in Sources */,
-				A79AA8F12B0D0B74007D25F2 /* V2LoginView.swift in Sources */,
 				A703226F2ABB1DD700D7C4ED /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

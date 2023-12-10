@@ -22,6 +22,12 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var authString: String {
+        didSet {
+            UserDefaults.standard.set(authString, forKey: "authString")
+        }
+    }
+    
     @Published var serverAddress: String {
         didSet {
             UserDefaults.standard.set(serverAddress, forKey: "serverAddress")
@@ -55,12 +61,29 @@ class UserSettings: ObservableObject {
     init() {
         self.username = UserDefaults.standard.object(forKey: "username") as? String ?? ""
         self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
+        self.authString = UserDefaults.standard.object(forKey: "authString") as? String ?? ""
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue
         self.downloadRecipes = UserDefaults.standard.object(forKey: "downloadRecipes") as? Bool ?? false
+        
+        if authString == "" {
+            if token != "" && username != "" {
+                let loginString = "\(self.username):\(self.token)"
+                let loginData = loginString.data(using: String.Encoding.utf8)!
+                authString = loginData.base64EncodedString()
+            }
+        }
     }
     
-    
+    func setAuthString() -> String {
+        if token != "" && username != "" {
+            let loginString = "\(self.username):\(self.token)"
+            let loginData = loginString.data(using: String.Encoding.utf8)!
+            return loginData.base64EncodedString()
+        } else {
+            return ""
+        }
+    }
 }

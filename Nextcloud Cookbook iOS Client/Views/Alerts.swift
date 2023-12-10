@@ -109,3 +109,30 @@ enum RecipeImportError: UserAlert {
         return [.OK]
     }
 }
+
+
+enum RequestAlert: UserAlert {
+    case REQUEST_DELAYED,
+         REQUEST_DROPPED,
+         REQUEST_SUCCESS
+    
+    var localizedDescription: LocalizedStringKey {
+        switch self {
+        case .REQUEST_DELAYED: return "Could not establish a connection to the server. The action will be retried upon reconnection."
+        case .REQUEST_DROPPED: return "Unable to complete action."
+        case .REQUEST_SUCCESS: return "Action completed."
+        }
+    }
+    
+    var localizedTitle: LocalizedStringKey {
+        switch self {
+        case .REQUEST_DELAYED: return "Action delayed"
+        case .REQUEST_DROPPED: return "Error"
+        case .REQUEST_SUCCESS: return "Success"
+        }
+    }
+    
+    var alertButtons: [AlertButton] {
+        return [.OK]
+    }
+}

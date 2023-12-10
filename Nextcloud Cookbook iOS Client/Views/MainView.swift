@@ -9,8 +9,8 @@ import SwiftUI
 
 
 struct MainView: View {
-    @ObservedObject var viewModel: MainViewModel
-    @StateObject var userSettings: UserSettings = UserSettings()
+    @ObservedObject var userSettings: UserSettings
+    @StateObject var viewModel = MainViewModel()
     
     @State private var selectedCategory: Category? = nil
     @State private var showEditView: Bool = false
@@ -35,10 +35,6 @@ struct MainView: View {
                             .italic()
                     }
                     .padding(7)
-                }
-                
-                if viewModel.categories.isEmpty {
-                    Text("Pull to refresh.")
                 }
                 
                 // Categories
@@ -94,7 +90,7 @@ struct MainView: View {
             }
             .task {
                 self.serverConnection = await viewModel.checkServerConnection()
-                await viewModel.loadCategoryList()
+                await viewModel.getCategories()//viewModel.loadCategoryList()
                 // Open detail view for default category
                 if userSettings.defaultCategory != "" {
                     if let cat = viewModel.categories.first(where: { c in
@@ -109,7 +105,7 @@ struct MainView: View {
             }
             .refreshable {
                 self.serverConnection = await viewModel.checkServerConnection()
-                await viewModel.loadCategoryList(needsUpdate: true)
+                await viewModel.getCategories()//loadCategoryList(needsUpdate: true)
             }
             
         }
@@ -212,7 +208,7 @@ struct RecipeSearchView: View {
             .navigationTitle("Search recipe")
         }
         .task {
-            allRecipes = await viewModel.getAllRecipes()
+            allRecipes = await viewModel.getRecipes()//.getAllRecipes()
         }
     }
     

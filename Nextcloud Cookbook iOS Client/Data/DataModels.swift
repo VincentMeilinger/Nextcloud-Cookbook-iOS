@@ -146,6 +146,9 @@ extension RecipeDetail {
 
 
 struct RecipeImage {
+    enum RecipeImageSize {
+        case THUMB, FULL
+    }
     var imageExists: Bool = true
     var thumb: UIImage?
     var full: UIImage?
@@ -193,7 +196,4 @@ struct MetaData: Codable {
 }
 
 
-// Networking
-struct ServerMessage: Decodable {
-    let msg: String
-}
+
