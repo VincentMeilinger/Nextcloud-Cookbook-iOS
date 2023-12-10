@@ -9,27 +9,22 @@ import SwiftUI
 
 @main
 struct Nextcloud_Cookbook_iOS_ClientApp: App {
-    @StateObject var mainViewModel = MainViewModel()
-    @AppStorage("onboarding") var onboarding = true
-    @AppStorage("language") var language = Locale.current.language.languageCode?.identifier ?? "en"
+    @StateObject var userSettings = UserSettings()
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if onboarding {
-                    OnboardingView()
+                if userSettings.onboarding {
+                    OnboardingView(userSettings: userSettings)
                 } else {
-                    MainView(viewModel: mainViewModel)
-                        .onAppear {
-                            mainViewModel.apiController = APIController()
-                        }
+                    MainView(userSettings: userSettings)
                 }
             }
             .transition(.slide)
             .environment(
                 \.locale,
-                .init(identifier: language ==
-                      SupportedLanguage.DEVICE.rawValue ? (Locale.current.language.languageCode?.identifier ?? "en") : language)
+                .init(identifier: userSettings.language == 
+                      SupportedLanguage.DEVICE.rawValue ? (Locale.current.language.languageCode?.identifier ?? "en") : userSettings.language)
             )
         }
     }
