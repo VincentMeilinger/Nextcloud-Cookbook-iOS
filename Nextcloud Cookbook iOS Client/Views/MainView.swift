@@ -9,8 +9,8 @@ import SwiftUI
 
 
 struct MainView: View {
-    @ObservedObject var viewModel: MainViewModel
-    @StateObject var userSettings: UserSettings = UserSettings()
+    @ObservedObject var userSettings: UserSettings
+    @StateObject var viewModel = MainViewModel()
     
     @State private var selectedCategory: Category? = nil
     @State private var showEditView: Bool = false
@@ -35,10 +35,6 @@ struct MainView: View {
                             .italic()
                     }
                     .padding(7)
-                }
-                
-                if viewModel.categories.isEmpty {
-                    Text("Pull to refresh.")
                 }
                 
                 // Categories

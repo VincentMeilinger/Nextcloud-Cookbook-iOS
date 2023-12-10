@@ -86,6 +86,4 @@ class UserSettings: ObservableObject {
             return ""
         }
     }
-    
-    
 }
