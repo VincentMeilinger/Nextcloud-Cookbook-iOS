@@ -18,6 +18,7 @@ public enum NetworkError: String, Error {
     case missingUrl = "Missing URL."
     case parametersNil = "Parameters are nil."
     case encodingFailed = "Parameter encoding failed."
+    case decodingFailed = "Data decoding failed."
     case redirectionError = "Redirection error"
     case clientError = "Client error"
     case serverError = "Server error"
@@ -25,3 +26,4 @@ public enum NetworkError: String, Error {
     case unknownError = "Unknown error"
     case dataError = "Invalid data error."
 }
+
