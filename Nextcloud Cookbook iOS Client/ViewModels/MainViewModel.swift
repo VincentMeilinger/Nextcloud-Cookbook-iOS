@@ -12,6 +12,8 @@ import UIKit
 
 @MainActor class MainViewModel: ObservableObject {
     @AppStorage("authString") var authString = ""
+    @AppStorage("username") var userName = ""
+    @AppStorage("token") var appToken = ""
     @AppStorage("serverAddress") var serverAdress = ""
     
     
@@ -27,6 +29,12 @@ import UIKit
         print("Created MainViewModel")
         self.api = api
         self.dataStore = DataStore()
+        
+        if authString == "" {
+            let loginString = "\(userName):\(appToken)"
+            let loginData = loginString.data(using: String.Encoding.utf8)!
+            authString = loginData.base64EncodedString()
+        }
     }
     
     enum FetchMode {
