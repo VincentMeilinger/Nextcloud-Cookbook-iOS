@@ -6,21 +6,23 @@
 //
 
 import Foundation
+import SwiftUI
 
 class APIController {
-    var userSettings: UserSettings
+    @AppStorage("serverAddress") var serverAddress = ""
+    @AppStorage("username") var username = ""
+    @AppStorage("token") var token = ""
     
-    var apiPath: String
-    var authString: String
+    var apiPath: String = ""
+    var authString: String = ""
     let apiVersion = "1"
     
-    init(userSettings: UserSettings) {
+    init() {
         print("Initializing APIController.")
-        self.userSettings = userSettings
         
-        self.apiPath = "https://\(userSettings.serverAddress)/index.php/apps/cookbook/api/v\(apiVersion)/"
+        self.apiPath = "https://\(serverAddress)/index.php/apps/cookbook/api/v\(apiVersion)/"
         
-        let loginString = "\(userSettings.username):\(userSettings.token)"
+        let loginString = "\(username):\(token)"
         let loginData = loginString.data(using: String.Encoding.utf8)!
         self.authString = loginData.base64EncodedString()
     }
