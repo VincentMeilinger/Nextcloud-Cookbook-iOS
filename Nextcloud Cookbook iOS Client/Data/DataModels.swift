@@ -11,6 +11,10 @@ import SwiftUI
 struct Category: Codable {
     let name: String
     let recipe_count: Int
+    
+    private enum CodingKeys: String, CodingKey {
+        case name, recipe_count
+    }
 }
 
 extension Category: Identifiable, Hashable {

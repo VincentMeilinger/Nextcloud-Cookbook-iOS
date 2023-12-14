@@ -55,8 +55,7 @@ import UIKit
         if let categories = categories {
             print("Successfully loaded categories")
             self.categories = categories
-            print(categories)
-            await saveLocal(categories, path: "categories.data")
+            await saveLocal(self.categories, path: "categories.data")
         } else {
             // If there's no server connection, try loading categories from local storage
             print("Loading categories from store ...")
@@ -83,6 +82,7 @@ import UIKit
      - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
     */
     func getCategory(named name: String, fetchMode: FetchMode) async {
+        print("getCategory(\(name), fetchMode: \(fetchMode))")
         func getLocal() async -> Bool {
             if let recipes: [Recipe] = await loadLocal(path: "category_\(categoryString).data") {
                 self.recipes[name] = recipes
@@ -225,8 +225,6 @@ import UIKit
     }
     
     
-    
-    
     /**
      Asynchronously downloads and saves details, thumbnails, and full images for all recipes.
 
@@ -237,17 +235,6 @@ import UIKit
      Example usage:
      ```swift
      await mainViewModel.downloadAllRecipes()
-    */
-    /*
-    func downloadAllRecipes() async {
-        for category in categories {
-            await getCategory(named: category.name, fetchMode: .onlyServer)
-            guard let recipeList = recipes[category.name] else { continue }
-            for recipe in recipeList {
-                await downloadRecipeDetail(id: recipe.recipe_id, withThumb: userSettings.storeThumb, withImage: userSettings.storeImages)
-            }
-        }
-    }
     */
     func updateRecipeDetail(id: Int, withThumb: Bool, withImage: Bool) async {
         if let recipeDetail = await getRecipe(id: id, fetchMode: .onlyServer) {
@@ -530,8 +517,7 @@ extension MainViewModel {
     }
     
     func saveLocal<T: Codable>(_ object: T, path: String) async {
-        guard let data = JSONEncoder.safeEncode(object) else { return }
-        await dataStore.save(data: data, toPath: path)
+        await dataStore.save(data: object, toPath: path)
     }
     
     private func imageFromStore(id: Int, size: RecipeImage.RecipeImageSize) async -> UIImage? {

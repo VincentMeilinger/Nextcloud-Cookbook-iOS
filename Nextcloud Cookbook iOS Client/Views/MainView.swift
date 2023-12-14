@@ -95,9 +95,6 @@ struct MainView: View {
                 showLoadingIndicator = true
                 self.serverConnection = await viewModel.checkServerConnection()
                 await viewModel.getCategories()
-                for category in viewModel.categories {
-                    await viewModel.getCategory(named: category.name, fetchMode: .preferLocal)
-                }
                 await viewModel.updateAllRecipeDetails()
                 
                 // Open detail view for default category
@@ -145,6 +142,7 @@ struct MainView: View {
                     Button {
                         Task {
                             showLoadingIndicator = true
+                            UserSettings.shared.lastUpdate = Date.distantPast
                             await viewModel.getCategories()
                             for category in viewModel.categories {
                                 await viewModel.getCategory(named: category.name, fetchMode: .preferServer)
