@@ -10,7 +10,6 @@ import SwiftUI
 
 @MainActor class RecipeEditViewModel: ObservableObject {
     @ObservedObject var mainViewModel: MainViewModel
-    @Published var isPresented: Binding<Bool>
     @Published var recipe: RecipeDetail = RecipeDetail()
     
     @Published var prepDuration: DurationComponents = DurationComponents()
@@ -19,29 +18,25 @@ import SwiftUI
     
     @Published var searchText: String = ""
     @Published var keywords: [String] = []
-    @Published var keywordSuggestions: [String] = []
+    @Published var keywordSuggestions: [RecipeKeyword] = []
     
     @Published var showImportSection: Bool = false
     @Published var importURL: String = ""
     
-    @Published var presentAlert = false
-    var alertType: UserAlert = RecipeCreationError.GENERIC
-    var alertAction: @MainActor () async -> (RequestAlert) = { return .REQUEST_DROPPED }
+    
     
     var uploadNew: Bool = true
     var waitingForUpload: Bool = false
     
     
-    init(mainViewModel: MainViewModel, isPresented: Binding<Bool>, uploadNew: Bool) {
+    init(mainViewModel: MainViewModel, uploadNew: Bool) {
         self.mainViewModel = mainViewModel
-        self.isPresented = isPresented
         self.uploadNew = uploadNew
     }
     
-    init(mainViewModel: MainViewModel, recipeDetail: RecipeDetail, isPresented: Binding<Bool>, uploadNew: Bool) {
+    init(mainViewModel: MainViewModel, recipeDetail: RecipeDetail, uploadNew: Bool) {
         self.mainViewModel = mainViewModel
         self.recipe = recipeDetail
-        self.isPresented = isPresented
         self.uploadNew = uploadNew
     }
     
@@ -53,13 +48,10 @@ import SwiftUI
         self.recipe.setKeywordsFromArray(keywords)
     }
     
-    func recipeValid() -> Bool {
+    func recipeValid() -> RecipeAlert? {
         // Check if the recipe has a name
         if recipe.name.replacingOccurrences(of: " ", with: "") == "" {
-            alertType = RecipeCreationError.NO_TITLE
-            alertAction = {return .REQUEST_DROPPED}
-            presentAlert = true
-            return false
+            return RecipeAlert.NO_TITLE
         }
         // Check if the recipe has a unique name
         for recipeList in mainViewModel.recipes.values {
@@ -71,50 +63,39 @@ import SwiftUI
                     .replacingOccurrences(of: " ", with: "")
                     .lowercased()
                 {
-                    alertType = RecipeCreationError.DUPLICATE
-                    alertAction = {return .REQUEST_DROPPED}
-                    presentAlert = true
-                    return false
+                    return RecipeAlert.DUPLICATE
                 }
             }
         }
         
-        return true
+        return nil
     }
     
-    func uploadNewRecipe() async -> RequestAlert {
+    func uploadNewRecipe() async -> UserAlert? {
         print("Uploading new recipe.")
         waitingForUpload = true
         createRecipe()
-        guard recipeValid() else { return .REQUEST_DROPPED }
+        if let recipeValidationError = recipeValid() {
+            return recipeValidationError
+        }
         
         return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: true)
     }
     
-    func uploadEditedRecipe() async -> RequestAlert {
+    func uploadEditedRecipe() async -> UserAlert? {
         waitingForUpload = true
         print("Uploading changed recipe.")
-        guard let recipeId = Int(recipe.id) else { return .REQUEST_DROPPED }
+        guard let recipeId = Int(recipe.id) else { return RequestAlert.REQUEST_DROPPED }
         createRecipe()
         
         return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: false)
     }
     
-    func deleteRecipe() async -> RequestAlert {
+    func deleteRecipe() async -> RequestAlert? {
         guard let id = Int(recipe.id) else {
             return .REQUEST_DROPPED
         }
         return await mainViewModel.deleteRecipe(withId: id, categoryName: recipe.recipeCategory)
-    }
-    
-    
-    
-    func dismissEditView() {
-        Task {
-            await mainViewModel.getCategories()
-            await mainViewModel.getCategory(named: recipe.recipeCategory, fetchMode: .preferServer)
-        }
-        isPresented.wrappedValue = false
     }
     
     func prepareView() {
@@ -130,22 +111,19 @@ import SwiftUI
         self.keywords = recipe.getKeywordsArray()
     }
     
-    func importRecipe() {
-        Task {
-            do {
-                let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: importURL)
-                if let scrapedRecipe = scrapedRecipe {
-                    self.recipe = scrapedRecipe
-                    prepareView()
-                }
-                if let error = error {
-                    self.alertType = error
-                    self.alertAction = {return .REQUEST_DROPPED}
-                    self.presentAlert = true
-                }
-            } catch {
-                print("Error")
+    func importRecipe() async -> UserAlert? {
+        do {
+            let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: importURL)
+            if let scrapedRecipe = scrapedRecipe {
+                self.recipe = scrapedRecipe
+                prepareView()
             }
+            if let error = error {
+                return error
+            }
+        } catch {
+            print("Error")
         }
+        return nil
     }
 }

@@ -12,7 +12,7 @@ import SwiftUI
 
 struct KeywordPickerView: View {
     @State var title: String
-    @State var searchSuggestions: [String]
+    @State var searchSuggestions: [RecipeKeyword]
     @Binding var selection: [String]
     @State var searchText: String = ""
     
@@ -35,17 +35,18 @@ struct KeywordPickerView: View {
                                     s == keyword ? true : false
                                 })
                                 searchSuggestions.removeAll(where: { s in
-                                    s == keyword ? true : false
+                                    s.name == keyword ? true : false
                                 })
                             } else {
                                 selection.append(keyword)
                             }
                         }
                     }
-                    ForEach(suggestionsFiltered(), id: \.self) { suggestion in
+                    ForEach(suggestionsFiltered(), id: \.name) { suggestion in
                         KeywordItemView(
-                            keyword: suggestion,
-                            isSelected: selection.contains(suggestion)
+                            keyword: suggestion.name,
+                            count: suggestion.recipe_count,
+                            isSelected: selection.contains(suggestion.name)
                         ) { keyword in
                             if selection.contains(keyword) {
                                 selection.removeAll(where: { s in
@@ -84,14 +85,17 @@ struct KeywordPickerView: View {
             }
         }
         .navigationTitle(title)
+        .padding(5)
         
     }
     
-    func suggestionsFiltered() -> [String] {
+    func suggestionsFiltered() -> [RecipeKeyword] {
         guard searchText != "" else { return searchSuggestions }
         return searchSuggestions.filter { suggestion in
-            suggestion.lowercased().contains(searchText.lowercased())
-        }
+            suggestion.name.lowercased().contains(searchText.lowercased())
+        }.sorted(by: { a, b in
+            a.recipe_count > b.recipe_count
+        })
     }
 }
 
@@ -99,6 +103,7 @@ struct KeywordPickerView: View {
 
 struct KeywordItemView: View {
     var keyword: String
+    var count: Int? = nil
     var isSelected: Bool
     var tapped: (String) -> ()
     
@@ -110,6 +115,9 @@ struct KeywordItemView: View {
             Text(keyword)
                 .lineLimit(2)
             Spacer()
+            if let count = count {
+                Text("(\(count))")
+            }
         }
         .padding()
         .background(

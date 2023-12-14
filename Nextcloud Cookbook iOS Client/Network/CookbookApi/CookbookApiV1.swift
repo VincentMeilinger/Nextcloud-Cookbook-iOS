@@ -53,7 +53,7 @@ class CookbookApiV1: CookbookApi {
             path: "/api/v1/recipes",
             method: .POST,
             authString: auth,
-            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)],
+            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON), HeaderField.contentType(value: .JSON)],
             body: recipeData
         )
         
@@ -95,7 +95,7 @@ class CookbookApiV1: CookbookApi {
             path: "/api/v1/recipes/\(recipe.id)",
             method: .PUT,
             authString: auth,
-            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)],
+            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON), HeaderField.contentType(value: .JSON)],
             body: recipeData
         )
         
@@ -170,7 +170,7 @@ class CookbookApiV1: CookbookApi {
         return nil
     }
     
-    static func getTags(from serverAdress: String, auth: String) async -> ([String]?, NetworkError?) {
+    static func getTags(from serverAdress: String, auth: String) async -> ([RecipeKeyword]?, NetworkError?) {
         let request = ApiRequest(
             serverAdress: serverAdress,
             path: "/api/v1/keywords",

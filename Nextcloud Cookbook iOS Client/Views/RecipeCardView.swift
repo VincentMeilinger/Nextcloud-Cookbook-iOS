@@ -51,11 +51,22 @@ struct RecipeCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 17))
         .padding(.horizontal)
         .task {
-            recipeThumb = await viewModel.getImage(id: recipe.recipe_id, size: .THUMB, fetchMode: .preferLocal)
-            self.isDownloaded = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
+            recipeThumb = await viewModel.getImage(
+                id: recipe.recipe_id,
+                size: .THUMB,
+                fetchMode: UserSettings.shared.storeThumb ? .preferLocal : .onlyServer
+            )
+            if recipe.storedLocally == nil {
+                recipe.storedLocally = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
+            }
+            isDownloaded = recipe.storedLocally
         }
         .refreshable {
-            recipeThumb = await viewModel.getImage(id: recipe.recipe_id, size: .THUMB, fetchMode: .preferServer)
+            recipeThumb = await viewModel.getImage(
+                id: recipe.recipe_id,
+                size: .THUMB,
+                fetchMode: UserSettings.shared.storeThumb ? .preferServer : .onlyServer
+            )
         }
     }
 }

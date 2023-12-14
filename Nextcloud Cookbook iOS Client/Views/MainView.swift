@@ -10,13 +10,14 @@ import SwiftUI
 
 struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
-    @StateObject var userSettings: UserSettings = UserSettings()
+    @StateObject var userSettings: UserSettings = UserSettings.shared
     
     @State private var selectedCategory: Category? = nil
     @State private var showEditView: Bool = false
     @State private var showSearchView: Bool = false
     @State private var showSettingsView: Bool = false
     @State private var serverConnection: Bool = false
+    @State private var showLoadingIndicator: Bool = false
     
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 150), spacing: 0)]
@@ -43,7 +44,7 @@ struct MainView: View {
                         NavigationLink(value: category) {
                             HStack(alignment: .center) {
                                 Image(systemName: "book.closed.fill")
-                                Text(category.name == "*" ? "Other" : category.name)
+                                Text(category.name == "*" ? String(localized: "Other") : category.name)
                                     .font(.system(size: 20, weight: .light, design: .serif))
                                     .italic()
                             }.padding(7)
@@ -53,7 +54,7 @@ struct MainView: View {
             }
             .navigationTitle("Cookbooks")
             .navigationDestination(isPresented: $showSettingsView) {
-                SettingsView(userSettings: userSettings, viewModel: viewModel)
+                SettingsView(viewModel: viewModel)
             }
             .navigationDestination(isPresented: $showSearchView) {
                 RecipeSearchView(viewModel: viewModel)
@@ -63,7 +64,8 @@ struct MainView: View {
                     viewModel: viewModel,
                     showEditView: $showEditView,
                     showSettingsView: $showSettingsView,
-                    serverConnection: $serverConnection
+                    serverConnection: $serverConnection,
+                    showLoadingIndicator: $showLoadingIndicator
                 )
             }
             } detail: {
@@ -80,17 +82,24 @@ struct MainView: View {
             }
             .tint(.nextcloudBlue)
             .sheet(isPresented: $showEditView) {
-                RecipeEditView(viewModel:
-                    RecipeEditViewModel(
-                        mainViewModel: viewModel,
-                        isPresented: $showEditView,
-                        uploadNew: true
-                    )
+                RecipeEditView(
+                    viewModel:
+                        RecipeEditViewModel(
+                            mainViewModel: viewModel,
+                            uploadNew: true
+                        ),
+                    isPresented: $showEditView
                 )
             }
             .task {
+                showLoadingIndicator = true
                 self.serverConnection = await viewModel.checkServerConnection()
-                await viewModel.getCategories()//viewModel.loadCategoryList()
+                await viewModel.getCategories()
+                for category in viewModel.categories {
+                    await viewModel.getCategory(named: category.name, fetchMode: .preferLocal)
+                }
+                await viewModel.updateAllRecipeDetails()
+                
                 // Open detail view for default category
                 if userSettings.defaultCategory != "" {
                     if let cat = viewModel.categories.first(where: { c in
@@ -102,10 +111,11 @@ struct MainView: View {
                         self.selectedCategory = cat
                     }
                 }
+                showLoadingIndicator = false
             }
             .refreshable {
                 self.serverConnection = await viewModel.checkServerConnection()
-                await viewModel.getCategories()//loadCategoryList(needsUpdate: true)
+                await viewModel.getCategories()
             }
             
         }
@@ -119,6 +129,7 @@ struct MainView: View {
         @Binding var showEditView: Bool
         @Binding var showSettingsView: Bool
         @Binding var serverConnection: Bool
+        @Binding var showLoadingIndicator: Bool
         @State private var presentPopover: Bool = false
         
         var body: some ToolbarContent {
@@ -126,22 +137,24 @@ struct MainView: View {
             ToolbarItem(placement: .topBarLeading) {
                 Menu {
                     Button {
-                        print("Downloading all recipes ...")
-                        Task {
-                            await viewModel.downloadAllRecipes()
-                        }
-                    } label: {
-                        HStack {
-                            Text("Download all recipes")
-                            Image(systemName: "icloud.and.arrow.down")
-                        }
-                    }
-                    
-                    Button {
                         self.showSettingsView = true
                     } label: {
                         Text("Settings")
                         Image(systemName: "gearshape")
+                    }
+                    Button {
+                        Task {
+                            showLoadingIndicator = true
+                            await viewModel.getCategories()
+                            for category in viewModel.categories {
+                                await viewModel.getCategory(named: category.name, fetchMode: .preferServer)
+                            }
+                            await viewModel.updateAllRecipeDetails()
+                            showLoadingIndicator = false
+                        }
+                    } label: {
+                        Text("Refresh all")
+                        Image(systemName: "icloud.and.arrow.down")
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -154,16 +167,24 @@ struct MainView: View {
                     print("Check server connection")
                     presentPopover = true
                 } label: {
-                    if serverConnection {
+                    if showLoadingIndicator {
+                        ProgressView()
+                    } else if serverConnection {
                         Image(systemName: "checkmark.icloud")
                     } else {
                         Image(systemName: "xmark.icloud")
                     }
                 }.popover(isPresented: $presentPopover) {
-                    Text(serverConnection ? LocalizedStringKey("Connected to server.") : LocalizedStringKey("Unable to connect to server."))
-                        .bold()
-                        .padding()
-                        .presentationCompactAdaptation(.popover)
+                    VStack(alignment: .leading) {
+                        Text(serverConnection ? LocalizedStringKey("Connected to server.") : LocalizedStringKey("Unable to connect to server."))
+                            .bold()
+                            
+                        Text("Last updated: \(DateFormatter.utcToString(date: UserSettings.shared.lastUpdate))")
+                            .font(.caption)
+                            .foregroundStyle(Color.secondary)
+                    }
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
                 }
             }
             
@@ -195,6 +216,7 @@ struct RecipeSearchView: View {
                         ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
                             NavigationLink(value: recipe) {
                                 RecipeCardView(viewModel: viewModel, recipe: recipe)
+                                    .shadow(radius: 2)
                             }
                             .buttonStyle(.plain)
                         }
@@ -208,7 +230,7 @@ struct RecipeSearchView: View {
             .navigationTitle("Search recipe")
         }
         .task {
-            allRecipes = await viewModel.getRecipes()//.getAllRecipes()
+            allRecipes = await viewModel.getRecipes()
         }
     }
     

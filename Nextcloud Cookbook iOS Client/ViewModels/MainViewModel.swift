@@ -11,15 +11,13 @@ import UIKit
 
 
 @MainActor class MainViewModel: ObservableObject {
-    @AppStorage("authString") var authString = ""
-    @AppStorage("username") var userName = ""
-    @AppStorage("token") var appToken = ""
-    @AppStorage("serverAddress") var serverAdress = ""
-    
+    @ObservedObject var userSettings = UserSettings.shared
     
     @Published var categories: [Category] = []
     @Published var recipes: [String: [Recipe]] = [:]
     @Published var recipeDetails: [Int: RecipeDetail] = [:]
+    var recipeImages: [Int: [String: UIImage]] = [:]
+    var imagesNeedUpdate: [Int: [String: Bool]] = [:]
     private var requestQueue: [RequestWrapper] = []
     
     private let api: CookbookApi.Type
@@ -30,10 +28,10 @@ import UIKit
         self.api = api
         self.dataStore = DataStore()
         
-        if authString == "" {
-            let loginString = "\(userName):\(appToken)"
+        if userSettings.authString == "" {
+            let loginString = "\(userSettings.username):\(userSettings.token)"
             let loginData = loginString.data(using: String.Encoding.utf8)!
-            authString = loginData.base64EncodedString()
+            userSettings.authString = loginData.base64EncodedString()
         }
     }
     
@@ -51,20 +49,25 @@ import UIKit
     */
     func getCategories() async {
         let (categories, _) = await api.getCategories(
-            from: serverAdress,
-            auth: authString
+            from: userSettings.serverAddress,
+            auth: userSettings.authString
         )
         if let categories = categories {
+            print("Successfully loaded categories")
             self.categories = categories
+            print(categories)
             await saveLocal(categories, path: "categories.data")
         } else {
             // If there's no server connection, try loading categories from local storage
+            print("Loading categories from store ...")
             if let categories: [Category] = await loadLocal(path: "categories.data") {
                 self.categories = categories
+                print("Success!")
+            } else {
+                print("Failure!")
             }
         }
     }
-    
     
     /**
      Fetches recipes for a specified category from either the server or local storage.
@@ -88,14 +91,18 @@ import UIKit
             return false
         }
         
-        func getServer() async -> Bool {
+        func getServer(store: Bool = false) async -> Bool {
             let (recipes, _) = await api.getCategory(
-                from: serverAdress,
-                auth: authString,
-                named: name
+                from: userSettings.serverAddress,
+                auth: userSettings.authString,
+                named: categoryString
             )
             if let recipes = recipes {
                 self.recipes[name] = recipes
+                if store {
+                    await saveLocal(recipes, path: "category_\(categoryString).data")
+                }
+                //userSettings.lastUpdate = Date()
                 return true
             }
             return false
@@ -105,14 +112,34 @@ import UIKit
         switch fetchMode {
         case .preferLocal:
             if await getLocal() { return }
-            if await getServer() { return }
+            if await getServer(store: true) { return }
         case .preferServer:
-            if await getServer() { return }
+            if await getServer(store: true) { return }
             if await getLocal() { return }
         case .onlyLocal:
             if await getLocal() { return }
         case .onlyServer:
             if await getServer() { return }
+        }
+    }
+    
+    func updateAllRecipeDetails() async {
+        for category in self.categories {
+            await updateRecipeDetails(in: category.name)
+        }
+        userSettings.lastUpdate = Date()
+    }
+    
+    func updateRecipeDetails(in category: String) async {
+        guard userSettings.storeRecipes else { return }
+        guard let recipes = self.recipes[category] else { return }
+        for recipe in recipes {
+            if needsUpdate(lastModified: recipe.dateModified) {
+                print("\(recipe.name) needs an update. (last modified: \(recipe.dateModified)")
+                await updateRecipeDetail(id: recipe.recipe_id, withThumb: userSettings.storeThumb, withImage: userSettings.storeImages)
+            } else {
+                print("\(recipe.name) is up to date.")
+            }
         }
     }
     
@@ -129,8 +156,8 @@ import UIKit
     */
     func getRecipes() async -> [Recipe] {
         let (recipes, error) = await api.getRecipes(
-            from: serverAdress,
-            auth: authString
+            from: userSettings.serverAddress,
+            auth: userSettings.authString
         )
         if let recipes = recipes {
             return recipes
@@ -162,18 +189,16 @@ import UIKit
      ```swift
      let recipeDetail = await mainViewModel.getRecipe(id: 123)
     */
-    func getRecipe(id: Int, fetchMode: FetchMode) async -> RecipeDetail {
+    func getRecipe(id: Int, fetchMode: FetchMode) async -> RecipeDetail? {
         func getLocal() async -> RecipeDetail? {
-            if let recipe: RecipeDetail = await loadLocal(path: "recipe\(id).data") {
-                return recipe
-            }
+            if let recipe: RecipeDetail = await loadLocal(path: "recipe\(id).data") { return recipe }
             return nil
         }
         
         func getServer() async -> RecipeDetail? {
             let (recipe, error) = await api.getRecipe(
-                from: serverAdress,
-                auth: authString,
+                from: userSettings.serverAddress,
+                auth: userSettings.authString,
                 id: id
             )
             if let recipe = recipe {
@@ -196,7 +221,7 @@ import UIKit
         case .onlyServer:
             if let recipe = await getServer() { return recipe }
         }
-        return .error
+        return nil
     }
     
     
@@ -213,24 +238,34 @@ import UIKit
      ```swift
      await mainViewModel.downloadAllRecipes()
     */
+    /*
     func downloadAllRecipes() async {
         for category in categories {
             await getCategory(named: category.name, fetchMode: .onlyServer)
             guard let recipeList = recipes[category.name] else { continue }
             for recipe in recipeList {
-                let recipeDetail = await getRecipe(id: recipe.recipe_id, fetchMode: .onlyServer)
-                await saveLocal(recipeDetail, path: "recipe\(recipe.recipe_id).data")
-                
-                let thumbnail = await getImage(id: recipe.recipe_id, size: .THUMB, fetchMode: .onlyServer)
-                guard let thumbnail = thumbnail else { continue }
-                guard let thumbnailData = thumbnail.pngData() else { continue }
-                await saveLocal(thumbnailData.base64EncodedString(), path: "image\(recipe.recipe_id)_thumb")
-                
-                let image = await getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .onlyServer)
-                guard let image = image else { continue }
-                guard let imageData = image.pngData() else { continue }
-                await saveLocal(imageData.base64EncodedString(), path: "image\(recipe.recipe_id)_full")
+                await downloadRecipeDetail(id: recipe.recipe_id, withThumb: userSettings.storeThumb, withImage: userSettings.storeImages)
             }
+        }
+    }
+    */
+    func updateRecipeDetail(id: Int, withThumb: Bool, withImage: Bool) async {
+        if let recipeDetail = await getRecipe(id: id, fetchMode: .onlyServer) {
+            await saveLocal(recipeDetail, path: "recipe\(id).data")
+        }
+        
+        if withThumb {
+            let thumbnail = await getImage(id: id, size: .THUMB, fetchMode: .onlyServer)
+            guard let thumbnail = thumbnail else { return }
+            guard let thumbnailData = thumbnail.pngData() else { return }
+            await saveLocal(thumbnailData.base64EncodedString(), path: "image\(id)_thumb")
+        }
+        
+        if withImage {
+            let image = await getImage(id: id, size: .FULL, fetchMode: .onlyServer)
+            guard let image = image else { return }
+            guard let imageData = image.pngData() else { return }
+            await saveLocal(imageData.base64EncodedString(), path: "image\(id)_full")
         }
     }
     
@@ -240,9 +275,7 @@ import UIKit
     ///     - recipeId: The id of a recipe.
     /// - Returns: True if the recipeDetail is stored, otherwise false
     func recipeDetailExists(recipeId: Int) -> Bool {
-        if recipeDetails[recipeId] != nil {
-            return true
-        } else if (dataStore.recipeDetailExists(recipeId: recipeId)) {
+        if (dataStore.recipeDetailExists(recipeId: recipeId)) {
             return true
         }
         return false
@@ -271,8 +304,8 @@ import UIKit
         
         func getServer() async -> UIImage? {
             let (image, _) = await api.getImage(
-                from: serverAdress,
-                auth: authString,
+                from: userSettings.serverAddress,
+                auth: userSettings.authString,
                 id: id,
                 size: size
             )
@@ -282,16 +315,51 @@ import UIKit
         
         switch fetchMode {
         case .preferLocal:
-            if let image = await getLocal() { return image }
-            if let image = await getServer() { return image }
+            if let image = imageFromCache(id: id, size: size) {
+                return image
+            }
+            if !imageUpdateNeeded(id: id, size: size) { return nil }
+            if let image = await getLocal() {
+                imageToCache(id: id, size: size, image: image)
+                return image
+            }
+            if let image = await getServer() {
+                await imageToStore(id: id, size: size, image: image)
+                imageToCache(id: id, size: size, image: image)
+                return image
+            }
         case .preferServer:
-            if let image = await getServer() { return image }
-            if let image = await getLocal() { return image }
+            if let image = await getServer() {
+                await imageToStore(id: id, size: size, image: image)
+                imageToCache(id: id, size: size, image: image)
+                return image
+            }
+            if let image = imageFromCache(id: id, size: size) {
+                return image
+            }
+            if let image = await getLocal() {
+                imageToCache(id: id, size: size, image: image)
+                return image
+            }
         case .onlyLocal:
-            if let image = await getLocal() { return image }
+            if let image = imageFromCache(id: id, size: size) {
+                return image
+            }
+            if !imageUpdateNeeded(id: id, size: size) { return nil }
+            if let image = await getLocal() {
+                imageToCache(id: id, size: size, image: image)
+                return image
+            }
         case .onlyServer:
-            if let image = await getServer() { return image }
+            if let image = imageFromCache(id: id, size: size) {
+                return image
+            }
+            if let image = await getServer() {
+                imageToCache(id: id, size: size, image: image)
+                return image
+            }
         }
+        imagesNeedUpdate[id] = [size.rawValue: false]
         return nil
     }
     
@@ -306,15 +374,15 @@ import UIKit
      ```swift
      let keywords = await mainViewModel.getKeywords()
     */
-    func getKeywords(fetchMode: FetchMode) async -> [String] {
-        func getLocal() async -> [String]? {
+    func getKeywords(fetchMode: FetchMode) async -> [RecipeKeyword] {
+        func getLocal() async -> [RecipeKeyword]? {
             return await loadLocal(path: "keywords.data")
         }
         
-        func getServer() async -> [String]? {
+        func getServer() async -> [RecipeKeyword]? {
             let (tags, _) = await api.getTags(
-                from: serverAdress,
-                auth: authString
+                from: userSettings.serverAddress,
+                auth: userSettings.authString
             )
             return tags
         }
@@ -322,9 +390,15 @@ import UIKit
         switch fetchMode {
         case .preferLocal:
             if let keywords = await getLocal() { return keywords }
-            if let keywords = await getServer() { return keywords }
+            if let keywords = await getServer() {
+                await saveLocal(keywords, path: "keywords.data")
+                return keywords
+            }
         case .preferServer:
-            if let keywords = await getServer() { return keywords }
+            if let keywords = await getServer() {
+                await saveLocal(keywords, path: "keywords.data")
+                return keywords
+            }
             if let keywords = await getLocal() { return keywords }
         case .onlyLocal:
             if let keywords = await getLocal() { return keywords }
@@ -340,6 +414,8 @@ import UIKit
             self.recipes = [:]
             self.recipeDetails = [:]
             self.requestQueue = []
+            self.recipeImages = [:]
+            self.imagesNeedUpdate = [:]
         }
     }
     
@@ -358,10 +434,10 @@ import UIKit
      ```swift
      let requestResult = await mainViewModel.deleteRecipe(withId: 123, categoryName: "Desserts")
     */
-    func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert {
+    func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert? {
         let (error) = await api.deleteRecipe(
-            from: serverAdress,
-            auth: authString,
+            from: userSettings.serverAddress,
+            auth: userSettings.authString,
             id: id
         )
         
@@ -376,7 +452,7 @@ import UIKit
             })
             recipeDetails.removeValue(forKey: id)
         }
-        return .REQUEST_SUCCESS
+        return nil
     }
     
     /**
@@ -392,8 +468,8 @@ import UIKit
     */
     func checkServerConnection() async -> Bool {
         let (categories, _) = await api.getCategories(
-            from: serverAdress,
-            auth: authString
+            from: userSettings.serverAddress,
+            auth: userSettings.authString
         )
         if let categories = categories {
             self.categories = categories
@@ -418,25 +494,25 @@ import UIKit
      ```swift
      let uploadResult = await mainViewModel.uploadRecipe(recipeDetail: myRecipeDetail, createNew: true)
     */
-    func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert {
+    func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert? {
         var error: NetworkError? = nil
         if createNew {
             error = await api.createRecipe(
-                from: serverAdress,
-                auth: authString,
+                from: userSettings.serverAddress,
+                auth: userSettings.authString,
                 recipe: recipeDetail
             )
         } else {
             error = await api.updateRecipe(
-                from: serverAdress,
-                auth: authString,
+                from: userSettings.serverAddress,
+                auth: userSettings.authString,
                 recipe: recipeDetail
             )
         }
         if let error = error {
             return .REQUEST_DROPPED
         }
-        return .REQUEST_SUCCESS
+        return nil
     }
 }
 
@@ -472,6 +548,72 @@ extension MainViewModel {
         }
         return nil
     }
+    
+    private func imageToStore(id: Int, size: RecipeImage.RecipeImageSize, image: UIImage) async {
+        if let data = image.pngData() {
+            await saveLocal(data.base64EncodedString(), path: "image\(id)_\(size.rawValue)")
+        }
+    }
+    
+    private func imageToCache(id: Int, size: RecipeImage.RecipeImageSize, image: UIImage) {
+        if recipeImages[id] != nil {
+            recipeImages[id]![size.rawValue] = image
+        } else {
+            recipeImages[id] = [size.rawValue : image]
+        }
+        if imagesNeedUpdate[id] != nil {
+            imagesNeedUpdate[id]![size.rawValue] = false
+        } else {
+            imagesNeedUpdate[id] = [size.rawValue: false]
+        }
+    }
+    
+    private func imageFromCache(id: Int, size: RecipeImage.RecipeImageSize) -> UIImage? {
+        if recipeImages[id] != nil {
+            return recipeImages[id]![size.rawValue]
+        }
+        return nil
+    }
+    
+    private func imageUpdateNeeded(id: Int, size: RecipeImage.RecipeImageSize) -> Bool {
+        if imagesNeedUpdate[id] != nil {
+            if imagesNeedUpdate[id]![size.rawValue] != nil {
+                return imagesNeedUpdate[id]![size.rawValue]!
+            }
+        }
+        return true
+    }
+    
+    private func needsUpdate(lastModified: String) -> Bool {
+        print("=======================")
+        print("original date string: \(lastModified)")
+        // Create a DateFormatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        //dateFormatter.locale = Locale(identifier: "en_US_POSIX") // Set the locale to posix
+
+        // Convert the string to a Date object
+        if let date = dateFormatter.date(from: lastModified) {
+            if date < userSettings.lastUpdate {
+                print("No update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: userSettings.lastUpdate))")
+                return false
+            } else {
+                print("Update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: userSettings.lastUpdate))")
+                return true
+            }
+        }
+        print("String is not a date. Update needed.")
+        return true
+    }
 }
 
 
+extension DateFormatter {
+    static func utcToString(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return dateFormatter.string(from: date)
+    }
+}

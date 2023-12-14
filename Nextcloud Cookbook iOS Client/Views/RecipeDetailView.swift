@@ -75,6 +75,14 @@ struct RecipeDetailView: View {
                             RecipeNutritionSection(recipeDetail: recipeDetail, presentNutritionPopover: $presentNutritionPopover)
                             RecipeKeywordSection(recipeDetail: recipeDetail, presentKeywordPopover: $presentKeywordPopover)
                         }
+                        VStack(alignment: .leading) {
+                            
+                            Text("Created: \(Date.convertISOStringToLocalString(isoDateString: recipeDetail.dateCreated) ?? "")")
+                            Text("Last modified: \(Date.convertISOStringToLocalString(isoDateString: recipeDetail.dateModified) ?? "")")
+                        }
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                        .padding()
                     }.padding(.horizontal, 5)
                     
                 }
@@ -95,24 +103,42 @@ struct RecipeDetailView: View {
         }
         .sheet(isPresented: $presentEditView) {
             if let recipeDetail = recipeDetail {
-                RecipeEditView(viewModel:
-                    RecipeEditViewModel(
-                        mainViewModel: viewModel,
-                        recipeDetail: recipeDetail,
-                        isPresented: $presentEditView,
-                        uploadNew: false
-                    )
+                RecipeEditView(
+                    viewModel:
+                        RecipeEditViewModel(
+                            mainViewModel: viewModel,
+                            recipeDetail: recipeDetail,
+                            uploadNew: false
+                        ),
+                    isPresented: $presentEditView
                 )
             }
         }
         .task {
-            recipeDetail = await viewModel.getRecipe(id: recipe.recipe_id, fetchMode: .preferLocal)//loadRecipeDetail(recipeId: recipe.recipe_id)
-            recipeImage = await viewModel.getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .preferLocal)//.loadImage(recipeId: recipe.recipe_id, thumb: false)
-            self.isDownloaded = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
+            recipeDetail = await viewModel.getRecipe(
+                id: recipe.recipe_id,
+                fetchMode: UserSettings.shared.storeRecipes ? .preferLocal : .onlyServer
+            )
+            recipeImage = await viewModel.getImage(
+                id: recipe.recipe_id,
+                size: .FULL,
+                fetchMode: UserSettings.shared.storeImages ? .preferLocal : .onlyServer
+            )
+            if recipe.storedLocally == nil {
+                recipe.storedLocally = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
+            }
+            self.isDownloaded = recipe.storedLocally
         }
         .refreshable {
-            recipeDetail = await viewModel.getRecipe(id: recipe.recipe_id, fetchMode: .preferServer)
-            recipeImage = await viewModel.getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .preferServer)
+            recipeDetail = await viewModel.getRecipe(
+                id: recipe.recipe_id,
+                fetchMode: UserSettings.shared.storeRecipes ? .preferServer : .onlyServer
+            )
+            recipeImage = await viewModel.getImage(
+                id: recipe.recipe_id,
+                size: .FULL,
+                fetchMode: UserSettings.shared.storeImages ? .preferServer : .onlyServer
+            )
         }
     }
 }

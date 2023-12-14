@@ -11,7 +11,7 @@ import SwiftUI
 
 
 class RecipeScraper {
-    func scrape(url: String) async throws -> (RecipeDetail?, RecipeImportError?) {
+    func scrape(url: String) async throws -> (RecipeDetail?, RecipeImportAlert?) {
         var contents: String? = nil
         if let url = URL(string: url) {
             do {

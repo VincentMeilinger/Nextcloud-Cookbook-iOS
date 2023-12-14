@@ -26,13 +26,13 @@
 		A70171CB2AB4CD1700064C43 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171CA2AB4CD1700064C43 /* UserSettings.swift */; };
 		A70171CD2AB501B100064C43 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171CC2AB501B100064C43 /* SettingsView.swift */; };
 		A703226A2ABAF49800D7C4ED /* JSONCoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */; };
-		A703226D2ABAF90D00D7C4ED /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703226C2ABAF90D00D7C4ED /* APIController.swift */; };
 		A703226F2ABB1DD700D7C4ED /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */; };
 		A70D7CA12AC73CA800D53DBF /* RecipeEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */; };
 		A74D33BE2AF82AAE00D06555 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = A74D33BD2AF82AAE00D06555 /* SwiftSoup */; };
 		A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */; };
 		A76B8A6F2ADFFA8800096CEC /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */; };
 		A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B8A702AE002AE00096CEC /* Alerts.swift */; };
+		A787B0782B2B1E6400C2DF1B /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A787B0772B2B1E6400C2DF1B /* DateExtension.swift */; };
 		A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */; };
 		A79AA8E22AFF8C14007D25F2 /* RecipeEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */; };
 		A79AA8E42B02A962007D25F2 /* CookbookApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E32B02A961007D25F2 /* CookbookApi.swift */; };
@@ -89,13 +89,12 @@
 		A70171CA2AB4CD1700064C43 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		A70171CC2AB501B100064C43 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCoderExtension.swift; sourceTree = "<group>"; };
-		A703226C2ABAF90D00D7C4ED /* APIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditView.swift; sourceTree = "<group>"; };
-		A74D33BF2AF82CB500D06555 /* TestScraper.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = TestScraper.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeScraper.swift; sourceTree = "<group>"; };
 		A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
 		A76B8A702AE002AE00096CEC /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		A787B0772B2B1E6400C2DF1B /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationComponents.swift; sourceTree = "<group>"; };
 		A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditViewModel.swift; sourceTree = "<group>"; };
 		A79AA8E32B02A961007D25F2 /* CookbookApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbookApi.swift; sourceTree = "<group>"; };
@@ -207,7 +206,6 @@
 			children = (
 				A79AA8EE2B063B33007D25F2 /* NextcloudApi */,
 				A79AA8E72B062DB6007D25F2 /* CookbookApi */,
-				A703226C2ABAF90D00D7C4ED /* APIController.swift */,
 				A70171B32AB2122900064C43 /* NetworkRequests.swift */,
 				A70171AE2AB2116B00064C43 /* NetworkHandler.swift */,
 				A70171B02AB211DF00064C43 /* CustomError.swift */,
@@ -258,6 +256,7 @@
 				A70322692ABAF49800D7C4ED /* JSONCoderExtension.swift */,
 				A703226E2ABB1DD700D7C4ED /* ColorExtension.swift */,
 				A79AA8E52B02C3CB007D25F2 /* LoggerExtension.swift */,
+				A787B0772B2B1E6400C2DF1B /* DateExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -272,7 +271,6 @@
 		A781E75F2AF8228100452F6F /* RecipeImport */ = {
 			isa = PBXGroup;
 			children = (
-				A74D33BF2AF82CB500D06555 /* TestScraper.playground */,
 				A74D33C22AFCD1C300D06555 /* RecipeScraper.swift */,
 			);
 			path = RecipeImport;
@@ -455,6 +453,7 @@
 				A79AA8E62B02C3CB007D25F2 /* LoggerExtension.swift in Sources */,
 				A70171C42AB4A31200064C43 /* DataStore.swift in Sources */,
 				A7FB0D7E2B25C6A200A3469E /* V2LoginView.swift in Sources */,
+				A787B0782B2B1E6400C2DF1B /* DateExtension.swift in Sources */,
 				A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */,
 				A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */,
 				A70171B42AB2122900064C43 /* NetworkRequests.swift in Sources */,
@@ -471,7 +470,6 @@
 				A70171842AA8E71900064C43 /* MainView.swift in Sources */,
 				A70171CB2AB4CD1700064C43 /* UserSettings.swift in Sources */,
 				A703226A2ABAF49800D7C4ED /* JSONCoderExtension.swift in Sources */,
-				A703226D2ABAF90D00D7C4ED /* APIController.swift in Sources */,
 				A79AA8ED2B063AD5007D25F2 /* NextcloudApi.swift in Sources */,
 				A70171822AA8E71900064C43 /* Nextcloud_Cookbook_iOS_ClientApp.swift in Sources */,
 				A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */,

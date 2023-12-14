@@ -132,7 +132,7 @@ protocol CookbookApi {
     static func getTags(
         from serverAdress: String,
         auth: String
-    ) async -> ([String]?, NetworkError?)
+    ) async -> ([RecipeKeyword]?, NetworkError?)
     
     /// Get all recipes tagged with the specified keyword.
     /// - Parameters:

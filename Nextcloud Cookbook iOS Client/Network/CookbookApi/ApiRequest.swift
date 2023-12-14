@@ -77,10 +77,14 @@ struct ApiRequest {
         do {
             (data, response) = try await URLSession.shared.data(for: request)
             Logger.network.debug("\(method.rawValue) \(path) SUCCESS!")
+            if let error = decodeURLResponse(response: response as? HTTPURLResponse) {
+                print("\(method.rawValue) \(path) FAILURE: \(error.localizedDescription)")
+                return (nil, error)
+            }
             if let data = data {
                 print(data, String(data: data, encoding: .utf8))
             }
-            return (data, nil)
+            return (data!, nil)
         } catch {
             let error = decodeURLResponse(response: response as? HTTPURLResponse)
             Logger.network.debug("\(method.rawValue) \(path) FAILURE: \(error.debugDescription)")
@@ -92,6 +96,7 @@ struct ApiRequest {
         guard let response = response else {
             return NetworkError.unknownError
         }
+        print("Status code: ", response.statusCode)
         switch response.statusCode {
             case 200...299: return (nil)
             case 300...399: return (NetworkError.redirectionError)

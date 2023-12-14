@@ -11,8 +11,8 @@ import SwiftUI
 
 
 struct SettingsView: View {
-    @ObservedObject var userSettings: UserSettings
     @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var userSettings = UserSettings.shared
     
     @State fileprivate var alertType: SettingsAlert = .NONE
     @State var showAlert: Bool = false
@@ -20,9 +20,6 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                /*Toggle(isOn: $userSettings.downloadRecipes) {
-                    Text("Always download new recipes")
-                }*/
                 Picker("Select a default cookbook", selection: $userSettings.defaultCategory) {
                     Text("None").tag("None")
                     ForEach(viewModel.categories, id: \.name) { category in
@@ -33,6 +30,22 @@ struct SettingsView: View {
                 Text("General")
             } footer: {
                 Text("The selected cookbook will open on app launch by default.")
+            }
+            
+            Section {
+                Toggle(isOn: $userSettings.storeRecipes) {
+                    Text("Offline recipes")
+                }
+                Toggle(isOn: $userSettings.storeImages) {
+                    Text("Store recipe images locally")
+                }
+                Toggle(isOn: $userSettings.storeThumb) {
+                    Text("Store recipe thumbnails locally")
+                }
+            } header: {
+                Text("Downloads")
+            } footer: {
+                Text("Configure what is stored on your device.")
             }
             
             Section {
@@ -102,6 +115,7 @@ struct SettingsView: View {
         userSettings.serverAddress = ""
         userSettings.username = ""
         userSettings.token = ""
+        userSettings.authString = ""
         viewModel.deleteAllData()
         userSettings.onboarding = true
     }

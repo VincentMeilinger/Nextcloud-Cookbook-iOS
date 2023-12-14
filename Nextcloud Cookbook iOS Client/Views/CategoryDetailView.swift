@@ -22,6 +22,7 @@ struct CategoryDetailView: View {
                 ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
                     NavigationLink(value: recipe) {
                         RecipeCardView(viewModel: viewModel, recipe: recipe)
+                            .shadow(radius: 2)
                     }
                     .buttonStyle(.plain)
                 }
@@ -30,41 +31,29 @@ struct CategoryDetailView: View {
         .navigationDestination(for: Recipe.self) { recipe in
             RecipeDetailView(viewModel: viewModel, recipe: recipe)
         }
-        .navigationTitle(categoryName == "*" ? "Other" : categoryName)
+        .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-            
-                Menu {
-                    Button {
-                        print("Add new recipe")
-                        showEditView = true
-                    } label: {
-                        HStack {
-                            Text("Add new recipe")
-                            Image(systemName: "plus.circle.fill")
-                        }
-                    }
-                    Button {
-                        print("Downloading all recipes in category \(categoryName) ...")
-                        downloadRecipes()
-                    } label: {
-                        HStack {
-                            Text("Download recipes")
-                            Image(systemName: "icloud.and.arrow.down")
-                        }
-                    }
-                    
+                Button {
+                    print("Add new recipe")
+                    showEditView = true
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Image(systemName: "plus.circle.fill")
                 }
             }
         }
         .searchable(text: $searchText, prompt: "Search recipes")
         .task {
-            await viewModel.getCategory(named: categoryName, fetchMode: .preferLocal)
+            await viewModel.getCategory(
+                named: categoryName,
+                fetchMode: UserSettings.shared.storeRecipes ? .preferLocal : .onlyServer
+            )
         }
         .refreshable {
-            await viewModel.getCategory(named: categoryName, fetchMode: .preferServer)
+            await viewModel.getCategory(
+                named: categoryName,
+                fetchMode: UserSettings.shared.storeRecipes ? .preferServer : .onlyServer
+            )
         }
     }
     
@@ -73,28 +62,6 @@ struct CategoryDetailView: View {
         guard searchText != "" else { return recipes }
         return recipes.filter { recipe in
             recipe.name.lowercased().contains(searchText.lowercased())
-        }
-    }
-
-    
-    func downloadRecipes() {
-        if let recipes = viewModel.recipes[categoryName] {
-            Task {
-                for recipe in recipes {
-                    let recipeDetail = await viewModel.getRecipe(id: recipe.recipe_id, fetchMode: .onlyServer)
-                    await viewModel.saveLocal(recipeDetail, path: "recipe\(recipe.recipe_id).data")
-                    
-                    let thumbnail = await viewModel.getImage(id: recipe.recipe_id, size: .THUMB, fetchMode: .onlyServer)
-                    guard let thumbnail = thumbnail else { continue }
-                    guard let thumbnailData = thumbnail.pngData() else { continue }
-                    await viewModel.saveLocal(thumbnailData.base64EncodedString(), path: "image\(recipe.recipe_id)_thumb")
-                    
-                    let image = await viewModel.getImage(id: recipe.recipe_id, size: .FULL, fetchMode: .onlyServer)
-                    guard let image = image else { continue }
-                    guard let imageData = image.pngData() else { continue }
-                    await viewModel.saveLocal(imageData.base64EncodedString(), path: "image\(recipe.recipe_id)_full")
-                }
-            }
         }
     }
 }

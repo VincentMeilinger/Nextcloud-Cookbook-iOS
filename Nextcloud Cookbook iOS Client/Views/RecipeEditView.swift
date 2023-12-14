@@ -12,14 +12,19 @@ import PhotosUI
 
 
 struct RecipeEditView: View {
-    @ObservedObject var viewModel: RecipeEditViewModel    
+    @ObservedObject var viewModel: RecipeEditViewModel
+    @Binding var isPresented: Bool
+    
+    @State var presentAlert = false
+    @State var alertType: UserAlert = RecipeAlert.GENERIC
+    @State var alertAction: @MainActor () async -> () = { }
     
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
                     Button() {
-                        viewModel.isPresented.wrappedValue = false
+                        isPresented = false
                     } label: {
                         Text("Cancel")
                             .bold()
@@ -28,9 +33,17 @@ struct RecipeEditView: View {
                         Menu {
                             Button {
                                 print("Delete recipe.")
-                                viewModel.alertType = RecipeCreationError.CONFIRM_DELETE
-                                viewModel.alertAction = viewModel.deleteRecipe
-                                viewModel.presentAlert = true
+                                alertType = RecipeAlert.CONFIRM_DELETE
+                                alertAction = {
+                                    if let res = await viewModel.deleteRecipe() {
+                                        alertType = res
+                                        alertAction = { }
+                                        presentAlert = true
+                                    } else {
+                                        self.dismissEditView()
+                                    }
+                                }
+                                presentAlert = true
                             } label: {
                                 Image(systemName: "trash")
                                     .foregroundStyle(.red)
@@ -47,9 +60,19 @@ struct RecipeEditView: View {
                     Button() {
                         Task {
                             if viewModel.uploadNew {
-                                await viewModel.uploadNewRecipe()
+                                if let res = await viewModel.uploadNewRecipe() {
+                                    alertType = res
+                                    presentAlert = true
+                                } else {
+                                    dismissEditView()
+                                }
                             } else {
-                                await viewModel.uploadEditedRecipe()
+                                if let res = await viewModel.uploadEditedRecipe() {
+                                    alertType = res
+                                    presentAlert = true
+                                } else {
+                                    dismissEditView()
+                                }
                             }
                         }
                     } label: {
@@ -58,7 +81,7 @@ struct RecipeEditView: View {
                     }
                 }.padding()
                 HStack {
-                    Text(viewModel.recipe.name == "" ? LocalizedStringKey("New recipe") : LocalizedStringKey(viewModel.recipe.name))
+                    Text(viewModel.recipe.name == "" ? String(localized: "New recipe") : viewModel.recipe.name)
                         .font(.title)
                         .bold()
                         .padding()
@@ -69,7 +92,16 @@ struct RecipeEditView: View {
                         Section {
                             TextField(LocalizedStringKey("URL (e.g. example.com/recipe)"), text: $viewModel.importURL)
                             Button {
-                                viewModel.importRecipe()
+                                Task {
+                                    if let res = await viewModel.importRecipe() {
+                                        alertType = RecipeAlert.CUSTOM(
+                                            title: res.localizedTitle,
+                                            description: res.localizedDescription
+                                        )
+                                        alertAction = { }
+                                        presentAlert = true
+                                    }
+                                }
                             } label: {
                                 Text(LocalizedStringKey("Import"))
                             }
@@ -148,12 +180,12 @@ struct RecipeEditView: View {
         .onAppear {
             viewModel.prepareView()
         }
-        .alert(viewModel.alertType.localizedTitle, isPresented: $viewModel.presentAlert) {
-            ForEach(viewModel.alertType.alertButtons) { buttonType in
+        .alert(alertType.localizedTitle, isPresented: $presentAlert) {
+            ForEach(alertType.alertButtons) { buttonType in
                 if buttonType == .OK {
                     Button(AlertButton.OK.rawValue, role: .cancel) {
                         Task {
-                            await viewModel.alertAction()
+                            await alertAction()
                         }
                     }
                 } else if buttonType == .CANCEL {
@@ -161,14 +193,23 @@ struct RecipeEditView: View {
                 } else if buttonType == .DELETE {
                     Button(AlertButton.DELETE.rawValue, role: .destructive) {
                         Task {
-                            await viewModel.alertAction()
+                            await alertAction()
                         }
                     }
                 }
             }
         } message: {
-            Text(viewModel.alertType.localizedDescription)
+            Text(alertType.localizedDescription)
         }
+    }
+    
+    func dismissEditView() {
+        Task {
+            await viewModel.mainViewModel.getCategories()
+            await viewModel.mainViewModel.getCategory(named: viewModel.recipe.recipeCategory, fetchMode: .preferServer)
+            await viewModel.mainViewModel.updateRecipeDetails(in: viewModel.recipe.recipeCategory)
+        }
+        self.isPresented = false
     }
 }
 

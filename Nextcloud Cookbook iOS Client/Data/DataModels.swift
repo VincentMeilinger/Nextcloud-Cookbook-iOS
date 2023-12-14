@@ -25,6 +25,13 @@ struct Recipe: Codable {
     let imageUrl: String
     let imagePlaceholderUrl: String
     let recipe_id: Int
+    
+    // Properties excluded from Codable
+    var storedLocally: Bool? = nil
+    
+    private enum CodingKeys: String, CodingKey {
+        case name, keywords, dateCreated, dateModified, imageUrl, imagePlaceholderUrl, recipe_id
+    }
 }
 
 extension Recipe: Identifiable, Hashable {
@@ -91,16 +98,6 @@ struct RecipeDetail: Codable {
         recipeInstructions = []
         nutrition = [:]
     }
-    
-    func getKeywordsArray() -> [String] {
-        return keywords.components(separatedBy: ",")
-    }
-    
-    mutating func setKeywordsFromArray(_ keywordsArray: [String]) {
-        if !self.keywords.isEmpty {
-            self.keywords = keywordsArray.joined(separator: ",")
-        }
-    }
 }
 
 extension RecipeDetail {
@@ -124,7 +121,18 @@ extension RecipeDetail {
              recipeInstructions: [],
              nutrition: [:]
          )
-     }
+    }
+    
+    func getKeywordsArray() -> [String] {
+        if keywords == "" { return [] }
+        return keywords.components(separatedBy: ",")
+    }
+    
+    mutating func setKeywordsFromArray(_ keywordsArray: [String]) {
+        if !keywordsArray.isEmpty {
+            self.keywords = keywordsArray.joined(separator: ",")
+        }
+    }
     
     func getNutritionList() -> [String]? {
         var stringList: [String] = []
@@ -146,8 +154,8 @@ extension RecipeDetail {
 
 
 struct RecipeImage {
-    enum RecipeImageSize {
-        case THUMB, FULL
+    enum RecipeImageSize: String {
+        case THUMB="thumb", FULL="full"
     }
     var imageExists: Bool = true
     var thumb: UIImage?

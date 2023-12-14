@@ -10,6 +10,9 @@ import Foundation
 import Combine
 
 class UserSettings: ObservableObject {
+    
+    static let shared = UserSettings()
+    
     @Published var username: String {
         didSet {
             UserDefaults.standard.set(username, forKey: "username")
@@ -52,9 +55,27 @@ class UserSettings: ObservableObject {
         }
     }
     
-    @Published var downloadRecipes: Bool {
+    @Published var storeRecipes: Bool {
         didSet {
-            UserDefaults.standard.set(downloadRecipes, forKey: "downloadRecipes")
+            UserDefaults.standard.set(storeRecipes, forKey: "storeRecipes")
+        }
+    }
+    
+    @Published var storeImages: Bool {
+        didSet {
+            UserDefaults.standard.set(storeImages, forKey: "storeImages")
+        }
+    }
+    
+    @Published var storeThumb: Bool {
+        didSet {
+            UserDefaults.standard.set(storeThumb, forKey: "storeThumb")
+        }
+    }
+    
+    @Published var lastUpdate: Date {
+        didSet {
+            UserDefaults.standard.set(lastUpdate, forKey: "lastUpdate")
         }
     }
     
@@ -66,7 +87,10 @@ class UserSettings: ObservableObject {
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue
-        self.downloadRecipes = UserDefaults.standard.object(forKey: "downloadRecipes") as? Bool ?? false
+        self.storeRecipes = UserDefaults.standard.object(forKey: "storeRecipes") as? Bool ?? true
+        self.storeImages = UserDefaults.standard.object(forKey: "storeImages") as? Bool ?? true
+        self.storeThumb = UserDefaults.standard.object(forKey: "storeThumb") as? Bool ?? true
+        self.lastUpdate = UserDefaults.standard.object(forKey: "lastUpdate") as? Date ?? Date.distantPast
         
         if authString == "" {
             if token != "" && username != "" {

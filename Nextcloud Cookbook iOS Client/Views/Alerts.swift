@@ -25,7 +25,7 @@ enum AlertButton: LocalizedStringKey, Identifiable {
 
 
 
-enum RecipeCreationError: UserAlert {
+enum RecipeAlert: UserAlert {
     
     case NO_TITLE,
          DUPLICATE,
@@ -84,7 +84,7 @@ enum RecipeCreationError: UserAlert {
 }
 
 
-enum RecipeImportError: UserAlert {
+enum RecipeImportAlert: UserAlert {
     case BAD_URL,
          CHECK_CONNECTION,
          WEBSITE_NOT_SUPPORTED
@@ -113,14 +113,12 @@ enum RecipeImportError: UserAlert {
 
 enum RequestAlert: UserAlert {
     case REQUEST_DELAYED,
-         REQUEST_DROPPED,
-         REQUEST_SUCCESS
+         REQUEST_DROPPED
     
     var localizedDescription: LocalizedStringKey {
         switch self {
         case .REQUEST_DELAYED: return "Could not establish a connection to the server. The action will be retried upon reconnection."
         case .REQUEST_DROPPED: return "Unable to complete action."
-        case .REQUEST_SUCCESS: return "Action completed."
         }
     }
     
@@ -128,7 +126,6 @@ enum RequestAlert: UserAlert {
         switch self {
         case .REQUEST_DELAYED: return "Action delayed"
         case .REQUEST_DROPPED: return "Error"
-        case .REQUEST_SUCCESS: return "Success"
         }
     }
     

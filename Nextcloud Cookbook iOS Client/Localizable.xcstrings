@@ -67,6 +67,9 @@
         }
       }
     },
+    "(%lld)" : {
+
+    },
     "%@" : {
       "localizations" : {
         "de" : {
@@ -293,9 +296,6 @@
         }
       }
     },
-    "Action completed." : {
-
-    },
     "Action delayed" : {
 
     },
@@ -497,6 +497,9 @@
         }
       }
     },
+    "Configure what is stored on your device." : {
+
+    },
     "Connected to server." : {
       "localizations" : {
         "de" : {
@@ -632,6 +635,9 @@
     "Could not establish a connection to the server. The action will be retried upon reconnection." : {
 
     },
+    "Created: %@" : {
+
+    },
     "Delete" : {
       "localizations" : {
         "de" : {
@@ -765,6 +771,7 @@
       }
     },
     "Download all recipes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -787,6 +794,7 @@
       }
     },
     "Download recipes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -807,6 +815,9 @@
           }
         }
       }
+    },
+    "Downloads" : {
+
     },
     "Duplicate recipe." : {
       "localizations" : {
@@ -1217,6 +1228,12 @@
         }
       }
     },
+    "Last modified: %@" : {
+
+    },
+    "Last updated: %@" : {
+
+    },
     "Log out" : {
       "localizations" : {
         "de" : {
@@ -1487,6 +1504,9 @@
         }
       }
     },
+    "Offline recipes" : {
+
+    },
     "Ok" : {
       "localizations" : {
         "de" : {
@@ -1708,6 +1728,9 @@
         }
       }
     },
+    "Refresh all" : {
+
+    },
     "Same as Device" : {
       "localizations" : {
         "de" : {
@@ -1865,6 +1888,12 @@
     "Show help" : {
 
     },
+    "Store recipe images locally" : {
+
+    },
+    "Store recipe thumbnails locally" : {
+
+    },
     "Submit" : {
       "localizations" : {
         "de" : {
@@ -1886,9 +1915,6 @@
           }
         }
       }
-    },
-    "Success" : {
-
     },
     "Support" : {
       "localizations" : {
