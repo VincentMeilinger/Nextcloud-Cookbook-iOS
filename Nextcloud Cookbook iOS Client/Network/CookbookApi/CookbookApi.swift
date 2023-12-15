@@ -16,7 +16,7 @@ protocol CookbookApi {
         from serverAdress: String,
         auth: String,
         data: Data
-    ) async -> (NetworkError?)
+    ) async -> (RecipeDetail?, NetworkError?)
     
     ///  Get either the full image or a thumbnail sized version.
     /// - Parameters:

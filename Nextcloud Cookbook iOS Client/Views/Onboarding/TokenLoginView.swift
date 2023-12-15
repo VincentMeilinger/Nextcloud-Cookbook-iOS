@@ -13,10 +13,7 @@ struct TokenLoginView: View {
     @Binding var alertMessage: String
     @FocusState private var focusedField: Field?
     
-    @AppStorage("serverAddress") var serverAddress = ""
-    @AppStorage("username") var userName = ""
-    @AppStorage("token") var token = ""
-    @AppStorage("onboarding") var onboarding = false
+    @State var userSettings = UserSettings.shared
     
     // TextField handling
     enum Field {
@@ -28,14 +25,14 @@ struct TokenLoginView: View {
     var body: some View {
         VStack(alignment: .leading) {
             LoginLabel(text: "Server address")
-            LoginTextField(example: "e.g.: example.com", text: $serverAddress)
+            LoginTextField(example: "e.g.: example.com", text: $userSettings.serverAddress)
                 .focused($focusedField, equals: .server)
                 .textContentType(.URL)
                 .submitLabel(.next)
                 .padding(.bottom)
             
             LoginLabel(text: "User name")
-            LoginTextField(example: "username", text: $userName)
+            LoginTextField(example: "username", text: $userSettings.username)
                 .focused($focusedField, equals: .username)
                 .textContentType(.username)
                 .submitLabel(.next)
@@ -43,7 +40,7 @@ struct TokenLoginView: View {
             
             
             LoginLabel(text: "App Token")
-            LoginTextField(example: "can be generated in security settings of your nextcloud", text: $token)
+            LoginTextField(example: "can be generated in security settings of your nextcloud", text: $userSettings.token)
                 .focused($focusedField, equals: .token)
                 .textContentType(.password)
                 .submitLabel(.join)
@@ -52,7 +49,7 @@ struct TokenLoginView: View {
                 Button {
                     Task {
                         if await loginCheck(nextcloudLogin: false) {
-                            onboarding = false
+                            userSettings.onboarding = false
                         }
                     }
                 } label: {
@@ -83,11 +80,11 @@ struct TokenLoginView: View {
     }
     
     func loginCheck(nextcloudLogin: Bool) async -> Bool {
-        if serverAddress == "" {
+        if userSettings.serverAddress == "" {
             alertMessage = "Please enter a server address!"
             showAlert = true
             return false
-        } else if !nextcloudLogin && (userName == "" || token == "") {
+        } else if !nextcloudLogin && (userSettings.username == "" || userSettings.token == "") {
             alertMessage = "Please enter a user name and app token!"
             showAlert = true
             return false
@@ -104,14 +101,18 @@ struct TokenLoginView: View {
         
         var (data, error): (Data?, Error?) = (nil, nil)
         do {
-            let loginString = "\(userName):\(token)"
+            let loginString = "\(userSettings.username):\(userSettings.token)"
             let loginData = loginString.data(using: String.Encoding.utf8)!
             let authString = loginData.base64EncodedString()
+            DispatchQueue.main.async {
+                userSettings.authString = authString
+            }
             (data, error) = try await NetworkHandler.sendHTTPRequest(
                 request,
-                hostPath: "https://\(serverAddress)/index.php/apps/cookbook/api/v1/",
+                hostPath: "https://\(userSettings.serverAddress)/index.php/apps/cookbook/api/v1/",
                 authString: authString
             )
+            
         } catch {
             print("Error: ", error)
         }

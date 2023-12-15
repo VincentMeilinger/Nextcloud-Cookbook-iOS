@@ -30,10 +30,9 @@ struct MainView: View {
                     RecipeSearchView(viewModel: viewModel)
                 } label: {
                     HStack(alignment: .center) {
-                        Image(systemName: "book.closed.fill")
-                        Text("All")
-                            .font(.system(size: 20, weight: .light, design: .serif))
-                            .italic()
+                        Image(systemName: "magnifyingglass")
+                        Text("Search")
+                            .font(.system(size: 20, weight: .medium, design: .default))
                     }
                     .padding(7)
                 }
@@ -43,10 +42,23 @@ struct MainView: View {
                     if category.recipe_count != 0 {
                         NavigationLink(value: category) {
                             HStack(alignment: .center) {
-                                Image(systemName: "book.closed.fill")
+                                if selectedCategory != nil && category.name == selectedCategory!.name {
+                                    Image(systemName: "book")
+                                } else {
+                                    Image(systemName: "book.closed.fill")
+                                }
                                 Text(category.name == "*" ? String(localized: "Other") : category.name)
-                                    .font(.system(size: 20, weight: .light, design: .serif))
-                                    .italic()
+                                    .font(.system(size: 20, weight: .medium, design: .default))
+                                Spacer()
+                                Text("\(category.recipe_count)")
+                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .foregroundStyle(Color.background)
+                                    .frame(width: 25, height: 25, alignment: .center)
+                                    .minimumScaleFactor(0.5)
+                                    .background {
+                                        Circle()
+                                            .foregroundStyle(Color.secondary)
+                                    }
                             }.padding(7)
                         }
                     }

@@ -10,8 +10,18 @@ import UIKit
 
 
 class CookbookApiV1: CookbookApi {
-    static func importRecipe(from serverAdress: String, auth: String, data: Data) async -> (NetworkError?) {
-        return .unknownError
+    static func importRecipe(from serverAdress: String, auth: String, data: Data) async -> (RecipeDetail?, NetworkError?) {
+        let request = ApiRequest(
+            serverAdress: serverAdress,
+            path: "/api/v1/import",
+            method: .POST,
+            authString: auth,
+            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON), HeaderField.contentType(value: .JSON)]
+        )
+        
+        let (data, error) = await request.send()
+        guard let data = data else { return (nil, error) }
+        return (JSONDecoder.safeDecode(data), nil)
     }
     
     static func getImage(from serverAdress: String, auth: String, id: Int, size: RecipeImage.RecipeImageSize) async -> (UIImage?, NetworkError?) {

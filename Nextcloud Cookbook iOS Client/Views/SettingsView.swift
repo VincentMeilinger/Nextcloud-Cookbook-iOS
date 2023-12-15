@@ -33,6 +33,22 @@ struct SettingsView: View {
             }
             
             Section {
+                Toggle(isOn: $userSettings.expandNutritionSection) {
+                    Text("Expand nutrition section")
+                }
+                Toggle(isOn: $userSettings.expandKeywordSection) {
+                    Text("Expand keyword section")
+                }
+                Toggle(isOn: $userSettings.expandInfoSection) {
+                    Text("Expand information section")
+                }
+            } header: {
+                Text("Recipes")
+            } footer: {
+                Text("Configure which sections in your recipes are expanded by default.")
+            }
+            
+            Section {
                 Toggle(isOn: $userSettings.storeRecipes) {
                     Text("Offline recipes")
                 }
@@ -107,6 +123,12 @@ struct SettingsView: View {
             }
         } message: {
             Text(alertType.getMessage())
+        }
+        .onDisappear {
+            Task {
+                userSettings.lastUpdate = .distantPast
+                await viewModel.updateAllRecipeDetails()
+            }
         }
         
     }

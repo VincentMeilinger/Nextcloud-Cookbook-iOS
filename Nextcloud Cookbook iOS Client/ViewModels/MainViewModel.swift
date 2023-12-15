@@ -496,10 +496,23 @@ import UIKit
                 recipe: recipeDetail
             )
         }
-        if let error = error {
+        if error != nil {
             return .REQUEST_DROPPED
         }
         return nil
+    }
+    
+    func importRecipe(url: String) async -> (RecipeDetail?, RequestAlert?) {
+        guard let data = JSONEncoder.safeEncode(RecipeImportRequest(url: url)) else { return (nil, .REQUEST_DROPPED) }
+        let (recipeDetail, error) = await api.importRecipe(
+            from: userSettings.serverAddress,
+            auth: userSettings.authString,
+            data: data
+        )
+        if error != nil {
+            return (nil, .REQUEST_DROPPED)
+        }
+        return (recipeDetail, nil)
     }
 }
 

@@ -41,6 +41,7 @@
 		A79AA8EB2B062E15007D25F2 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */; };
 		A79AA8ED2B063AD5007D25F2 /* NextcloudApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */; };
 		A7AEAE642AD5521400135378 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A7AEAE632AD5521400135378 /* Localizable.xcstrings */; };
+		A7CD3FD22B2C546A00D764AD /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CD3FD12B2C546A00D764AD /* CollapsibleView.swift */; };
 		A7F3F8E82ACBFC760076C227 /* KeywordPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */; };
 		A7F3F8EA2ACC221C0076C227 /* CategoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */; };
 		A7FB0D7A2B25C66600A3469E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D792B25C66600A3469E /* OnboardingView.swift */; };
@@ -103,6 +104,7 @@
 		A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextcloudApi.swift; sourceTree = "<group>"; };
 		A7AEAE632AD5521400135378 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		A7CD3FD12B2C546A00D764AD /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordPickerView.swift; sourceTree = "<group>"; };
 		A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerView.swift; sourceTree = "<group>"; };
 		A7FB0D792B25C66600A3469E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */,
 				A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */,
 				A76B8A702AE002AE00096CEC /* Alerts.swift */,
+				A7CD3FD12B2C546A00D764AD /* CollapsibleView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -456,6 +459,7 @@
 				A787B0782B2B1E6400C2DF1B /* DateExtension.swift in Sources */,
 				A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */,
 				A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */,
+				A7CD3FD22B2C546A00D764AD /* CollapsibleView.swift in Sources */,
 				A70171B42AB2122900064C43 /* NetworkRequests.swift in Sources */,
 				A70171BE2AB4987900064C43 /* CategoryDetailView.swift in Sources */,
 				A70171C62AB4C43A00064C43 /* DataModels.swift in Sources */,
@@ -658,7 +662,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -701,7 +705,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

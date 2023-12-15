@@ -68,7 +68,26 @@
       }
     },
     "(%lld)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
+          }
+        }
+      }
     },
     "%@" : {
       "localizations" : {
@@ -297,7 +316,26 @@
       }
     },
     "Action delayed" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acción retrasada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action retardée"
+          }
+        }
+      }
     },
     "Add" : {
       "localizations" : {
@@ -343,28 +381,6 @@
         }
       }
     },
-    "All" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Todas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tout"
-          }
-        }
-      }
-    },
     "An unknown error occured." : {
       "localizations" : {
         "de" : {
@@ -383,6 +399,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Une erreur inconnue s'est produite."
+          }
+        }
+      }
+    },
+    "An unknown server error occured." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein unbekannter Server-Fehler ist aufgetreten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error desconocido del servidor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une erreur inconnue du serveur s'est produite."
           }
         }
       }
@@ -498,7 +536,48 @@
       }
     },
     "Configure what is stored on your device." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Legen Sie fest, was lokal auf diesem Gerät gespeichert werden soll."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure lo que se almacena en su dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurez ce qui est stocké sur votre appareil."
+          }
+        }
+      }
+    },
+    "Configure which sections in your recipes are expanded by default." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Legen Sie fest, welche Rezept-Abschnitte standardmäßig gezeigt werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure qué secciones de sus recetas se expanden por defecto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurez les sections de vos recettes qui sont déployées par défaut."
+          }
+        }
+      }
     },
     "Connected to server." : {
       "localizations" : {
@@ -633,10 +712,48 @@
       }
     },
     "Could not establish a connection to the server. The action will be retried upon reconnection." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es konnte keine Verbindung zum Server hergestellt werden. Die Aktion wird bei erneuter Verbindung wiederholt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo establecer una conexión con el servidor. La acción se reintentará al reconectar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d'établir une connexion avec le serveur. L'action sera réessayée lors de la reconnexion."
+          }
+        }
+      }
     },
     "Created: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellt: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creado: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créé : %@"
+          }
+        }
+      }
     },
     "Delete" : {
       "localizations" : {
@@ -770,61 +887,56 @@
         }
       }
     },
-    "Download all recipes" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Rezepte herunterladen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Descargar todas las recetas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Télécharger toutes les recettes"
-          }
-        }
-      }
-    },
-    "Download recipes" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rezepte herunterladen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Descargar recetas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Télécharger des recettes"
-          }
-        }
-      }
-    },
     "Downloads" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloads"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Téléchargements"
+          }
+        }
+      }
+    },
+    "Duplicate Recipe" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplikat"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receta duplicada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recette en double"
+          }
+        }
+      }
     },
     "Duplicate recipe." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rezept bereits vorhanden."
+            "value" : "Duplikat."
           }
         },
         "es" : {
@@ -863,31 +975,27 @@
         }
       }
     },
-    "Entering the server address will open a web browser. Please follow the login instructions provided there. If the browser does not open, click the link 'Open in browser'\nAfter a successfull login, return to this application and press 'Validate'." : {
-      "extractionState" : "stale",
+    "Error" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das Eingeben der Serveradresse wird einen Webbrowser öffnen. Bitte folgen Sie dort den bereitgestellten Anmeldeanweisungen. Falls der Browser nicht geöffnet wird, klicken Sie auf den Link 'Im Browser öffnen'.\nNach erfolgreicher Anmeldung kehren Sie zu dieser Anwendung zurück und drücken Sie 'Überprüfen'."
+            "value" : "Fehler"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ingresar la dirección del servidor abrirá un navegador web. Por favor, siga las instrucciones de inicio de sesión proporcionadas allí. Si el navegador no se abre, haga clic en el enlace 'Abrir en el navegador'.\nDespués de iniciar sesión con éxito, regrese a esta aplicación y presione 'Validar'."
+            "value" : "Error"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L'ajout de l'adresse du serveur ouvrira un navigateur web. Suivez les instructions de connexion fournies là-bas. Si le navigateur ne s'ouvre pas, cliquez sur le lien 'Ouvrir dans le navigateur'. Après une connexion réussie, revenez à cette application et appuyez sur 'Valider'."
+            "value" : "Erreur"
           }
         }
       }
-    },
-    "Error" : {
-
     },
     "Error." : {
       "localizations" : {
@@ -907,6 +1015,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erreur."
+          }
+        }
+      }
+    },
+    "Expand information section" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weitere Informationen zeigen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expandir sección de información"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Développer la section d'informations"
+          }
+        }
+      }
+    },
+    "Expand keyword section" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlagwörter zeigen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expandir sección de palabras clave"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Développer la section des mots-clés"
+          }
+        }
+      }
+    },
+    "Expand nutrition section" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nährwerte zeigen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expandir sección de nutrición"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Développer la section nutrition"
           }
         }
       }
@@ -978,7 +1152,26 @@
       }
     },
     "If the login button does not open your browser, copy the following link and paste it in your browser manually:" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn der Anmeldebutton Ihren Browser nicht öffnet, kopieren Sie den folgenden Link und fügen Sie ihn manuell in Ihren Browser ein:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si el botón de inicio de sesión no abre su navegador, copie el siguiente enlace y péguelo manualmente en su navegador:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si le bouton de connexion n'ouvre pas votre navigateur, copiez le lien suivant et collez-le manuellement dans votre navigateur :"
+          }
+        }
+      }
     },
     "If you are interested in contributing to this project or simply wish to review its source code, we encourage you to visit the GitHub repository for this application." : {
       "localizations" : {
@@ -1020,6 +1213,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Si vous avez des questions, des commentaires ou avez besoin d'aide, veuillez consulter la page d'assistance pour obtenir les informations de contact."
+          }
+        }
+      }
+    },
+    "Image MIME Error" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MIME fehler"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
           }
         }
       }
@@ -1229,10 +1444,48 @@
       }
     },
     "Last modified: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt geändert: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última modificación: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière modification : %@"
+          }
+        }
+      }
     },
     "Last updated: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letztes update: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última actualización: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière mise à jour : %@"
+          }
+        }
+      }
     },
     "Log out" : {
       "localizations" : {
@@ -1257,7 +1510,26 @@
       }
     },
     "Login" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anmelden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar sesión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connexion"
+          }
+        }
+      }
     },
     "Login failed." : {
       "localizations" : {
@@ -1304,7 +1576,48 @@
       }
     },
     "Make sure to enter the server address in the form 'example.com'. Currently, only servers using the 'https' protocol are supported." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stellen Sie sicher, dass Sie die Serveradresse in der Form 'beispiel.com' eingeben. Derzeit werden nur Server unterstützt, die das 'https'-Protokoll verwenden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrese de ingresar la dirección del servidor en el formato 'example.com'. Actualmente, solo se admiten servidores que usan el protocolo 'https'."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assurez-vous de saisir l'adresse du serveur sous la forme 'example.com'. Actuellement, seuls les serveurs utilisant le protocole 'https' sont pris en charge."
+          }
+        }
+      }
+    },
+    "Missing Name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlender Name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre faltante"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom manquant"
+          }
+        }
+      }
     },
     "Missing recipe name." : {
       "localizations" : {
@@ -1324,6 +1637,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nom de la recette manquant."
+          }
+        }
+      }
+    },
+    "Missing Request Body" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing Request Body"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing Request Body"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing Request Body"
+          }
+        }
+      }
+    },
+    "More information" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weitere Informationen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más información"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus d'informations"
           }
         }
       }
@@ -1505,7 +1862,26 @@
       }
     },
     "Offline recipes" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezepte herunterladen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recetas sin conexión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recettes hors ligne"
+          }
+        }
+      }
     },
     "Ok" : {
       "localizations" : {
@@ -1525,29 +1901,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ok"
-          }
-        }
-      }
-    },
-    "Open in browser" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Im Browser öffnen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abrir en el navegador."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir dans le navigateur"
           }
         }
       }
@@ -1728,8 +2081,49 @@
         }
       }
     },
+    "Recipes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezepte"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recettes"
+          }
+        }
+      }
+    },
     "Refresh all" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar todo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout actualiser"
+          }
+        }
+      }
     },
     "Same as Device" : {
       "localizations" : {
@@ -1749,6 +2143,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Langue du système"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche"
           }
         }
       }
@@ -1886,13 +2302,70 @@
       }
     },
     "Show help" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar ayuda"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l'aide"
+          }
+        }
+      }
     },
     "Store recipe images locally" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept-Bild herunterladen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almacenar imágenes de recetas localmente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stocker les images des recettes localement"
+          }
+        }
+      }
     },
     "Store recipe thumbnails locally" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept-Thumbnail herunterladen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almacenar miniaturas de recetas localmente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stocker les vignettes des recettes localement"
+          }
+        }
+      }
     },
     "Submit" : {
       "localizations" : {
@@ -1961,7 +2434,48 @@
       }
     },
     "The 'Login' button will open a web browser. Please follow the login instructions provided there.\nAfter a successful login, return to this application and press 'Validate'." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der 'Anmelden'-Button wird einen Webbrowser öffnen. Bitte folgen Sie den dort angegebenen Anmeldeanweisungen.\nNach einer erfolgreichen Anmeldung kehren Sie zu dieser Anwendung zurück und drücken Sie 'Validieren'."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El botón 'Iniciar sesión' abrirá un navegador web. Por favor, siga las instrucciones de inicio de sesión proporcionadas allí. Después de un inicio de sesión exitoso, regrese a esta aplicación y presione 'Validar'."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le bouton 'Connexion' ouvrira un navigateur web. Veuillez suivre les instructions de connexion fournies là-bas. Après une connexion réussie, revenez à cette application et appuyez sur 'Valider'."
+          }
+        }
+      }
+    },
+    "The recipe has no image whose MIME type matches the Accept header" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recipe has no image whose MIME type matches the Accept header"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recipe has no image whose MIME type matches the Accept header"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recipe has no image whose MIME type matches the Accept header"
+          }
+        }
+      }
     },
     "The selected cookbook will open on app launch by default." : {
       "localizations" : {
@@ -1981,6 +2495,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le livre de cuisine sélectionné s'ouvrira par défaut lors du lancement de l'application."
+          }
+        }
+      }
+    },
+    "There was no name in the request given for the recipe. Cannot save the recipe." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Rezeptname fehlt. Das Rezept konnte nicht gespeichert werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No había un nombre en la solicitud dada para la receta. No se puede guardar la receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n'y avait pas de nom dans la demande faite pour la recette."
           }
         }
       }
@@ -2140,7 +2676,26 @@
       }
     },
     "Unable to complete action." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Aktion kann momentan nicht durchgeführt werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede completar la acción."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de compléter l'action."
+          }
+        }
+      }
     },
     "Unable to connect to server." : {
       "localizations" : {
@@ -2248,6 +2803,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL (par exemple, example.com/recette)"
+          }
+        }
+      }
+    },
+    "URL:" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL:"
           }
         }
       }

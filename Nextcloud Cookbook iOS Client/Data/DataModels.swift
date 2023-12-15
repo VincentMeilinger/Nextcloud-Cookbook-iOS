@@ -173,6 +173,10 @@ struct RecipeKeyword: Codable {
     let recipe_count: Int
 }
 
+struct RecipeImportRequest: Codable {
+    let url: String
+}
+
 
 
 

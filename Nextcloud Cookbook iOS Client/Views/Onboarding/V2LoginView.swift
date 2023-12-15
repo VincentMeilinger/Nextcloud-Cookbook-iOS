@@ -28,42 +28,7 @@ enum V2LoginStage: LoginStage {
     }
 }
 
-struct CollapsibleView<T: View>: View {
-    @State var titleColor: Color = .white
-    @State var content: () -> T
-    @State var title: () -> Text
-    
-    @State var isCollapsed: Bool = true
-    @State var rotationAngle: Double = -90
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isCollapsed.toggle()
-                    if isCollapsed {
-                        rotationAngle += 90
-                    } else {
-                        rotationAngle -= 90
-                    }
-                }
-                rotationAngle = isCollapsed ? -90 : 0
-            } label: {
-                HStack {
-                    Image(systemName: "chevron.down")
-                        .bold()
-                        .rotationEffect(Angle(degrees: rotationAngle))
-                    title()
-                }.foregroundStyle(titleColor)
-            }
-            
-            if !isCollapsed {
-                content()
-                    .padding(.top, 1)
-            }
-        }
-    }
-}
+
 
 struct V2LoginView: View {
     @Binding var showAlert: Bool
@@ -73,10 +38,7 @@ struct V2LoginView: View {
     @State var loginRequest: LoginV2Request? = nil
     @FocusState private var focusedField: Field?
     
-    @AppStorage("serverAddress") var serverAddress = ""
-    @AppStorage("username") var userName = ""
-    @AppStorage("token") var token = ""
-    @AppStorage("onboarding") var onboarding = true
+    @State var userSettings = UserSettings.shared
     
     // TextField handling
     enum Field {
@@ -90,7 +52,7 @@ struct V2LoginView: View {
             VStack(alignment: .leading) {
                 LoginLabel(text: "Server address")
                     .padding()
-                LoginTextField(example: "e.g.: example.com", text: $serverAddress, color: loginStage == .serverAddress ? .white : .secondary)
+                LoginTextField(example: "e.g.: example.com", text: $userSettings.serverAddress, color: loginStage == .serverAddress ? .white : .secondary)
                     .focused($focusedField, equals: .server)
                     .textContentType(.URL)
                     .submitLabel(.done)
@@ -124,7 +86,7 @@ struct V2LoginView: View {
                 HStack {
                     if loginStage == .login || loginStage == .validate {
                         Button {
-                            if serverAddress == "" {
+                            if userSettings.serverAddress == "" {
                                 alertMessage = "Please enter a valid server address."
                                 showAlert = true
                                 return
@@ -164,9 +126,14 @@ struct V2LoginView: View {
                                     return
                                 }
                                 print("Login successfull for user \(res.loginName)!")
-                                self.userName = res.loginName
-                                self.token = res.appPassword
-                                self.onboarding = false
+                                self.userSettings.username = res.loginName
+                                self.userSettings.token = res.appPassword
+                                let loginString = "\(userSettings.username):\(userSettings.token)"
+                                let loginData = loginString.data(using: String.Encoding.utf8)!
+                                DispatchQueue.main.async {
+                                    userSettings.authString = loginData.base64EncodedString()
+                                }
+                                self.userSettings.onboarding = false
                             }
                         } label: {
                             Text("Validate")
@@ -188,7 +155,7 @@ struct V2LoginView: View {
     }
     
     func sendLoginV2Request() async {
-        let hostPath = "https://\(serverAddress)"
+        let hostPath = "https://\(userSettings.serverAddress)"
         let headerFields: [HeaderField] = [
             //HeaderField.ocsRequest(value: true),
             //HeaderField.accept(value: .JSON)

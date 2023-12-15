@@ -112,6 +112,13 @@ import SwiftUI
     }
     
     func importRecipe() async -> UserAlert? {
+        let (scrapedRecipe, error) = await mainViewModel.importRecipe(url: importURL)
+        if let scrapedRecipe = scrapedRecipe {
+            self.recipe = scrapedRecipe
+            prepareView()
+            return nil
+        }
+        
         do {
             let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: importURL)
             if let scrapedRecipe = scrapedRecipe {
@@ -125,5 +132,6 @@ import SwiftUI
             print("Error")
         }
         return nil
+         
     }
 }

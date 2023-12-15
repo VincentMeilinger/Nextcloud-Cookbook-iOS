@@ -21,21 +21,20 @@ struct RecipeCardView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 80, height: 80)
-                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 17))
             } else {
-                ZStack {
-                    Image(systemName: "square.text.square")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundStyle(Color.white)
-                        .padding(10)
-                        
-                }
-                .background(Color("ncblue"))
-                .frame(width: 80, height: 80)
+                Image(systemName: "square.text.square")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundStyle(Color.white)
+                    .padding(10)
+                    .background(Color("ncblue"))
+                    .frame(width: 80, height: 80)
+                    .clipShape(RoundedRectangle(cornerRadius: 17))
             }
             Text(recipe.name)
                 .font(.headline)
+                .padding(.leading, 4)
                 
             Spacer()
             if let isDownloaded = isDownloaded {
