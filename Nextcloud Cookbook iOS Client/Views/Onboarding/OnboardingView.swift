@@ -137,6 +137,28 @@ struct LoginLabel: View {
     }
 }
 
+struct BorderedLoginTextField: View {
+    var example: String
+    @Binding var text: String
+    @State var color: Color = .white
+    
+    var body: some View {
+        TextField(example, text: $text)
+            .textFieldStyle(.plain)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
+            .foregroundColor(color)
+            .accentColor(color)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(.white, lineWidth: 2)
+                    .foregroundColor(.clear)
+            )
+            
+    }
+}
+
 struct LoginTextField: View {
     var example: String
     @Binding var text: String
@@ -152,8 +174,84 @@ struct LoginTextField: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(color, lineWidth: 2)
+                    .foregroundColor(Color.white.opacity(0.2))
+            )
+    }
+}
+
+
+struct ServerAddressField: View {
+    @Binding var addressString: String
+    @State var serverAddress: String = ""
+    @State var serverProtocol: ServerProtocol = .https
+    @State var serverPort: String = ""
+    @State var useNonStandardPort: Bool = false
+    
+    enum ServerProtocol: String {
+        case https="https://", http="http://"
+        
+        static let all = [https, http]
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            LoginLabel(text: "Server address")
+            VStack(alignment: .leading) {
+                HStack {
+                    Picker(ServerProtocol.https.rawValue, selection: $serverProtocol) {
+                        ForEach(ServerProtocol.all, id: \.self) {
+                            Text($0.rawValue)
+                        }
+                    }.pickerStyle(.menu)
+                    .tint(.white)
+                    .font(.headline)
+                    
+                    LoginTextField(example: "e.g.: example.com", text: $serverAddress)
+                }
+                
+                Toggle("Use a non-standard port", isOn: $useNonStandardPort)
+                    .tint(.white.opacity(0.2))
+                    .foregroundStyle(.white)
+                    .font(.headline)
+                    .padding(.top)
+                if useNonStandardPort {
+                    LoginTextField(example: "e.g.: 80", text: $serverPort)
+                }
+                
+                LoginLabel(text: "Full server address")
+                    .padding(.top)
+                Text(createServerAddressString())
+                    .foregroundColor(.white)
+                    .padding(.vertical, 5)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(.white, lineWidth: 2)
                     .foregroundColor(.clear)
             )
+        }.animation(.easeInOut, value: useNonStandardPort)
+    }
+    
+    func createServerAddressString() -> String {
+        if useNonStandardPort && serverPort != "" {
+            addressString = serverProtocol.rawValue + serverAddress + ":" + serverPort
+        } else {
+            addressString = serverProtocol.rawValue + serverAddress
+        }
+        return addressString
+    }
+}
+
+struct ServerAddressField_Preview: PreviewProvider {
+    static var previews: some View {
+        ServerAddressField(addressString: .constant(""),
+                           serverAddress: "example.com",
+                           serverProtocol: .https,
+                           serverPort: "80",
+                           useNonStandardPort: true)
+            .previewLayout(.sizeThatFits)
+            .padding()
+            .background(Color.nextcloudBlue)
     }
 }

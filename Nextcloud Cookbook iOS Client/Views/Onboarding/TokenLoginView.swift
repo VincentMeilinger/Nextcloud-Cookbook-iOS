@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+
+
 struct TokenLoginView: View {
     @Binding var showAlert: Bool
     @Binding var alertMessage: String
@@ -24,15 +26,16 @@ struct TokenLoginView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            LoginLabel(text: "Server address")
+            /*LoginLabel(text: "Server address")
             LoginTextField(example: "e.g.: example.com", text: $userSettings.serverAddress)
                 .focused($focusedField, equals: .server)
                 .textContentType(.URL)
                 .submitLabel(.next)
                 .padding(.bottom)
-            
+            */
+            ServerAddressField(addressString: $userSettings.serverAddress)
             LoginLabel(text: "User name")
-            LoginTextField(example: "username", text: $userSettings.username)
+            BorderedLoginTextField(example: "username", text: $userSettings.username)
                 .focused($focusedField, equals: .username)
                 .textContentType(.username)
                 .submitLabel(.next)
@@ -40,7 +43,7 @@ struct TokenLoginView: View {
             
             
             LoginLabel(text: "App Token")
-            LoginTextField(example: "can be generated in security settings of your nextcloud", text: $userSettings.token)
+            BorderedLoginTextField(example: "can be generated in security settings of your nextcloud", text: $userSettings.token)
                 .focused($focusedField, equals: .token)
                 .textContentType(.password)
                 .submitLabel(.join)

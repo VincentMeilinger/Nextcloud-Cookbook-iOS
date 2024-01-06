@@ -50,7 +50,7 @@ struct V2LoginView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                LoginLabel(text: "Server address")
+                /*LoginLabel(text: "Server address")
                     .padding()
                 LoginTextField(example: "e.g.: example.com", text: $userSettings.serverAddress, color: loginStage == .serverAddress ? .white : .secondary)
                     .focused($focusedField, equals: .server)
@@ -62,7 +62,8 @@ struct V2LoginView: View {
                             loginStage = loginStage.next()
                         }
                     }
-                
+                */
+                ServerAddressField(addressString: $userSettings.serverAddress)
                 CollapsibleView {
                     VStack(alignment: .leading) {
                         Text("Make sure to enter the server address in the form 'example.com'. Currently, only servers using the 'https' protocol are supported.")
