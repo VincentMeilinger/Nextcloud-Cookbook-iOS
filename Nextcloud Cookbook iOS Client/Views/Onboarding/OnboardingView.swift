@@ -182,7 +182,7 @@ struct LoginTextField: View {
 
 struct ServerAddressField: View {
     @ObservedObject var userSettings = UserSettings.shared
-    @State var serverProtocol: ServerProtocol = .https
+    @State var serverProtocol: ServerProtocol = UserSettings.shared.serverProtocol == ServerProtocol.http.rawValue ? ServerProtocol.http : ServerProtocol.https
     
     enum ServerProtocol: String {
         case https="https://", http="http://"
@@ -202,8 +202,9 @@ struct ServerAddressField: View {
                     }.pickerStyle(.menu)
                     .tint(.white)
                     .font(.headline)
-                    .onChange(of: serverProtocol) { color in
-                        userSettings.serverProtocol = color.rawValue
+                    .onChange(of: serverProtocol) { value in
+                        print(value)
+                        userSettings.serverProtocol = value.rawValue
                     }
                     
                     TextField("e.g.: example.com", text: $userSettings.serverAddress)
