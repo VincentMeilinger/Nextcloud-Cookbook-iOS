@@ -18,7 +18,7 @@ import UIKit
     @Published var recipeDetails: [Int: RecipeDetail] = [:]
     var recipeImages: [Int: [String: UIImage]] = [:]
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
-    private var requestQueue: [RequestWrapper] = []
+    var lastUpdates: [String: Date] = [:]
     
     private let api: CookbookApi.Type
     private let dataStore: DataStore
@@ -64,6 +64,11 @@ import UIKit
             } else {
                 print("Failure!")
             }
+        }
+        
+        // Initialize the lastUpdates with distantPast dates, so that each recipeDetail is updated on launch for all categories
+        for category in self.categories {
+            lastUpdates[category.name] = Date.distantPast
         }
     }
     
@@ -132,7 +137,7 @@ import UIKit
         guard userSettings.storeRecipes else { return }
         guard let recipes = self.recipes[category] else { return }
         for recipe in recipes {
-            if needsUpdate(lastModified: recipe.dateModified) {
+            if needsUpdate(category: category, lastModified: recipe.dateModified) {
                 print("\(recipe.name) needs an update. (last modified: \(recipe.dateModified)")
                 await updateRecipeDetail(id: recipe.recipe_id, withThumb: userSettings.storeThumb, withImage: userSettings.storeImages)
             } else {
@@ -394,7 +399,6 @@ import UIKit
             self.categories = []
             self.recipes = [:]
             self.recipeDetails = [:]
-            self.requestQueue = []
             self.recipeImages = [:]
             self.imagesNeedUpdate = [:]
         }
@@ -572,22 +576,21 @@ extension MainViewModel {
         return true
     }
     
-    private func needsUpdate(lastModified: String) -> Bool {
+    private func needsUpdate(category: String, lastModified: String) -> Bool {
         print("=======================")
         print("original date string: \(lastModified)")
         // Create a DateFormatter
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        //dateFormatter.locale = Locale(identifier: "en_US_POSIX") // Set the locale to posix
-
+        
         // Convert the string to a Date object
-        if let date = dateFormatter.date(from: lastModified) {
-            if date < userSettings.lastUpdate {
-                print("No update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: userSettings.lastUpdate))")
+        if let date = dateFormatter.date(from: lastModified), let lastUpdate = lastUpdates[category] {
+            if date < lastUpdate {
+                print("No update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: lastUpdate))")
                 return false
             } else {
-                print("Update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: userSettings.lastUpdate))")
+                print("Update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: lastUpdate))")
                 return true
             }
         }
