@@ -9,11 +9,10 @@ import Foundation
 import SwiftUI
 
 enum V2LoginStage: LoginStage {
-    case serverAddress, login, validate
+    case login, validate
     
     func next() -> V2LoginStage {
         switch self {
-        case .serverAddress: return .login
         case .login: return .validate
         case .validate: return .validate
         }
@@ -21,8 +20,7 @@ enum V2LoginStage: LoginStage {
     
     func previous() -> V2LoginStage {
         switch self {
-        case .serverAddress: return .serverAddress
-        case .login: return .serverAddress
+        case .login: return .login
         case .validate: return .login
         }
     }
@@ -34,9 +32,8 @@ struct V2LoginView: View {
     @Binding var showAlert: Bool
     @Binding var alertMessage: String
     
-    @State var loginStage: V2LoginStage = .serverAddress
+    @State var loginStage: V2LoginStage = .login
     @State var loginRequest: LoginV2Request? = nil
-    @FocusState private var focusedField: Field?
     
     @State var userSettings = UserSettings.shared
     
@@ -50,27 +47,14 @@ struct V2LoginView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                /*LoginLabel(text: "Server address")
-                    .padding()
-                LoginTextField(example: "e.g.: example.com", text: $userSettings.serverAddress, color: loginStage == .serverAddress ? .white : .secondary)
-                    .focused($focusedField, equals: .server)
-                    .textContentType(.URL)
-                    .submitLabel(.done)
-                    .padding([.bottom, .horizontal])
-                    .onSubmit {
-                        withAnimation(.easeInOut) {
-                            loginStage = loginStage.next()
-                        }
-                    }
-                */
-                ServerAddressField(addressString: $userSettings.serverAddress)
+                ServerAddressField()
                 CollapsibleView {
                     VStack(alignment: .leading) {
-                        Text("Make sure to enter the server address in the form 'example.com'. Currently, only servers using the 'https' protocol are supported.")
-                        if let loginRequest = loginRequest {
-                            Text("If the login button does not open your browser, copy the following link and paste it in your browser manually:")
-                            Text(loginRequest.login)
-                        }
+                        Text("Make sure to enter the server address in the form 'example.com', or \n'<server address>:<port>'\n when a non-standard port is used.")
+                            .padding(.bottom)
+                        Text("The 'Login' button will open a web browser. Please follow the login instructions provided there.\nAfter a successful login, return to this application and press 'Validate'.")
+                            .padding(.bottom)
+                        Text("If the login button does not open your browser, use the 'Copy Link' button and paste the link in your browser manually.")
                     }
                 } title: {
                     Text("Show help")
@@ -78,43 +62,45 @@ struct V2LoginView: View {
                         .font(.headline)
                 }.padding()
                 
-                if loginStage == .login || loginStage == .validate {
-                    Text("The 'Login' button will open a web browser. Please follow the login instructions provided there.\nAfter a successful login, return to this application and press 'Validate'.")
-                        .font(.subheadline)
-                        .foregroundStyle(.white)
-                        .padding()
-                }
-                HStack {
-                    if loginStage == .login || loginStage == .validate {
-                        Button {
-                            if userSettings.serverAddress == "" {
-                                alertMessage = "Please enter a valid server address."
-                                showAlert = true
-                                return
-                            }
-                            
-                            Task {
-                                await sendLoginV2Request()
-                                if let loginRequest = loginRequest {
-                                    await UIApplication.shared.open(URL(string: loginRequest.login)!)
-                                } else {
-                                    alertMessage = "Unable to reach server. Please check your server address and internet connection."
-                                    showAlert = true
-                                }
-                            }
-                            loginStage = loginStage.next()
-                        } label: {
-                            Text("Login")
-                                .foregroundColor(.white)
-                                .font(.headline)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.white, lineWidth: 2)
-                                        .foregroundColor(.clear)
-                                )
-                        }.padding()
+                if loginRequest != nil {
+                    Button("Copy Link") {
+                        UIPasteboard.general.string = loginRequest!.login
                     }
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding()
+                }
+                
+                HStack {
+                    Button {
+                        if userSettings.serverAddress == "" {
+                            alertMessage = "Please enter a valid server address."
+                            showAlert = true
+                            return
+                        }
+                        
+                        Task {
+                            await sendLoginV2Request()
+                            if let loginRequest = loginRequest {
+                                await UIApplication.shared.open(URL(string: loginRequest.login)!)
+                            } else {
+                                alertMessage = "Unable to reach server. Please check your server address and internet connection."
+                                showAlert = true
+                            }
+                        }
+                        loginStage = loginStage.next()
+                    } label: {
+                        Text("Login")
+                            .foregroundColor(.white)
+                            .font(.headline)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.white, lineWidth: 2)
+                                    .foregroundColor(.clear)
+                            )
+                    }.padding()
+                    
                     if loginStage == .validate {
                         Spacer()
                         

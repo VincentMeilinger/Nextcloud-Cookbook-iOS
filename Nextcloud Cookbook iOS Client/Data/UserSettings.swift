@@ -37,6 +37,12 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var serverProtocol: String {
+        didSet {
+            UserDefaults.standard.set(serverProtocol, forKey: "serverProtocol")
+        }
+    }
+    
     @Published var onboarding: Bool {
         didSet {
             UserDefaults.standard.set(onboarding, forKey: "onboarding")
@@ -102,6 +108,7 @@ class UserSettings: ObservableObject {
         self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
         self.authString = UserDefaults.standard.object(forKey: "authString") as? String ?? ""
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
+        self.serverProtocol = UserDefaults.standard.object(forKey: "serverProtocol") as? String ?? "https://"
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue

@@ -49,7 +49,6 @@ import UIKit
     */
     func getCategories() async {
         let (categories, _) = await api.getCategories(
-            from: userSettings.serverAddress,
             auth: userSettings.authString
         )
         if let categories = categories {
@@ -93,7 +92,6 @@ import UIKit
         
         func getServer(store: Bool = false) async -> Bool {
             let (recipes, _) = await api.getCategory(
-                from: userSettings.serverAddress,
                 auth: userSettings.authString,
                 named: categoryString
             )
@@ -156,7 +154,6 @@ import UIKit
     */
     func getRecipes() async -> [Recipe] {
         let (recipes, error) = await api.getRecipes(
-            from: userSettings.serverAddress,
             auth: userSettings.authString
         )
         if let recipes = recipes {
@@ -197,7 +194,6 @@ import UIKit
         
         func getServer() async -> RecipeDetail? {
             let (recipe, error) = await api.getRecipe(
-                from: userSettings.serverAddress,
                 auth: userSettings.authString,
                 id: id
             )
@@ -291,7 +287,6 @@ import UIKit
         
         func getServer() async -> UIImage? {
             let (image, _) = await api.getImage(
-                from: userSettings.serverAddress,
                 auth: userSettings.authString,
                 id: id,
                 size: size
@@ -368,7 +363,6 @@ import UIKit
         
         func getServer() async -> [RecipeKeyword]? {
             let (tags, _) = await api.getTags(
-                from: userSettings.serverAddress,
                 auth: userSettings.authString
             )
             return tags
@@ -423,7 +417,6 @@ import UIKit
     */
     func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert? {
         let (error) = await api.deleteRecipe(
-            from: userSettings.serverAddress,
             auth: userSettings.authString,
             id: id
         )
@@ -455,7 +448,6 @@ import UIKit
     */
     func checkServerConnection() async -> Bool {
         let (categories, _) = await api.getCategories(
-            from: userSettings.serverAddress,
             auth: userSettings.authString
         )
         if let categories = categories {
@@ -485,13 +477,11 @@ import UIKit
         var error: NetworkError? = nil
         if createNew {
             error = await api.createRecipe(
-                from: userSettings.serverAddress,
                 auth: userSettings.authString,
                 recipe: recipeDetail
             )
         } else {
             error = await api.updateRecipe(
-                from: userSettings.serverAddress,
                 auth: userSettings.authString,
                 recipe: recipeDetail
             )
@@ -505,7 +495,6 @@ import UIKit
     func importRecipe(url: String) async -> (RecipeDetail?, RequestAlert?) {
         guard let data = JSONEncoder.safeEncode(RecipeImportRequest(url: url)) else { return (nil, .REQUEST_DROPPED) }
         let (recipeDetail, error) = await api.importRecipe(
-            from: userSettings.serverAddress,
             auth: userSettings.authString,
             data: data
         )

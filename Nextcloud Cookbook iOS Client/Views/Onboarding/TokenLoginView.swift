@@ -26,14 +26,9 @@ struct TokenLoginView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            /*LoginLabel(text: "Server address")
-            LoginTextField(example: "e.g.: example.com", text: $userSettings.serverAddress)
-                .focused($focusedField, equals: .server)
-                .textContentType(.URL)
-                .submitLabel(.next)
+            ServerAddressField()
                 .padding(.bottom)
-            */
-            ServerAddressField(addressString: $userSettings.serverAddress)
+            
             LoginLabel(text: "User name")
             BorderedLoginTextField(example: "username", text: $userSettings.username)
                 .focused($focusedField, equals: .username)

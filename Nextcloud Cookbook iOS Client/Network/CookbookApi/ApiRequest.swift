@@ -9,8 +9,6 @@ import Foundation
 import OSLog
 
 struct ApiRequest {
-    /// The server address, e.g. https://example.com
-    let serverAddress: String
     let path: String
     let method: RequestMethod
     let authString: String?
@@ -21,14 +19,12 @@ struct ApiRequest {
     let cookbookPath = "/index.php/apps/cookbook"
         
     init(
-        serverAdress: String,
         path: String,
         method: RequestMethod,
         authString: String? = nil,
         headerFields: [HeaderField] = [],
         body: Data? = nil
     ) {
-        self.serverAddress = serverAdress
         self.method = method
         self.path = path
         self.headerFields = headerFields
@@ -40,7 +36,7 @@ struct ApiRequest {
         Logger.network.debug("\(method.rawValue) \(path) sending ...")
         
         // Prepare URL
-        let urlString = "https://" + serverAddress + cookbookPath + path
+        let urlString = UserSettings.shared.serverProtocol + UserSettings.shared.serverAddress + cookbookPath + path
         print("Full path: \(urlString)")
         //Logger.network.debug("Full path: \(urlString)")
         guard let urlStringSanitized = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return (nil, .unknownError) }

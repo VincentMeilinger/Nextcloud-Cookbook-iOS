@@ -711,6 +711,9 @@
         }
       }
     },
+    "Copy Link" : {
+
+    },
     "Could not establish a connection to the server. The action will be retried upon reconnection." : {
       "localizations" : {
         "de" : {
@@ -953,6 +956,9 @@
         }
       }
     },
+    "e.g.: example.com" : {
+
+    },
     "Edit" : {
       "localizations" : {
         "de" : {
@@ -1152,6 +1158,7 @@
       }
     },
     "If the login button does not open your browser, copy the following link and paste it in your browser manually:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1172,6 +1179,9 @@
           }
         }
       }
+    },
+    "If the login button does not open your browser, use the 'Copy Link' button and paste the link in your browser manually." : {
+
     },
     "If you are interested in contributing to this project or simply wish to review its source code, we encourage you to visit the GitHub repository for this application." : {
       "localizations" : {
@@ -1575,7 +1585,11 @@
         }
       }
     },
+    "Make sure to enter the server address in the form 'example.com', or \n'<server address>:<port>'\n when a non-standard port is used." : {
+
+    },
     "Make sure to enter the server address in the form 'example.com'. Currently, only servers using the 'https' protocol are supported." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2828,9 +2842,6 @@
           }
         }
       }
-    },
-    "Use a non-standard port" : {
-
     },
     "Validate" : {
       "localizations" : {
