@@ -712,7 +712,26 @@
       }
     },
     "Copy Link" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link kopieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar enlace"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copier le lien"
+          }
+        }
+      }
     },
     "Could not establish a connection to the server. The action will be retried upon reconnection." : {
       "localizations" : {
@@ -957,7 +976,26 @@
       }
     },
     "e.g.: example.com" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "z.B. beispiel.com"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "por ejemplo, example.com"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "par exemple example.com"
+          }
+        }
+      }
     },
     "Edit" : {
       "localizations" : {
@@ -1157,31 +1195,27 @@
         }
       }
     },
-    "If the login button does not open your browser, copy the following link and paste it in your browser manually:" : {
-      "extractionState" : "stale",
+    "If the login button does not open your browser, use the 'Copy Link' button and paste the link in your browser manually." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn der Anmeldebutton Ihren Browser nicht öffnet, kopieren Sie den folgenden Link und fügen Sie ihn manuell in Ihren Browser ein:"
+            "value" : "Wenn der Anmeldebutton Ihren Browser nicht öffnet, verwenden Sie den 'Link kopieren' Button und fügen Sie den Link manuell in Ihren Browser ein."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si el botón de inicio de sesión no abre su navegador, copie el siguiente enlace y péguelo manualmente en su navegador:"
+            "value" : "Si el botón de inicio de sesión no abre tu navegador, usa el botón 'Copiar enlace' y pega el enlace manualmente en tu navegador."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si le bouton de connexion n'ouvre pas votre navigateur, copiez le lien suivant et collez-le manuellement dans votre navigateur :"
+            "value" : "Si le bouton de connexion n'ouvre pas votre navigateur, utilisez le bouton 'Copier le lien' et collez le lien manuellement dans votre navigateur."
           }
         }
       }
-    },
-    "If the login button does not open your browser, use the 'Copy Link' button and paste the link in your browser manually." : {
-
     },
     "If you are interested in contributing to this project or simply wish to review its source code, we encourage you to visit the GitHub repository for this application." : {
       "localizations" : {
@@ -1586,27 +1620,23 @@
       }
     },
     "Make sure to enter the server address in the form 'example.com', or \n'<server address>:<port>'\n when a non-standard port is used." : {
-
-    },
-    "Make sure to enter the server address in the form 'example.com'. Currently, only servers using the 'https' protocol are supported." : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stellen Sie sicher, dass Sie die Serveradresse in der Form 'beispiel.com' eingeben. Derzeit werden nur Server unterstützt, die das 'https'-Protokoll verwenden."
+            "value" : "Stellen Sie sicher, dass Sie die Serveradresse in der Form 'beispiel.com' eingeben, oder '<Serveradresse>:<Port>', wenn ein nicht standardmäßiger Port verwendet wird."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Asegúrese de ingresar la dirección del servidor en el formato 'example.com'. Actualmente, solo se admiten servidores que usan el protocolo 'https'."
+            "value" : "Asegúrate de introducir la dirección del servidor en la forma 'example.com', o '<dirección del servidor>:<puerto>' cuando se utiliza un puerto no estándar."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Assurez-vous de saisir l'adresse du serveur sous la forme 'example.com'. Actuellement, seuls les serveurs utilisant le protocole 'https' sont pris en charge."
+            "value" : "Assurez-vous de saisir l'adresse du serveur sous la forme 'example.com', ou '<adresse du serveur>:<port>' lorsqu'un port non standard est utilisé."
           }
         }
       }
@@ -2223,6 +2253,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rechercher des recettes"
+          }
+        }
+      }
+    },
+    "Search recipes/keywords" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche Rezepte/Schlagwörter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar recetas/palabras clave"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher recettes/mots-clés"
           }
         }
       }

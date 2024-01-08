@@ -42,7 +42,7 @@ struct CategoryDetailView: View {
                 }
             }
         }
-        .searchable(text: $searchText, prompt: "Search recipes")
+        .searchable(text: $searchText, prompt: "Search recipes/keywords")
         .task {
             await viewModel.getCategory(
                 named: categoryName,
@@ -61,7 +61,8 @@ struct CategoryDetailView: View {
         guard let recipes = viewModel.recipes[categoryName] else { return [] }
         guard searchText != "" else { return recipes }
         return recipes.filter { recipe in
-            recipe.name.lowercased().contains(searchText.lowercased())
+            recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
+            (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
         }
     }
 }
