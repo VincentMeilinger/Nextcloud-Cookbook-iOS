@@ -24,8 +24,8 @@ You can download the app from the AppStore:
 - [x] Support for multiple languages
 - [x] MacOS support (through Mac Catalyst)
 - [x] Light and dark mode support
-- [ ] Share recipes
-- [ ] Import recipes
+- [x] Share recipes
+- [x] Import recipes
 
 
 
