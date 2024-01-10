@@ -19,6 +19,8 @@ struct RecipeDetailView: View {
     @State private var presentEditView: Bool = false
     @State private var presentNutritionPopover: Bool = false
     @State private var presentKeywordPopover: Bool = false
+    @State private var presentShareSheet: Bool = false
+    @State private var sharedURL: URL? = nil
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -76,6 +78,7 @@ struct RecipeDetailView: View {
                             RecipeKeywordSection(recipeDetail: recipeDetail)
                             MoreInformationSection(recipeDetail: recipeDetail)
                         }
+                        
                     }.padding(.horizontal, 5)
                     
                 }
@@ -85,12 +88,25 @@ struct RecipeDetailView: View {
         .navigationTitle(showTitle ? recipe.name : "")
         .toolbar {
             if recipeDetail != nil {
-                Button {
-                    presentEditView = true
-                } label: {
-                    HStack {
-                        Text("Edit")
+                Menu {
+                    Button {
+                        presentEditView = true
+                    } label: {
+                        HStack {
+                            Text("Edit")
+                            Image(systemName: "pencil")
+                        }
                     }
+                    
+                    Button {
+                        print("Sharing recipe ...")
+                        self.presentShareSheet = true
+                    } label: {
+                        Text("Share recipe")
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
             }
         }
@@ -107,6 +123,14 @@ struct RecipeDetailView: View {
                 )
             }
         }
+        .sheet(isPresented: $presentShareSheet) {
+            if let recipeDetail = recipeDetail {
+                ShareView(recipeDetail: recipeDetail,
+                          recipeImage: recipeImage,
+                          presentShareSheet: $presentShareSheet)
+            }
+        }
+        
         .task {
             recipeDetail = await viewModel.getRecipe(
                 id: recipe.recipe_id,
@@ -133,6 +157,50 @@ struct RecipeDetailView: View {
                 fetchMode: UserSettings.shared.storeImages ? .preferServer : .onlyServer
             )
         }
+    }
+}
+
+fileprivate struct ShareView: View {
+    @State var recipeDetail: RecipeDetail
+    @State var recipeImage: UIImage?
+    @Binding var presentShareSheet: Bool
+    
+    @State var exporter = RecipeExporter()
+    @State var sharedURL: URL? = nil
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            if let url = sharedURL {
+                ShareLink(item: url, subject: Text("PDF Document")) {
+                    Image(systemName: "doc")
+                    Text("Share as PDF")
+                }
+                .foregroundStyle(.primary)
+                .bold()
+                .padding()
+            }
+            
+            ShareLink(item: exporter.createText(recipe: recipeDetail), subject: Text("Recipe")) {
+                Image(systemName: "ellipsis.message")
+                Text("Share as text")
+            }
+            .foregroundStyle(.primary)
+            .bold()
+            .padding()
+            
+            /*ShareLink(item: exporter.createJson(recipe: recipeDetail), subject: Text("Recipe")) {
+                Image(systemName: "doc.badge.gearshape")
+                Text("Share as JSON")
+            }
+            .foregroundStyle(.primary)
+            .bold()
+            .padding()
+            */
+        }
+        .task {
+            self.sharedURL = exporter.createPDF(recipe: recipeDetail, image: recipeImage)
+        }
+        
     }
 }
 

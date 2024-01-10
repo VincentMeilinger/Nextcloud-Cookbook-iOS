@@ -2015,6 +2015,9 @@
         }
       }
     },
+    "PDF Document" : {
+
+    },
     "Please check the entered URL." : {
       "localizations" : {
         "de" : {
@@ -2124,6 +2127,9 @@
           }
         }
       }
+    },
+    "Recipe" : {
+
     },
     "Recipes" : {
       "localizations" : {
@@ -2236,6 +2242,7 @@
       }
     },
     "Search recipes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2366,6 +2373,15 @@
           }
         }
       }
+    },
+    "Share as PDF" : {
+
+    },
+    "Share as text" : {
+
+    },
+    "Share recipe" : {
+
     },
     "Show help" : {
       "localizations" : {

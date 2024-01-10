@@ -8,6 +8,15 @@
         "revision" : "8b6cf29eead8841a1fa7822481cb3af4ddaadba6",
         "version" : "2.6.1"
       }
+    },
+    {
+      "identity" : "tppdf",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/techprimate/TPPDF.git",
+      "state" : {
+        "revision" : "1955ebbc090a3fb2149fb53e703595c3146689af",
+        "version" : "2.4.1"
+      }
     }
   ],
   "version" : 2

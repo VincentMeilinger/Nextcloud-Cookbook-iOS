@@ -166,6 +166,7 @@ struct MainView: View {
                         Text("Refresh all")
                         Image(systemName: "icloud.and.arrow.down")
                     }
+                    
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
@@ -235,7 +236,7 @@ struct RecipeSearchView: View {
                 .navigationDestination(for: Recipe.self) { recipe in
                     RecipeDetailView(viewModel: viewModel, recipe: recipe)
                 }
-                .searchable(text: $searchText, prompt: "Search recipes")
+                .searchable(text: $searchText, prompt: "Search recipes/keywords")
             }
             .navigationTitle("Search recipe")
         }
@@ -247,7 +248,9 @@ struct RecipeSearchView: View {
     func recipesFiltered() -> [Recipe] {
         guard searchText != "" else { return allRecipes }
         return allRecipes.filter { recipe in
-            recipe.name.lowercased().contains(searchText.lowercased())
+            recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
+            (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
         }
     }
 }
+
