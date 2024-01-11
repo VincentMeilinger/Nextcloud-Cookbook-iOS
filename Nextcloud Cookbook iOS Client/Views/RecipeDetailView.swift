@@ -157,6 +157,14 @@ struct RecipeDetailView: View {
                 fetchMode: UserSettings.shared.storeImages ? .preferServer : .onlyServer
             )
         }
+        .onAppear {
+            if UserSettings.shared.keepScreenAwake {
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
 }
 

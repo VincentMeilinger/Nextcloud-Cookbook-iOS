@@ -49,6 +49,12 @@ struct SettingsView: View {
             }
             
             Section {
+                Toggle(isOn: $userSettings.keepScreenAwake) {
+                    Text("Keep screen awake when viewing recipes")
+                }
+            }
+            
+            Section {
                 Toggle(isOn: $userSettings.storeRecipes) {
                     Text("Offline recipes")
                 }
@@ -111,6 +117,23 @@ struct SettingsView: View {
                 Text("Other")
             } footer: {
                 Text("Deleting local data will not affect the recipe data stored on your server.")
+            }
+            
+            Section(header: Text("Acknowledgements")) {
+                VStack(alignment: .leading) {
+                    if let url = URL(string: "https://github.com/scinfu/SwiftSoup") {
+                        Link("SwiftSoup", destination:  url)
+                            .font(.headline)
+                        Text("An HTML parsing and web scraping library for Swift. Used for importing schema.org recipes from websites.")
+                    }
+                }
+                VStack(alignment: .leading) {
+                    if let url = URL(string: "https://github.com/techprimate/TPPDF") {
+                        Link("TPPDF", destination: url)
+                            .font(.headline)
+                        Text("A simple-to-use PDF builder for Swift. Used for generating recipe PDF documents.")
+                    }
+                }
             }
         }
         .navigationTitle("Settings")

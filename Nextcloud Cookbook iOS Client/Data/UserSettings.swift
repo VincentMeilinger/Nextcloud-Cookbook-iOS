@@ -103,6 +103,12 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var keepScreenAwake: Bool {
+        didSet {
+            UserDefaults.standard.set(keepScreenAwake, forKey: "keepScreenAwake")
+        }
+    }
+    
     init() {
         self.username = UserDefaults.standard.object(forKey: "username") as? String ?? ""
         self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
@@ -119,6 +125,7 @@ class UserSettings: ObservableObject {
         self.expandNutritionSection = UserDefaults.standard.object(forKey: "expandNutritionSection") as? Bool ?? false
         self.expandKeywordSection = UserDefaults.standard.object(forKey: "expandKeywordSection") as? Bool ?? false
         self.expandInfoSection = UserDefaults.standard.object(forKey: "expandInfoSection") as? Bool ?? false
+        self.keepScreenAwake = UserDefaults.standard.object(forKey: "keepScreenAwake") as? Bool ?? true
         
         if authString == "" {
             if token != "" && username != "" {

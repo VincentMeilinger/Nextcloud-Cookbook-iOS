@@ -293,6 +293,28 @@
         }
       }
     },
+    "A simple-to-use PDF builder for Swift. Used for generating recipe PDF documents." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
     "About" : {
       "localizations" : {
         "de" : {
@@ -311,6 +333,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "À propos"
+          }
+        }
+      }
+    },
+    "Acknowledgements" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwendete Bibliotheken"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconocimientos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remerciements"
           }
         }
       }
@@ -377,6 +421,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajouter une nouvelle recette"
+          }
+        }
+      }
+    },
+    "An HTML parsing and web scraping library for Swift. Used for importing schema.org recipes from websites." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
           }
         }
       }
@@ -1439,6 +1505,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instructions"
+          }
+        }
+      }
+    },
+    "Keep screen awake when viewing recipes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatische Bildschirmsperre beim Ansehen von Rezepten deaktivieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantener la pantalla encendida al ver recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garder l'écran allumé lors de la consultation des recettes"
           }
         }
       }
@@ -2565,6 +2653,28 @@
         }
       }
     },
+    "SwiftSoup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
     "Thank you for downloading" : {
       "localizations" : {
         "de" : {
@@ -2825,6 +2935,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durée totale"
+          }
+        }
+      }
+    },
+    "TPPDF" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
           }
         }
       }
