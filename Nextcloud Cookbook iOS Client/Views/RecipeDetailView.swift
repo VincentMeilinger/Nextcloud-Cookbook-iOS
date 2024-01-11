@@ -61,7 +61,7 @@ struct RecipeDetailView: View {
                         }
                         
                         Divider()
-                        
+                        TimerView(timer: viewModel.getTimer(forRecipe: recipeDetail.id, timeTotal: 20))
                         RecipeDurationSection(recipeDetail: recipeDetail)
                         
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {

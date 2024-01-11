@@ -16,9 +16,11 @@ import UIKit
     @Published var categories: [Category] = []
     @Published var recipes: [String: [Recipe]] = [:]
     @Published var recipeDetails: [Int: RecipeDetail] = [:]
+    @Published var timers: [String: RecipeTimer] = [:]
     var recipeImages: [Int: [String: UIImage]] = [:]
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
     var lastUpdates: [String: Date] = [:]
+    
     
     private let api: CookbookApi.Type
     private let dataStore: DataStore
@@ -606,5 +608,39 @@ extension DateFormatter {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return dateFormatter.string(from: date)
+    }
+}
+
+
+// Timer logic
+extension MainViewModel {
+    func createTimer(forRecipe recipeId: String, timeTotal: Double) -> RecipeTimer {
+        let timer = RecipeTimer(timeTotal: timeTotal)
+        timers[recipeId] = timer
+        return timer
+    }
+    
+    func getTimer(forRecipe recipeId: String, timeTotal: Double) -> RecipeTimer {
+        return timers[recipeId] ?? createTimer(forRecipe: recipeId, timeTotal: timeTotal)
+    }
+    
+    
+    func startTimer(forRecipe recipeId: String, timeTotal: Double) {
+        let timer = RecipeTimer(timeTotal: timeTotal)
+        timer.start()
+        timers[recipeId] = timer
+    }
+
+    func pauseTimer(forRecipe recipeId: String) {
+        timers[recipeId]?.pause()
+    }
+
+    func resumeTimer(forRecipe recipeId: String) {
+        timers[recipeId]?.resume()
+    }
+
+    func cancelTimer(forRecipe recipeId: String) {
+        timers[recipeId]?.cancel()
+        timers[recipeId] = nil
     }
 }
