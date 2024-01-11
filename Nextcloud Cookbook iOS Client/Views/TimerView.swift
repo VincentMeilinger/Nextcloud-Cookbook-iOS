@@ -9,12 +9,11 @@ import Foundation
 import SwiftUI
 import Combine
 import AVFoundation
+import UserNotifications
 
 
 struct TimerView: View {
     @ObservedObject var timer: RecipeTimer
-    @State var audioPlayer: AVAudioPlayer?
-    @State var presentTimerAlert: Bool = false
     
     var body: some View {
         HStack {
@@ -59,31 +58,6 @@ struct TimerView: View {
             RoundedRectangle(cornerRadius: 20)
                 .foregroundStyle(.ultraThickMaterial)
         }
-        .alert("Timer alert!", isPresented: $timer.timerExpired) {
-            Button {
-                timer.timerExpired = false
-                audioPlayer?.stop()
-            } label: {
-                Text("Your timer is expired!")
-            }
-            .onAppear {
-                playSound()
-            }
-        }
-    }
-    
-    func playSound() {
-        if let path = Bundle.main.path(forResource: "alarm_sound_0", ofType: "mp3") {
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
-                audioPlayer?.prepareToPlay()
-            } catch {
-                // Handle the error
-                print("Error loading sound file.")
-                return
-            }
-        }
-        audioPlayer?.play()
     }
 }
 
@@ -99,6 +73,7 @@ class RecipeTimer: ObservableObject {
     @Published var timerExpired: Bool = false
     private var timer: Timer.TimerPublisher?
     private var timerCancellable: Cancellable?
+    var audioPlayer: AVAudioPlayer?
 
     init(duration: DurationComponents) {
         self.duration = duration
@@ -114,7 +89,12 @@ class RecipeTimer: ObservableObject {
             let pauseDuration = Date().timeIntervalSince(pauseDate)
             startDate = startDate?.addingTimeInterval(pauseDuration)
         }
-
+        requestNotificationPermissions()
+        scheduleTimerNotification(timeInterval: timeTotal)
+        // Prepare audio session
+        setupAudioSession()
+        prepareAudioPlayer(with: "alarm_sound_0")
+        
         self.timer = Timer.publish(every: 1, on: .main, in: .common)
         self.timerCancellable = self.timer?.autoconnect().sink { [weak self] _ in
             DispatchQueue.main.async {
@@ -128,6 +108,8 @@ class RecipeTimer: ObservableObject {
                         self.timeElapsed = self.timeTotal
                         self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
                         self.pause()
+                        
+                        self.startAlarm()
                     }
                 }
             }
@@ -156,5 +138,71 @@ class RecipeTimer: ObservableObject {
         self.startDate = nil
         self.pauseDate = nil
         self.duration.fromSeconds(Int(timeTotal))
+    }
+}
+
+extension RecipeTimer {
+    func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to set audio session category. Error: \(error)")
+        }
+    }
+    
+    func prepareAudioPlayer(with soundName: String) {
+        if let soundURL = Bundle.main.url(forResource: "alarm_sound_0", withExtension: "mp3") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+                audioPlayer?.prepareToPlay()
+                audioPlayer?.numberOfLoops = -1 // Loop indefinitely
+            } catch {
+                print("Error loading sound file: \(error)")
+            }
+        }
+    }
+    
+    func postNotification() {
+        NotificationCenter.default.post(name: Notification.Name("AlarmNotification"), object: nil)
+    }
+
+    func startAlarm() {
+        audioPlayer?.play()
+        postNotification()
+    }
+
+    func stopAlarm() {
+        audioPlayer?.stop()
+        try? AVAudioSession.sharedInstance().setActive(false)
+    }
+    
+    // ===================================== ALTERNATIVE
+    
+    func requestNotificationPermissions() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                print("Notification permission granted.")
+            } else if let error = error {
+                print("Notification permission denied because: \(error.localizedDescription).")
+            }
+        }
+    }
+    
+    func scheduleTimerNotification(timeInterval: TimeInterval) {
+        let content = UNMutableNotificationContent()
+        content.title = "Timer Finished"
+        content.body = "Your timer is up!"
+        content.sound = UNNotificationSound.default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
+
+        let request = UNNotificationRequest(identifier: "timerNotification", content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling notification: \(error)")
+            }
+        }
     }
 }
