@@ -29,6 +29,7 @@ You can download the app from the AppStore:
 - [ ] Keep display awake when viewing recipes
 - [ ] Cooking timer for recipes
 - [ ] Ingredient shopping list
+- [ ] Add code documentation
       
 ## Screenshots
 
