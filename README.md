@@ -24,11 +24,12 @@ You can download the app from the AppStore:
 - [x] Support for multiple languages
 - [x] MacOS support (through Mac Catalyst)
 - [x] Light and dark mode support
-- [x] Share recipes
+- [x] Share recipes (by name and keyword)
 - [x] Import recipes
 - [ ] Keep display awake when viewing recipes
 - [ ] Cooking timer for recipes
-
+- [ ] Ingredient shopping list
+      
 ## Screenshots
 
 The following screenshots might not be up to date, since there can always be minor user interface changes.
