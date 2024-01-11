@@ -623,4 +623,8 @@ extension MainViewModel {
     func getTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
         return timers[recipeId] ?? createTimer(forRecipe: recipeId, duration: duration)
     }
+    
+    func deleteTimer(forRecipe recipeId: String) {
+        timers.removeValue(forKey: recipeId)
+    }
 }

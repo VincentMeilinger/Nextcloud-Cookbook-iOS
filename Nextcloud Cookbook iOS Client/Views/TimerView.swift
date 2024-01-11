@@ -8,10 +8,13 @@
 import Foundation
 import SwiftUI
 import Combine
+import AVFoundation
 
 
 struct TimerView: View {
     @ObservedObject var timer: RecipeTimer
+    @State var audioPlayer: AVAudioPlayer?
+    @State var presentTimerAlert: Bool = false
     
     var body: some View {
         HStack {
@@ -56,6 +59,31 @@ struct TimerView: View {
             RoundedRectangle(cornerRadius: 20)
                 .foregroundStyle(.ultraThickMaterial)
         }
+        .alert("Timer alert!", isPresented: $timer.timerExpired) {
+            Button {
+                timer.timerExpired = false
+                audioPlayer?.stop()
+            } label: {
+                Text("Your timer is expired!")
+            }
+            .onAppear {
+                playSound()
+            }
+        }
+    }
+    
+    func playSound() {
+        if let path = Bundle.main.path(forResource: "alarm_sound_0", ofType: "mp3") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
+                audioPlayer?.prepareToPlay()
+            } catch {
+                // Handle the error
+                print("Error loading sound file.")
+                return
+            }
+        }
+        audioPlayer?.play()
     }
 }
 
@@ -68,6 +96,7 @@ class RecipeTimer: ObservableObject {
     private var pauseDate: Date?
     @Published var timeElapsed: Double = 0
     @Published var isRunning: Bool = false
+    @Published var timerExpired: Bool = false
     private var timer: Timer.TimerPublisher?
     private var timerCancellable: Cancellable?
 
@@ -95,6 +124,7 @@ class RecipeTimer: ObservableObject {
                         self.timeElapsed = elapsed
                         self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
                     } else {
+                        self.timerExpired = true
                         self.timeElapsed = self.timeTotal
                         self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
                         self.pause()

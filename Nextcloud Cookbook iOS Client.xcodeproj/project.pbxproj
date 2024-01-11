@@ -50,6 +50,7 @@
 		A9CA6CEF2B4C086100F78AB5 /* RecipeExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CA6CEE2B4C086100F78AB5 /* RecipeExporter.swift */; };
 		A9CA6CF62B4C63F200F78AB5 /* TPPDF in Frameworks */ = {isa = PBXBuildFile; productRef = A9CA6CF52B4C63F200F78AB5 /* TPPDF */; };
 		A9D89AB02B4FE97800F49D92 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D89AAF2B4FE97800F49D92 /* TimerView.swift */; };
+		A9FA2AB62B5079B200A43702 /* alarm_sound_0.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,7 @@
 		A7FB0D7D2B25C6A200A3469E /* V2LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V2LoginView.swift; sourceTree = "<group>"; };
 		A9CA6CEE2B4C086100F78AB5 /* RecipeExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeExporter.swift; sourceTree = "<group>"; };
 		A9D89AAF2B4FE97800F49D92 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = alarm_sound_0.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 		A70171752AA8E71900064C43 = {
 			isa = PBXGroup;
 			children = (
+				A9FA2AB42B50798800A43702 /* Resources */,
 				A781E75E2AE9133B00452F6F /* Screenshots */,
 				A70171802AA8E71900064C43 /* Nextcloud Cookbook iOS Client */,
 				A70171922AA8E72000064C43 /* Nextcloud Cookbook iOS ClientTests */,
@@ -323,6 +326,14 @@
 			path = RecipeExport;
 			sourceTree = "<group>";
 		};
+		A9FA2AB42B50798800A43702 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -438,6 +449,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9FA2AB62B5079B200A43702 /* alarm_sound_0.mp3 in Resources */,
 				A701718A2AA8E71F00064C43 /* Preview Assets.xcassets in Resources */,
 				A70171862AA8E71F00064C43 /* Assets.xcassets in Resources */,
 				A7AEAE642AD5521400135378 /* Localizable.xcstrings in Resources */,

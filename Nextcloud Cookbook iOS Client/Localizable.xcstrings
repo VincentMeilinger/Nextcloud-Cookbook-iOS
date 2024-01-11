@@ -2854,6 +2854,9 @@
         }
       }
     },
+    "Timer alert!" : {
+
+    },
     "Title" : {
       "localizations" : {
         "de" : {
@@ -3161,6 +3164,9 @@
           }
         }
       }
+    },
+    "Your timer is expired!" : {
+
     }
   },
   "version" : "1.0"
