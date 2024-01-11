@@ -10,6 +10,22 @@ import SwiftUI
 
 
 class DurationComponents: ObservableObject {
+    @Published var secondComponent: String = "00" {
+        didSet {
+            if secondComponent.count > 2 {
+                secondComponent = oldValue
+            } else if secondComponent.count == 1 {
+                secondComponent = "0\(secondComponent)"
+            } else if secondComponent.count == 0 {
+                secondComponent = "00"
+            }
+            let filtered = secondComponent.filter { $0.isNumber }
+            if secondComponent != filtered {
+                secondComponent = filtered
+            }
+        }
+    }
+    
     @Published var minuteComponent: String = "00" {
         didSet {
             if minuteComponent.count > 2 {
@@ -42,6 +58,19 @@ class DurationComponents: ObservableObject {
         }
     }
     
+    static func fromPTString(_ PTRepresentation: String) -> DurationComponents {
+        let duration = DurationComponents()
+        let hourRegex = /([0-9]{1,2})H/
+        let minuteRegex = /([0-9]{1,2})M/
+        if let match = PTRepresentation.firstMatch(of: hourRegex) {
+            duration.hourComponent = String(match.1)
+        }
+        if let match = PTRepresentation.firstMatch(of: minuteRegex) {
+            duration.minuteComponent = String(match.1)
+        }
+        return duration
+    }
+    
     func fromPTString(_ PTRepresentation: String) {
         let hourRegex = /([0-9]{1,2})H/
         let minuteRegex = /([0-9]{1,2})M/
@@ -60,6 +89,7 @@ class DurationComponents: ObservableObject {
     func toText() -> LocalizedStringKey {
         let intHour = Int(hourComponent) ?? 0
         let intMinute = Int(minuteComponent) ?? 0
+        
         if intHour != 0 && intMinute != 0 {
             return "\(intHour) h, \(intMinute) min"
         } else if intHour == 0 && intMinute != 0 {
@@ -69,6 +99,32 @@ class DurationComponents: ObservableObject {
         } else {
             return "-"
         }
+    }
+    
+    func toTimerText() -> String {
+        var timeString = ""
+        if hourComponent != "00" {
+            timeString.append("\(hourComponent):")
+        }
+        timeString.append("\(minuteComponent):")
+        timeString.append("\(secondComponent)")
+        return timeString
+    }
+    
+    func toSeconds() -> Double {
+        guard let hours = Double(hourComponent) else { return 0 }
+        guard let minutes = Double(minuteComponent) else { return 0 }
+        guard let seconds = Double(secondComponent) else { return 0 }
+        return hours * 3600 + minutes * 60 + seconds
+    }
+    
+    func fromSeconds(_ totalSeconds: Int) {
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        self.hourComponent = String(hours)
+        self.minuteComponent = String(minutes)
+        self.secondComponent = String(seconds)
     }
     
     static func ptToText(_ ptString: String) -> String? {

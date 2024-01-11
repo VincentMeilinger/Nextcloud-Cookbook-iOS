@@ -614,33 +614,13 @@ extension DateFormatter {
 
 // Timer logic
 extension MainViewModel {
-    func createTimer(forRecipe recipeId: String, timeTotal: Double) -> RecipeTimer {
-        let timer = RecipeTimer(timeTotal: timeTotal)
+    func createTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
+        let timer = RecipeTimer(duration: duration)
         timers[recipeId] = timer
         return timer
     }
     
-    func getTimer(forRecipe recipeId: String, timeTotal: Double) -> RecipeTimer {
-        return timers[recipeId] ?? createTimer(forRecipe: recipeId, timeTotal: timeTotal)
-    }
-    
-    
-    func startTimer(forRecipe recipeId: String, timeTotal: Double) {
-        let timer = RecipeTimer(timeTotal: timeTotal)
-        timer.start()
-        timers[recipeId] = timer
-    }
-
-    func pauseTimer(forRecipe recipeId: String) {
-        timers[recipeId]?.pause()
-    }
-
-    func resumeTimer(forRecipe recipeId: String) {
-        timers[recipeId]?.resume()
-    }
-
-    func cancelTimer(forRecipe recipeId: String) {
-        timers[recipeId]?.cancel()
-        timers[recipeId] = nil
+    func getTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
+        return timers[recipeId] ?? createTimer(forRecipe: recipeId, duration: duration)
     }
 }

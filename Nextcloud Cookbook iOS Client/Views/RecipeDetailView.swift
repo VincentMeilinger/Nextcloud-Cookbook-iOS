@@ -61,8 +61,8 @@ struct RecipeDetailView: View {
                         }
                         
                         Divider()
-                        TimerView(timer: viewModel.getTimer(forRecipe: recipeDetail.id, timeTotal: 20))
-                        RecipeDurationSection(recipeDetail: recipeDetail)
+                        
+                        RecipeDurationSection(viewModel: viewModel, recipeDetail: recipeDetail)
                         
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
                             if(!recipeDetail.recipeIngredient.isEmpty) {
@@ -214,10 +214,11 @@ fileprivate struct ShareView: View {
 
 
 fileprivate struct RecipeDurationSection: View {
+    @ObservedObject var viewModel: MainViewModel
     @State var recipeDetail: RecipeDetail
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), alignment: .leading)]) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 250), alignment: .leading)]) {
             if let prepTime = recipeDetail.prepTime, let time = DurationComponents.ptToText(prepTime) {
                 VStack(alignment: .leading) {
                     HStack {
@@ -230,6 +231,12 @@ fileprivate struct RecipeDurationSection: View {
             }
             
             if let cookTime = recipeDetail.cookTime, let time = DurationComponents.ptToText(cookTime) {
+                TimerView(timer: viewModel.getTimer(forRecipe: recipeDetail.id, duration: DurationComponents.fromPTString(cookTime)))
+                    .padding()
+            }
+            
+            /*
+            if let cookTime = recipeDetail.cookTime, let time = DurationComponents.ptToText(cookTime) {
                 VStack(alignment: .leading) {
                     HStack {
                         SecondaryLabel(text: LocalizedStringKey("Cooking"))
@@ -238,7 +245,7 @@ fileprivate struct RecipeDurationSection: View {
                     Text(time)
                         .lineLimit(1)
                 }.padding()
-            }
+            }*/
             
             if let totalTime = recipeDetail.totalTime, let time = DurationComponents.ptToText(totalTime) {
                 VStack(alignment: .leading) {

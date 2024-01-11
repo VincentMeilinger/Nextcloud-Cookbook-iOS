@@ -27,29 +27,27 @@ struct TimerView: View {
                 } label: {
                     if timer.isRunning {
                         Image(systemName: "pause.fill")
-                            .foregroundStyle(.blue)
                     } else {
                         Image(systemName: "play.fill")
-                            .foregroundStyle(.blue)
                     }
                 }
             }
             .gaugeStyle(.accessoryCircularCapacity)
             .animation(.easeInOut, value: timer.timeElapsed)
-            .tint(.white)
+            .tint(timer.isRunning ? .green : .nextcloudBlue)
+            .foregroundStyle(timer.isRunning ? Color.green : Color.nextcloudBlue)
             
             VStack(alignment: .leading) {
-                HStack {
-                    Text("Cooking time")
-                        .padding(.horizontal)
-                    Button {
-                        timer.cancel()
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                    }
-                }
-                Text("\(Int(timer.timeTotal - timer.timeElapsed))")
-                    .padding(.horizontal)
+                Text("Cooking")
+                Text(timer.duration.toTimerText())
+            }
+            .padding(.horizontal)
+            
+            Button {
+                timer.cancel()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(timer.isRunning ? Color.nextcloudBlue : Color.secondary)
             }
         }
         .bold()
@@ -65,6 +63,7 @@ struct TimerView: View {
 
 class RecipeTimer: ObservableObject {
     var timeTotal: Double
+    @Published var duration: DurationComponents
     private var startDate: Date?
     private var pauseDate: Date?
     @Published var timeElapsed: Double = 0
@@ -72,8 +71,9 @@ class RecipeTimer: ObservableObject {
     private var timer: Timer.TimerPublisher?
     private var timerCancellable: Cancellable?
 
-    init(timeTotal: Double) {
-        self.timeTotal = timeTotal
+    init(duration: DurationComponents) {
+        self.duration = duration
+        self.timeTotal = duration.toSeconds()
     }
     
     func start() {
@@ -93,8 +93,10 @@ class RecipeTimer: ObservableObject {
                     let elapsed = Date().timeIntervalSince(startTime)
                     if elapsed < self.timeTotal {
                         self.timeElapsed = elapsed
+                        self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
                     } else {
                         self.timeElapsed = self.timeTotal
+                        self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
                         self.pause()
                     }
                 }
@@ -123,5 +125,6 @@ class RecipeTimer: ObservableObject {
         self.timeElapsed = 0
         self.startDate = nil
         self.pauseDate = nil
+        self.duration.fromSeconds(Int(timeTotal))
     }
 }
