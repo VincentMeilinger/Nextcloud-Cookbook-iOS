@@ -176,9 +176,7 @@ extension RecipeTimer {
         audioPlayer?.stop()
         try? AVAudioSession.sharedInstance().setActive(false)
     }
-    
-    // ===================================== ALTERNATIVE
-    
+        
     func requestNotificationPermissions() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
