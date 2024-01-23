@@ -364,10 +364,17 @@ fileprivate struct RecipeIngredientSection: View {
                     SecondaryLabel(text: LocalizedStringKey("Ingredients for \(recipeDetail.recipeYield) servings"))
                 }
                 Spacer()
+                Button {
+                    GroceryList.shared.addItems(recipeDetail.recipeIngredient)
+                } label: {
+                    Image(systemName: "storefront")
+                }
             }
+            
             ForEach(recipeDetail.recipeIngredient, id: \.self) { ingredient in
                 IngredientListItem(ingredient: ingredient)
                 .padding(4)
+                
             }
         }.padding()
     }
@@ -392,9 +399,17 @@ fileprivate struct RecipeToolSection: View {
 fileprivate struct IngredientListItem: View {
     @State var ingredient: String
     @State var isSelected: Bool = false
+    @State private var dragOffset: CGFloat = 0
+    let maxDragDistance = 30.0
     
     var body: some View {
         HStack(alignment: .top) {
+            if dragOffset > 0 {
+                Image(systemName: "storefront")
+                    .padding(2)
+                    .background(Color.green)
+                    .opacity((dragOffset - 10)/(maxDragDistance-10))
+            }
             if isSelected {
                 Image(systemName: "checkmark.circle")
             } else {
@@ -404,12 +419,31 @@ fileprivate struct IngredientListItem: View {
             Text("\(ingredient)")
                 .multilineTextAlignment(.leading)
                 .lineLimit(5)
+            Spacer()
         }
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)
         .onTapGesture {
             isSelected.toggle()
         }
         .animation(.easeInOut, value: isSelected)
+        .offset(x: dragOffset, y: 0)
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    // Update drag offset as the user drags
+                    let dragAmount = gesture.translation.width
+                    self.dragOffset = min(dragAmount, maxDragDistance + pow(dragAmount - maxDragDistance, 0.7))
+                }
+                .onEnded { gesture in
+                    if gesture.translation.width > maxDragDistance * 0.8 { // Swipe right threshold
+                        GroceryList.shared.addItem(ingredient)
+                    }
+                    // Animate back to original position
+                    withAnimation {
+                        self.dragOffset = 0
+                    }
+                }
+        )
     }
 }
 

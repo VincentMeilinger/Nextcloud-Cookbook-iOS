@@ -403,6 +403,9 @@
         }
       }
     },
+    "Add groceries to this list by either using the button next to an ingredient list in a recipe, or by swiping right on individual ingredients of a recipe." : {
+
+    },
     "Add new recipe" : {
       "localizations" : {
         "de" : {
@@ -1241,6 +1244,9 @@
           }
         }
       }
+    },
+    "Grocery List" : {
+
     },
     "If 'Same as Device' is selected and your device language is not supported yet, this option will default to english." : {
       "localizations" : {
@@ -3161,6 +3167,9 @@
           }
         }
       }
+    },
+    "You're all set for cooking 🍓" : {
+
     }
   },
   "version" : "1.0"

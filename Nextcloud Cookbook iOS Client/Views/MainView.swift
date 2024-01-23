@@ -7,8 +7,66 @@
 
 import SwiftUI
 
-
 struct MainView: View {
+    @StateObject var viewModel = MainViewModel()
+    @State var selectedCategory: Category? = nil
+    @State var showLoadingIndicator: Bool = false
+    
+    enum Tab {
+        case recipes, search, shoppingList, settings
+    }
+    
+    var body: some View {
+        TabView {
+            RecipeTabView(selectedCategory: $selectedCategory, showLoadingIndicator: $showLoadingIndicator)
+                .environmentObject(viewModel)
+                .tabItem {
+                    Label("Recipes", systemImage: "book.closed.fill")
+                }
+                .tag(Tab.recipes)
+            
+            SearchTabView()
+                .environmentObject(viewModel)
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+                .tag(Tab.search)
+            
+            GroceryListTabView()
+                .tabItem {
+                    Label("Grocery List", systemImage: "storefront")
+                }
+                .tag(Tab.shoppingList)
+            
+            SettingsView()
+                .environmentObject(viewModel)
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
+                .tag(Tab.settings)
+        }
+        .task {
+            showLoadingIndicator = true
+            await viewModel.getCategories()
+            await viewModel.updateAllRecipeDetails()
+            
+            // Open detail view for default category
+            if UserSettings.shared.defaultCategory != "" {
+                if let cat = viewModel.categories.first(where: { c in
+                    if c.name == UserSettings.shared.defaultCategory {
+                        return true
+                    }
+                    return false
+                }) {
+                    self.selectedCategory = cat
+                }
+            }
+            showLoadingIndicator = false
+            await GroceryList.shared.load()
+        }
+    }
+}
+/*struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
     @StateObject var userSettings: UserSettings = UserSettings.shared
     
@@ -214,43 +272,5 @@ struct MainView: View {
 
 
 
-struct RecipeSearchView: View {
-    @ObservedObject var viewModel: MainViewModel
-    @State var searchText: String = ""
-    @State var allRecipes: [Recipe] = []
-    
-    var body: some View {
-        NavigationStack {
-            VStack {
-                ScrollView(showsIndicators: false) {
-                    LazyVStack {
-                        ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
-                            NavigationLink(value: recipe) {
-                                RecipeCardView(viewModel: viewModel, recipe: recipe)
-                                    .shadow(radius: 2)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                }
-                .navigationDestination(for: Recipe.self) { recipe in
-                    RecipeDetailView(viewModel: viewModel, recipe: recipe)
-                }
-                .searchable(text: $searchText, prompt: "Search recipes/keywords")
-            }
-            .navigationTitle("Search recipe")
-        }
-        .task {
-            allRecipes = await viewModel.getRecipes()
-        }
-    }
-    
-    func recipesFiltered() -> [Recipe] {
-        guard searchText != "" else { return allRecipes }
-        return allRecipes.filter { recipe in
-            recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
-            (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
-        }
-    }
-}
 
+*/

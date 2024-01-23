@@ -11,7 +11,7 @@ import SwiftUI
 
 
 struct SettingsView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: MainViewModel
     @ObservedObject var userSettings = UserSettings.shared
     
     @State fileprivate var alertType: SettingsAlert = .NONE
