@@ -367,14 +367,20 @@ fileprivate struct RecipeIngredientSection: View {
                 }
                 Spacer()
                 Button {
-                    groceryList.addItems(recipeDetail.recipeIngredient, toRecipe: recipeDetail.id, recipeName: recipeDetail.name)
+                    withAnimation {
+                        if groceryList.containsRecipe(recipeDetail.id) {
+                            groceryList.deleteGroceryRecipe(recipeDetail.id)
+                        } else {
+                            groceryList.addItems(recipeDetail.recipeIngredient, toRecipe: recipeDetail.id, recipeName: recipeDetail.name)
+                        }
+                    }
                 } label: {
                     Image(systemName: "storefront")
                 }
             }
             
             ForEach(recipeDetail.recipeIngredient, id: \.self) { ingredient in
-                IngredientListItem(ingredient: ingredient) {
+                IngredientListItem(ingredient: ingredient, recipeId: recipeDetail.id) {
                     groceryList.addItem(ingredient, toRecipe: recipeDetail.id, recipeName: recipeDetail.name)
                 }
                 .padding(4)
@@ -403,6 +409,7 @@ fileprivate struct RecipeToolSection: View {
 fileprivate struct IngredientListItem: View {
     @EnvironmentObject var groceryList: GroceryList
     @State var ingredient: String
+    @State var recipeId: String
     let addToGroceryListAction: () -> Void
     @State var isSelected: Bool = false
     @State private var dragOffset: CGFloat = 0
@@ -410,6 +417,10 @@ fileprivate struct IngredientListItem: View {
     
     var body: some View {
         HStack(alignment: .top) {
+            if groceryList.containsItem(at: recipeId, item: ingredient) {
+                Image(systemName: "storefront")
+                    .foregroundStyle(Color.green)
+            }
             if isSelected {
                 Image(systemName: "checkmark.circle")
             } else {
@@ -435,8 +446,14 @@ fileprivate struct IngredientListItem: View {
                     self.dragOffset = max(0, min(dragAmount, maxDragDistance + pow(dragAmount - maxDragDistance, 0.7)))
                 }
                 .onEnded { gesture in
-                    if gesture.translation.width > maxDragDistance * 0.8 { // Swipe right threshold
-                        addToGroceryListAction()
+                    if gesture.translation.width > maxDragDistance * 0.8 { // Swipe threshold
+                        withAnimation {
+                            if groceryList.containsItem(at: recipeId, item: ingredient) {
+                                groceryList.deleteItem(ingredient, fromRecipe: recipeId)
+                            } else {
+                                addToGroceryListAction()
+                            }
+                        }
                     }
                     // Animate back to original position
                     withAnimation {
@@ -444,17 +461,6 @@ fileprivate struct IngredientListItem: View {
                     }
                 }
         )
-        .background {
-            if dragOffset > 0 {
-                HStack {
-                    Image(systemName: "storefront")
-                        .foregroundStyle(Color.green)
-                        .opacity((dragOffset - 10)/(maxDragDistance-10))
-                        
-                    Spacer()
-                }
-            }
-        }
     }
 }
 

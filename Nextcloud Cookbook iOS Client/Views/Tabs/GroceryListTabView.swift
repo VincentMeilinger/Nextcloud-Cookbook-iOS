@@ -180,12 +180,14 @@ class GroceryList: ObservableObject {
             groceryDict.removeValue(forKey: recipeId)
         }
         save()
+        objectWillChange.send()
     }
     
     func deleteGroceryRecipe(_ recipeId: String) {
         print("Deleting grocery recipe with id \(recipeId)")
         groceryDict.removeValue(forKey: recipeId)
         save()
+        objectWillChange.send()
     }
     
     func deleteAll() {
@@ -198,6 +200,18 @@ class GroceryList: ObservableObject {
         print("Item checked: \(groceryItem.name)")
         groceryItem.isChecked.toggle()
         save()
+    }
+    
+    func containsItem(at recipeId: String, item: String) -> Bool {
+        guard let recipe = groceryDict[recipeId] else { return false }
+        if recipe.items.contains(where: { $0.name == item }) {
+            return true
+        }
+        return false
+    }
+    
+    func containsRecipe(_ recipeId: String) -> Bool {
+        return groceryDict[recipeId] != nil
     }
     
     func save() {
