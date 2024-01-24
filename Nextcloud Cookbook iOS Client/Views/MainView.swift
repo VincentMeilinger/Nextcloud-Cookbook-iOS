@@ -9,17 +9,20 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject var viewModel = MainViewModel()
+    @StateObject var groceryList = GroceryList()
+    
     @State var selectedCategory: Category? = nil
     @State var showLoadingIndicator: Bool = false
     
     enum Tab {
-        case recipes, search, shoppingList, settings
+        case recipes, search, groceryList, settings
     }
     
     var body: some View {
         TabView {
             RecipeTabView(selectedCategory: $selectedCategory, showLoadingIndicator: $showLoadingIndicator)
                 .environmentObject(viewModel)
+                .environmentObject(groceryList)
                 .tabItem {
                     Label("Recipes", systemImage: "book.closed.fill")
                 }
@@ -27,16 +30,18 @@ struct MainView: View {
             
             SearchTabView()
                 .environmentObject(viewModel)
+                .environmentObject(groceryList)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
                 .tag(Tab.search)
             
             GroceryListTabView()
+                .environmentObject(groceryList)
                 .tabItem {
                     Label("Grocery List", systemImage: "storefront")
                 }
-                .tag(Tab.shoppingList)
+                .tag(Tab.groceryList)
             
             SettingsView()
                 .environmentObject(viewModel)
@@ -62,7 +67,7 @@ struct MainView: View {
                 }
             }
             showLoadingIndicator = false
-            await GroceryList.shared.load()
+            await groceryList.load()
         }
     }
 }

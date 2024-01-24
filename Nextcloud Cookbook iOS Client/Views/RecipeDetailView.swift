@@ -352,7 +352,9 @@ fileprivate struct MoreInformationSection: View {
 
 
 fileprivate struct RecipeIngredientSection: View {
+    @EnvironmentObject var groceryList: GroceryList
     @State var recipeDetail: RecipeDetail
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -365,14 +367,16 @@ fileprivate struct RecipeIngredientSection: View {
                 }
                 Spacer()
                 Button {
-                    GroceryList.shared.addItems(recipeDetail.recipeIngredient)
+                    groceryList.addItems(recipeDetail.recipeIngredient, toRecipe: recipeDetail.id, recipeName: recipeDetail.name)
                 } label: {
                     Image(systemName: "storefront")
                 }
             }
             
             ForEach(recipeDetail.recipeIngredient, id: \.self) { ingredient in
-                IngredientListItem(ingredient: ingredient)
+                IngredientListItem(ingredient: ingredient) {
+                    groceryList.addItem(ingredient, toRecipe: recipeDetail.id, recipeName: recipeDetail.name)
+                }
                 .padding(4)
                 
             }
@@ -397,19 +401,15 @@ fileprivate struct RecipeToolSection: View {
 
 
 fileprivate struct IngredientListItem: View {
+    @EnvironmentObject var groceryList: GroceryList
     @State var ingredient: String
+    let addToGroceryListAction: () -> Void
     @State var isSelected: Bool = false
     @State private var dragOffset: CGFloat = 0
     let maxDragDistance = 30.0
     
     var body: some View {
         HStack(alignment: .top) {
-            if dragOffset > 0 {
-                Image(systemName: "storefront")
-                    .padding(2)
-                    .background(Color.green)
-                    .opacity((dragOffset - 10)/(maxDragDistance-10))
-            }
             if isSelected {
                 Image(systemName: "checkmark.circle")
             } else {
@@ -432,11 +432,11 @@ fileprivate struct IngredientListItem: View {
                 .onChanged { gesture in
                     // Update drag offset as the user drags
                     let dragAmount = gesture.translation.width
-                    self.dragOffset = min(dragAmount, maxDragDistance + pow(dragAmount - maxDragDistance, 0.7))
+                    self.dragOffset = max(0, min(dragAmount, maxDragDistance + pow(dragAmount - maxDragDistance, 0.7)))
                 }
                 .onEnded { gesture in
                     if gesture.translation.width > maxDragDistance * 0.8 { // Swipe right threshold
-                        GroceryList.shared.addItem(ingredient)
+                        addToGroceryListAction()
                     }
                     // Animate back to original position
                     withAnimation {
@@ -444,6 +444,17 @@ fileprivate struct IngredientListItem: View {
                     }
                 }
         )
+        .background {
+            if dragOffset > 0 {
+                HStack {
+                    Image(systemName: "storefront")
+                        .foregroundStyle(Color.green)
+                        .opacity((dragOffset - 10)/(maxDragDistance-10))
+                        
+                    Spacer()
+                }
+            }
+        }
     }
 }
 

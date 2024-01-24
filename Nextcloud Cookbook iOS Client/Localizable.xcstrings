@@ -3170,6 +3170,9 @@
     },
     "You're all set for cooking 🍓" : {
 
+    },
+    "Your grocery list is stored locally and therefore not synchronized across different devices!" : {
+
     }
   },
   "version" : "1.0"
