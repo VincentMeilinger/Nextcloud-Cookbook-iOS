@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct RecipeDetailView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: AppState
     @State var recipe: Recipe
     @State var recipeDetail: RecipeDetail?
     @State var recipeImage: UIImage?
@@ -25,13 +25,15 @@ struct RecipeDetailView: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading) {
-                if let recipeImage = recipeImage {
-                    Image(uiImage: recipeImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(maxHeight: 300)
-                        .clipped()
-                }
+                ZStack {
+                    if let recipeImage = recipeImage {
+                        Image(uiImage: recipeImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxHeight: 300)
+                            .clipped()
+                    }
+                }.animation(.easeInOut, value: recipeImage)
                 
                 if let recipeDetail = recipeDetail {
                     LazyVStack (alignment: .leading) {
@@ -62,7 +64,7 @@ struct RecipeDetailView: View {
                         
                         Divider()
                         
-                        RecipeDurationSection(recipeDetail: recipeDetail)
+                        RecipeDurationSection(viewModel: viewModel, recipeDetail: recipeDetail)
                         
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
                             if(!recipeDetail.recipeIngredient.isEmpty) {
@@ -82,7 +84,7 @@ struct RecipeDetailView: View {
                     }.padding(.horizontal, 5)
                     
                 }
-            }.animation(.easeInOut, value: recipeImage)
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(showTitle ? recipe.name : "")
@@ -157,6 +159,14 @@ struct RecipeDetailView: View {
                 fetchMode: UserSettings.shared.storeImages ? .preferServer : .onlyServer
             )
         }
+        .onAppear {
+            if UserSettings.shared.keepScreenAwake {
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
 }
 
@@ -206,10 +216,11 @@ fileprivate struct ShareView: View {
 
 
 fileprivate struct RecipeDurationSection: View {
+    @ObservedObject var viewModel: AppState
     @State var recipeDetail: RecipeDetail
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), alignment: .leading)]) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 250), alignment: .leading)]) {
             if let prepTime = recipeDetail.prepTime, let time = DurationComponents.ptToText(prepTime) {
                 VStack(alignment: .leading) {
                     HStack {
@@ -220,6 +231,12 @@ fileprivate struct RecipeDurationSection: View {
                         .lineLimit(1)
                 }.padding()
             }
+            /*
+            if let cookTime = recipeDetail.cookTime, let time = DurationComponents.ptToText(cookTime) {
+                TimerView(timer: viewModel.getTimer(forRecipe: recipeDetail.id, duration: DurationComponents.fromPTString(cookTime)))
+                    .padding()
+            }
+            */
             
             if let cookTime = recipeDetail.cookTime, let time = DurationComponents.ptToText(cookTime) {
                 VStack(alignment: .leading) {
@@ -337,7 +354,9 @@ fileprivate struct MoreInformationSection: View {
 
 
 fileprivate struct RecipeIngredientSection: View {
+    @EnvironmentObject var groceryList: GroceryList
     @State var recipeDetail: RecipeDetail
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -349,10 +368,25 @@ fileprivate struct RecipeIngredientSection: View {
                     SecondaryLabel(text: LocalizedStringKey("Ingredients for \(recipeDetail.recipeYield) servings"))
                 }
                 Spacer()
+                Button {
+                    withAnimation {
+                        if groceryList.containsRecipe(recipeDetail.id) {
+                            groceryList.deleteGroceryRecipe(recipeDetail.id)
+                        } else {
+                            groceryList.addItems(recipeDetail.recipeIngredient, toRecipe: recipeDetail.id, recipeName: recipeDetail.name)
+                        }
+                    }
+                } label: {
+                    Image(systemName: "storefront")
+                }
             }
+            
             ForEach(recipeDetail.recipeIngredient, id: \.self) { ingredient in
-                IngredientListItem(ingredient: ingredient)
+                IngredientListItem(ingredient: ingredient, recipeId: recipeDetail.id) {
+                    groceryList.addItem(ingredient, toRecipe: recipeDetail.id, recipeName: recipeDetail.name)
+                }
                 .padding(4)
+                
             }
         }.padding()
     }
@@ -375,12 +409,23 @@ fileprivate struct RecipeToolSection: View {
 
 
 fileprivate struct IngredientListItem: View {
+    @EnvironmentObject var groceryList: GroceryList
     @State var ingredient: String
+    @State var recipeId: String
+    let addToGroceryListAction: () -> Void
     @State var isSelected: Bool = false
+    
+    // Drag animation
+    @State private var dragOffset: CGFloat = 0
+    @State private var animationStartOffset: CGFloat = 0
+    let maxDragDistance = 50.0
     
     var body: some View {
         HStack(alignment: .top) {
-            if isSelected {
+            if groceryList.containsItem(at: recipeId, item: ingredient) {
+                Image(systemName: "storefront")
+                    .foregroundStyle(Color.green)
+            } else if isSelected {
                 Image(systemName: "checkmark.circle")
             } else {
                 Image(systemName: "circle")
@@ -389,12 +434,43 @@ fileprivate struct IngredientListItem: View {
             Text("\(ingredient)")
                 .multilineTextAlignment(.leading)
                 .lineLimit(5)
+            Spacer()
         }
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)
         .onTapGesture {
             isSelected.toggle()
         }
+        .offset(x: dragOffset, y: 0)
         .animation(.easeInOut, value: isSelected)
+        
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    // Update drag offset as the user drags
+                    if animationStartOffset == 0 {
+                        animationStartOffset = gesture.translation.width
+                    }
+                    let dragAmount = gesture.translation.width
+                    let offset = min(dragAmount, maxDragDistance + pow(dragAmount - maxDragDistance, 0.7)) - animationStartOffset
+                    self.dragOffset = max(0, offset)
+                }
+                .onEnded { gesture in
+                    withAnimation {
+                        if dragOffset > maxDragDistance * 0.3 { // Swipe threshold
+                                if groceryList.containsItem(at: recipeId, item: ingredient) {
+                                    groceryList.deleteItem(ingredient, fromRecipe: recipeId)
+                                } else {
+                                    addToGroceryListAction()
+                                }
+                            
+                        }
+                        // Animate back to original position
+                    
+                        self.dragOffset = 0
+                        self.animationStartOffset = 0
+                    }
+                }
+        )
     }
 }
 

@@ -11,7 +11,7 @@ import SwiftUI
 
 
 struct SettingsView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: AppState
     @ObservedObject var userSettings = UserSettings.shared
     
     @State fileprivate var alertType: SettingsAlert = .NONE
@@ -46,6 +46,12 @@ struct SettingsView: View {
                 Text("Recipes")
             } footer: {
                 Text("Configure which sections in your recipes are expanded by default.")
+            }
+            
+            Section {
+                Toggle(isOn: $userSettings.keepScreenAwake) {
+                    Text("Keep screen awake when viewing recipes")
+                }
             }
             
             Section {
@@ -111,6 +117,23 @@ struct SettingsView: View {
                 Text("Other")
             } footer: {
                 Text("Deleting local data will not affect the recipe data stored on your server.")
+            }
+            
+            Section(header: Text("Acknowledgements")) {
+                VStack(alignment: .leading) {
+                    if let url = URL(string: "https://github.com/scinfu/SwiftSoup") {
+                        Link("SwiftSoup", destination:  url)
+                            .font(.headline)
+                        Text("An HTML parsing and web scraping library for Swift. Used for importing schema.org recipes from websites.")
+                    }
+                }
+                VStack(alignment: .leading) {
+                    if let url = URL(string: "https://github.com/techprimate/TPPDF") {
+                        Link("TPPDF", destination: url)
+                            .font(.headline)
+                        Text("A simple-to-use PDF builder for Swift. Used for generating recipe PDF documents.")
+                    }
+                }
             }
         }
         .navigationTitle("Settings")

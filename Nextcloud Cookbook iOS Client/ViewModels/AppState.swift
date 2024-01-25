@@ -10,15 +10,15 @@ import SwiftUI
 import UIKit
 
 
-@MainActor class MainViewModel: ObservableObject {
-    @ObservedObject var userSettings = UserSettings.shared
-    
+@MainActor class AppState: ObservableObject {
     @Published var categories: [Category] = []
     @Published var recipes: [String: [Recipe]] = [:]
     @Published var recipeDetails: [Int: RecipeDetail] = [:]
+    @Published var timers: [String: RecipeTimer] = [:]
     var recipeImages: [Int: [String: UIImage]] = [:]
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
     var lastUpdates: [String: Date] = [:]
+    
     
     private let api: CookbookApi.Type
     private let dataStore: DataStore
@@ -28,10 +28,10 @@ import UIKit
         self.api = api
         self.dataStore = DataStore()
         
-        if userSettings.authString == "" {
-            let loginString = "\(userSettings.username):\(userSettings.token)"
+        if UserSettings.shared.authString == "" {
+            let loginString = "\(UserSettings.shared.username):\(UserSettings.shared.token)"
             let loginData = loginString.data(using: String.Encoding.utf8)!
-            userSettings.authString = loginData.base64EncodedString()
+            UserSettings.shared.authString = loginData.base64EncodedString()
         }
     }
     
@@ -49,7 +49,7 @@ import UIKit
     */
     func getCategories() async {
         let (categories, _) = await api.getCategories(
-            auth: userSettings.authString
+            auth: UserSettings.shared.authString
         )
         if let categories = categories {
             print("Successfully loaded categories")
@@ -97,7 +97,7 @@ import UIKit
         
         func getServer(store: Bool = false) async -> Bool {
             let (recipes, _) = await api.getCategory(
-                auth: userSettings.authString,
+                auth: UserSettings.shared.authString,
                 named: categoryString
             )
             if let recipes = recipes {
@@ -130,16 +130,16 @@ import UIKit
         for category in self.categories {
             await updateRecipeDetails(in: category.name)
         }
-        userSettings.lastUpdate = Date()
+        UserSettings.shared.lastUpdate = Date()
     }
     
     func updateRecipeDetails(in category: String) async {
-        guard userSettings.storeRecipes else { return }
+        guard UserSettings.shared.storeRecipes else { return }
         guard let recipes = self.recipes[category] else { return }
         for recipe in recipes {
             if needsUpdate(category: category, lastModified: recipe.dateModified) {
                 print("\(recipe.name) needs an update. (last modified: \(recipe.dateModified)")
-                await updateRecipeDetail(id: recipe.recipe_id, withThumb: userSettings.storeThumb, withImage: userSettings.storeImages)
+                await updateRecipeDetail(id: recipe.recipe_id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
             } else {
                 print("\(recipe.name) is up to date.")
             }
@@ -159,7 +159,7 @@ import UIKit
     */
     func getRecipes() async -> [Recipe] {
         let (recipes, error) = await api.getRecipes(
-            auth: userSettings.authString
+            auth: UserSettings.shared.authString
         )
         if let recipes = recipes {
             return recipes
@@ -199,7 +199,7 @@ import UIKit
         
         func getServer() async -> RecipeDetail? {
             let (recipe, error) = await api.getRecipe(
-                auth: userSettings.authString,
+                auth: UserSettings.shared.authString,
                 id: id
             )
             if let recipe = recipe {
@@ -292,7 +292,7 @@ import UIKit
         
         func getServer() async -> UIImage? {
             let (image, _) = await api.getImage(
-                auth: userSettings.authString,
+                auth: UserSettings.shared.authString,
                 id: id,
                 size: size
             )
@@ -368,7 +368,7 @@ import UIKit
         
         func getServer() async -> [RecipeKeyword]? {
             let (tags, _) = await api.getTags(
-                auth: userSettings.authString
+                auth: UserSettings.shared.authString
             )
             return tags
         }
@@ -421,7 +421,7 @@ import UIKit
     */
     func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert? {
         let (error) = await api.deleteRecipe(
-            auth: userSettings.authString,
+            auth: UserSettings.shared.authString,
             id: id
         )
         
@@ -452,7 +452,7 @@ import UIKit
     */
     func checkServerConnection() async -> Bool {
         let (categories, _) = await api.getCategories(
-            auth: userSettings.authString
+            auth: UserSettings.shared.authString
         )
         if let categories = categories {
             self.categories = categories
@@ -481,12 +481,12 @@ import UIKit
         var error: NetworkError? = nil
         if createNew {
             error = await api.createRecipe(
-                auth: userSettings.authString,
+                auth: UserSettings.shared.authString,
                 recipe: recipeDetail
             )
         } else {
             error = await api.updateRecipe(
-                auth: userSettings.authString,
+                auth: UserSettings.shared.authString,
                 recipe: recipeDetail
             )
         }
@@ -499,7 +499,7 @@ import UIKit
     func importRecipe(url: String) async -> (RecipeDetail?, RequestAlert?) {
         guard let data = JSONEncoder.safeEncode(RecipeImportRequest(url: url)) else { return (nil, .REQUEST_DROPPED) }
         let (recipeDetail, error) = await api.importRecipe(
-            auth: userSettings.authString,
+            auth: UserSettings.shared.authString,
             data: data
         )
         if error != nil {
@@ -507,12 +507,13 @@ import UIKit
         }
         return (recipeDetail, nil)
     }
+    
 }
 
 
 
 
-extension MainViewModel {
+extension AppState {
     func loadLocal<T: Codable>(path: String) async -> T? {
         do {
             return try await dataStore.load(fromPath: path)
@@ -606,5 +607,23 @@ extension DateFormatter {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return dateFormatter.string(from: date)
+    }
+}
+
+
+// Timer logic
+extension AppState {
+    func createTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
+        let timer = RecipeTimer(duration: duration)
+        timers[recipeId] = timer
+        return timer
+    }
+    
+    func getTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
+        return timers[recipeId] ?? createTimer(forRecipe: recipeId, duration: duration)
+    }
+    
+    func deleteTimer(forRecipe recipeId: String) {
+        timers.removeValue(forKey: recipeId)
     }
 }

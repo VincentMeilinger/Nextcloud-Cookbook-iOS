@@ -13,7 +13,7 @@ import SwiftUI
 struct CategoryDetailView: View {
     @State var categoryName: String
     @State var searchText: String = ""
-    @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: AppState
     @Binding var showEditView: Bool
     
     var body: some View {
