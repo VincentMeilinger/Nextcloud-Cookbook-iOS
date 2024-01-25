@@ -404,7 +404,26 @@
       }
     },
     "Add groceries to this list by either using the button next to an ingredient list in a recipe, or by swiping right on individual ingredients of a recipe." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügen Sie dieser Liste Rezeptzutaten hinzu, indem Sie entweder den Button neben einer Zutatenliste in einem Rezept verwenden, um alle Zutaten hinzuzufügen, oder indem Sie einzelne Zutaten eines Rezepts nach rechts wischen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega comestibles a esta lista usando el botón junto a una lista de ingredientes en una receta, o deslizando hacia la derecha en ingredientes individuales de una receta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez des articles à cette liste soit en utilisant le bouton à côté d'une liste d'ingrédients dans une recette, soit en balayant vers la droite sur des ingrédients individuels d'une recette."
+          }
+        }
+      }
     },
     "Add new recipe" : {
       "localizations" : {
@@ -781,7 +800,26 @@
       }
     },
     "Cooking time" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kochen:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración de cocción:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de cuisson:"
+          }
+        }
+      }
     },
     "Copy Link" : {
       "localizations" : {
@@ -1246,7 +1284,26 @@
       }
     },
     "Grocery List" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einkaufsliste"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lista de la compra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste de courses"
+          }
+        }
+      }
     },
     "If 'Same as Device' is selected and your device language is not supported yet, this option will default to english." : {
       "localizations" : {
@@ -3169,10 +3226,48 @@
       }
     },
     "You're all set for cooking 🍓" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sie sind bereit zum Kochen 🍓"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estás listo(a) para cocinar 🍓"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous êtes prêt(e) pour cuisiner 🍓"
+          }
+        }
+      }
     },
     "Your grocery list is stored locally and therefore not synchronized across your devices." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ihre Einkaufsliste wird lokal gespeichert und daher nicht auf andere Geräte übertragen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu lista de la compra se almacena localmente y, por lo tanto, no se sincroniza en tus dispositivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre liste de courses est stockée localement et n'est donc pas synchronisée sur vos appareils."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
