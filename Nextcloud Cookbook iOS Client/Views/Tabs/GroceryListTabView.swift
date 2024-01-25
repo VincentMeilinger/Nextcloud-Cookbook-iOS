@@ -103,7 +103,7 @@ fileprivate struct EmptyGroceryListView: View {
                 .font(.headline)
             Text("Add groceries to this list by either using the button next to an ingredient list in a recipe, or by swiping right on individual ingredients of a recipe.")
                 .foregroundStyle(.secondary)
-            Text("Your grocery list is stored locally and therefore not synchronized across different devices!")
+            Text("Your grocery list is stored locally and therefore not synchronized across your devices.")
                 .foregroundStyle(.secondary)
         }
         .navigationTitle("Grocery List")
@@ -141,7 +141,7 @@ class GroceryRecipeItem: Identifiable, Codable {
 
 
 
-class GroceryList: ObservableObject {
+@MainActor class GroceryList: ObservableObject {
     let dataStore: DataStore = DataStore()
     @Published var groceryDict: [String: GroceryRecipe] = [:]
     @Published var sortBySimilarity: Bool = false

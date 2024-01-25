@@ -25,13 +25,15 @@ struct RecipeDetailView: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading) {
-                if let recipeImage = recipeImage {
-                    Image(uiImage: recipeImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(maxHeight: 300)
-                        .clipped()
-                }
+                ZStack {
+                    if let recipeImage = recipeImage {
+                        Image(uiImage: recipeImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxHeight: 300)
+                            .clipped()
+                    }
+                }.animation(.easeInOut, value: recipeImage)
                 
                 if let recipeDetail = recipeDetail {
                     LazyVStack (alignment: .leading) {
@@ -82,7 +84,7 @@ struct RecipeDetailView: View {
                     }.padding(.horizontal, 5)
                     
                 }
-            }.animation(.easeInOut, value: recipeImage)
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(showTitle ? recipe.name : "")
@@ -229,13 +231,13 @@ fileprivate struct RecipeDurationSection: View {
                         .lineLimit(1)
                 }.padding()
             }
-            
+            /*
             if let cookTime = recipeDetail.cookTime, let time = DurationComponents.ptToText(cookTime) {
                 TimerView(timer: viewModel.getTimer(forRecipe: recipeDetail.id, duration: DurationComponents.fromPTString(cookTime)))
                     .padding()
             }
+            */
             
-            /*
             if let cookTime = recipeDetail.cookTime, let time = DurationComponents.ptToText(cookTime) {
                 VStack(alignment: .leading) {
                     HStack {
@@ -245,7 +247,7 @@ fileprivate struct RecipeDurationSection: View {
                     Text(time)
                         .lineLimit(1)
                 }.padding()
-            }*/
+            }
             
             if let totalTime = recipeDetail.totalTime, let time = DurationComponents.ptToText(totalTime) {
                 VStack(alignment: .leading) {
