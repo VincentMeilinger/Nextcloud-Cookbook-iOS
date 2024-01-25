@@ -412,16 +412,18 @@ fileprivate struct IngredientListItem: View {
     @State var recipeId: String
     let addToGroceryListAction: () -> Void
     @State var isSelected: Bool = false
+    
+    // Drag animation
     @State private var dragOffset: CGFloat = 0
-    let maxDragDistance = 30.0
+    @State private var animationStartOffset: CGFloat = 0
+    let maxDragDistance = 50.0
     
     var body: some View {
         HStack(alignment: .top) {
             if groceryList.containsItem(at: recipeId, item: ingredient) {
                 Image(systemName: "storefront")
                     .foregroundStyle(Color.green)
-            }
-            if isSelected {
+            } else if isSelected {
                 Image(systemName: "checkmark.circle")
             } else {
                 Image(systemName: "circle")
@@ -436,28 +438,34 @@ fileprivate struct IngredientListItem: View {
         .onTapGesture {
             isSelected.toggle()
         }
-        .animation(.easeInOut, value: isSelected)
         .offset(x: dragOffset, y: 0)
+        .animation(.easeInOut, value: isSelected)
+        
         .gesture(
             DragGesture()
                 .onChanged { gesture in
                     // Update drag offset as the user drags
+                    if animationStartOffset == 0 {
+                        animationStartOffset = gesture.translation.width
+                    }
                     let dragAmount = gesture.translation.width
-                    self.dragOffset = max(0, min(dragAmount, maxDragDistance + pow(dragAmount - maxDragDistance, 0.7)))
+                    let offset = min(dragAmount, maxDragDistance + pow(dragAmount - maxDragDistance, 0.7)) - animationStartOffset
+                    self.dragOffset = max(0, offset)
                 }
                 .onEnded { gesture in
-                    if gesture.translation.width > maxDragDistance * 0.8 { // Swipe threshold
-                        withAnimation {
-                            if groceryList.containsItem(at: recipeId, item: ingredient) {
-                                groceryList.deleteItem(ingredient, fromRecipe: recipeId)
-                            } else {
-                                addToGroceryListAction()
-                            }
-                        }
-                    }
-                    // Animate back to original position
                     withAnimation {
+                        if dragOffset > maxDragDistance * 0.3 { // Swipe threshold
+                                if groceryList.containsItem(at: recipeId, item: ingredient) {
+                                    groceryList.deleteItem(ingredient, fromRecipe: recipeId)
+                                } else {
+                                    addToGroceryListAction()
+                                }
+                            
+                        }
+                        // Animate back to original position
+                    
                         self.dragOffset = 0
+                        self.animationStartOffset = 0
                     }
                 }
         )
