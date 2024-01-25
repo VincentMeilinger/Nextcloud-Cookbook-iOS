@@ -26,9 +26,9 @@ You can download the app from the AppStore:
 - [x] Light and dark mode support
 - [x] Share recipes (by name and keyword)
 - [x] Import recipes
-- [ ] Keep display awake when viewing recipes
+- [x] Keep display awake when viewing recipes
 - [ ] Cooking timer for recipes
-- [ ] Ingredient shopping list
+- [x] Ingredient shopping list
 - [ ] Add code documentation
       
 ## Screenshots
