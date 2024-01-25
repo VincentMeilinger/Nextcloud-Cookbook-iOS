@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject var viewModel = MainViewModel()
+    @StateObject var viewModel = AppState()
     @StateObject var groceryList = GroceryList()
-    
-    @State var selectedCategory: Category? = nil
-    @State var showLoadingIndicator: Bool = false
+    @StateObject var recipeViewModel = RecipeTabView.ViewModel()
+    @StateObject var searchViewModel = SearchTabView.ViewModel()
     
     enum Tab {
-        case recipes, search, groceryList, settings
+        case recipes, search, groceryList
     }
     
     var body: some View {
         TabView {
-            RecipeTabView(selectedCategory: $selectedCategory, showLoadingIndicator: $showLoadingIndicator)
+            RecipeTabView()
+                .environmentObject(recipeViewModel)
                 .environmentObject(viewModel)
                 .environmentObject(groceryList)
                 .tabItem {
@@ -29,6 +29,7 @@ struct MainView: View {
                 .tag(Tab.recipes)
             
             SearchTabView()
+                .environmentObject(searchViewModel)
                 .environmentObject(viewModel)
                 .environmentObject(groceryList)
                 .tabItem {
@@ -42,16 +43,9 @@ struct MainView: View {
                     Label("Grocery List", systemImage: "storefront")
                 }
                 .tag(Tab.groceryList)
-            
-            SettingsView()
-                .environmentObject(viewModel)
-                .tabItem {
-                    Label("Settings", systemImage: "gearshape")
-                }
-                .tag(Tab.settings)
         }
         .task {
-            showLoadingIndicator = true
+            recipeViewModel.presentLoadingIndicator = true
             await viewModel.getCategories()
             await viewModel.updateAllRecipeDetails()
             
@@ -63,11 +57,11 @@ struct MainView: View {
                     }
                     return false
                 }) {
-                    self.selectedCategory = cat
+                    recipeViewModel.selectedCategory = cat
                 }
             }
-            showLoadingIndicator = false
             await groceryList.load()
+            recipeViewModel.presentLoadingIndicator = false
         }
     }
 }

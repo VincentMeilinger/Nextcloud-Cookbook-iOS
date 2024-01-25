@@ -10,26 +10,17 @@ import SwiftUI
 
 
 struct SearchTabView: View {
-    @EnvironmentObject var viewModel: MainViewModel
-    
-    var body: some View {
-        RecipeSearchView(viewModel: viewModel)
-    }
-}
-
-struct RecipeSearchView: View {
-    @ObservedObject var viewModel: MainViewModel
-    @State var searchText: String = ""
-    @State var allRecipes: [Recipe] = []
+    @EnvironmentObject var viewModel: SearchTabView.ViewModel
+    @EnvironmentObject var mainViewModel: AppState
     
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView(showsIndicators: false) {
                     LazyVStack {
-                        ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
+                        ForEach(viewModel.recipesFiltered(), id: \.recipe_id) { recipe in
                             NavigationLink(value: recipe) {
-                                RecipeCardView(viewModel: viewModel, recipe: recipe)
+                                RecipeCardView(viewModel: mainViewModel, recipe: recipe)
                                     .shadow(radius: 2)
                             }
                             .buttonStyle(.plain)
@@ -37,22 +28,32 @@ struct RecipeSearchView: View {
                     }
                 }
                 .navigationDestination(for: Recipe.self) { recipe in
-                    RecipeDetailView(viewModel: viewModel, recipe: recipe)
+                    RecipeDetailView(viewModel: mainViewModel, recipe: recipe)
                 }
-                .searchable(text: $searchText, prompt: "Search recipes/keywords")
+                .searchable(text: $viewModel.searchText, prompt: "Search recipes/keywords")
             }
             .navigationTitle("Search recipe")
         }
         .task {
-            allRecipes = await viewModel.getRecipes()
+            if viewModel.allRecipes.isEmpty {
+                viewModel.allRecipes = await mainViewModel.getRecipes()
+            }
+        }
+        .refreshable {
+            viewModel.allRecipes = await mainViewModel.getRecipes()
         }
     }
     
-    func recipesFiltered() -> [Recipe] {
-        guard searchText != "" else { return allRecipes }
-        return allRecipes.filter { recipe in
-            recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
-            (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
+    class ViewModel: ObservableObject {
+        @Published var allRecipes: [Recipe] = []
+        @Published var searchText: String = ""
+        
+        func recipesFiltered() -> [Recipe] {
+            guard searchText != "" else { return allRecipes }
+            return allRecipes.filter { recipe in
+                recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
+                (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct RecipeCardView: View {
-    @State var viewModel: MainViewModel
+    @State var viewModel: AppState
     @State var recipe: Recipe
     @State var recipeThumb: UIImage?
     @State var isDownloaded: Bool? = nil

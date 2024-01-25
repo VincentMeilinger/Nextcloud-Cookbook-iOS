@@ -10,25 +10,18 @@ import SwiftUI
 
 
 struct RecipeTabView: View {
-    @Binding var selectedCategory: Category?
-    @Binding var showLoadingIndicator: Bool
-    
-    @EnvironmentObject var viewModel: MainViewModel
-    @StateObject var userSettings: UserSettings = UserSettings.shared
-    
-    @State private var showEditView: Bool = false
-    @State private var serverConnection: Bool = false
-    
+    @EnvironmentObject var viewModel: RecipeTabView.ViewModel
+    @EnvironmentObject var mainViewModel: AppState
     
     var body: some View {
         NavigationSplitView {
-            List(selection: $selectedCategory) {
+            List(selection: $viewModel.selectedCategory) {
                 // Categories
-                ForEach(viewModel.categories) { category in
+                ForEach(mainViewModel.categories) { category in
                     if category.recipe_count != 0 {
                         NavigationLink(value: category) {
                             HStack(alignment: .center) {
-                                if selectedCategory != nil && category.name == selectedCategory!.name {
+                                if viewModel.selectedCategory != nil && category.name == viewModel.selectedCategory!.name {
                                     Image(systemName: "book")
                                 } else {
                                     Image(systemName: "book.closed.fill")
@@ -52,53 +45,59 @@ struct RecipeTabView: View {
             }
             .navigationTitle("Cookbooks")
             .toolbar {
-                RecipeTabViewToolBar(
-                    viewModel: viewModel,
-                    showEditView: $showEditView,
-                    serverConnection: $serverConnection,
-                    showLoadingIndicator: $showLoadingIndicator
-                )
+                RecipeTabViewToolBar()
+            }
+            .navigationDestination(isPresented: $viewModel.presentSettingsView) {
+                SettingsView()
             }
         } detail: {
             NavigationStack {
-                if let category = selectedCategory {
+                if let category = viewModel.selectedCategory {
                     CategoryDetailView(
                         categoryName: category.name,
-                        viewModel: viewModel,
-                        showEditView: $showEditView
+                        viewModel: mainViewModel,
+                        showEditView: $viewModel.presentEditView
                     )
                     .id(category.id) // Workaround: This is needed to update the detail view when the selection changes
                 }
             }
         }
         .tint(.nextcloudBlue)
-        .sheet(isPresented: $showEditView) {
+        .sheet(isPresented: $viewModel.presentEditView) {
             RecipeEditView(
                 viewModel:
                     RecipeEditViewModel(
-                        mainViewModel: viewModel,
+                        mainViewModel: mainViewModel,
                         uploadNew: true
                     ),
-                isPresented: $showEditView
+                isPresented: $viewModel.presentEditView
             )
         }
         .task {
-            self.serverConnection = await viewModel.checkServerConnection()
+            viewModel.serverConnection = await mainViewModel.checkServerConnection()
         }
         .refreshable {
-            self.serverConnection = await viewModel.checkServerConnection()
-            await viewModel.getCategories()
+            viewModel.serverConnection = await mainViewModel.checkServerConnection()
+            await mainViewModel.getCategories()
         }
+    }
+    
+    class ViewModel: ObservableObject {
+        @Published var presentEditView: Bool = false
+        @Published var presentSettingsView: Bool = false
+        
+        @Published var presentLoadingIndicator: Bool = false
+        @Published var presentConnectionPopover: Bool = false
+        @Published var serverConnection: Bool = false
+        
+        @Published var selectedCategory: Category? = nil
     }
 }
 
 
 fileprivate struct RecipeTabViewToolBar: ToolbarContent {
-    @ObservedObject var viewModel: MainViewModel
-    @Binding var showEditView: Bool
-    @Binding var serverConnection: Bool
-    @Binding var showLoadingIndicator: Bool
-    @State private var presentPopover: Bool = false
+    @EnvironmentObject var mainViewModel: AppState
+    @EnvironmentObject var viewModel: RecipeTabView.ViewModel
     
     var body: some ToolbarContent {
         // Top left menu toolbar item
@@ -106,20 +105,26 @@ fileprivate struct RecipeTabViewToolBar: ToolbarContent {
             Menu {
                 Button {
                     Task {
-                        showLoadingIndicator = true
+                        viewModel.presentLoadingIndicator = true
                         UserSettings.shared.lastUpdate = Date.distantPast
-                        await viewModel.getCategories()
-                        for category in viewModel.categories {
-                            await viewModel.getCategory(named: category.name, fetchMode: .preferServer)
+                        await mainViewModel.getCategories()
+                        for category in mainViewModel.categories {
+                            await mainViewModel.getCategory(named: category.name, fetchMode: .preferServer)
                         }
-                        await viewModel.updateAllRecipeDetails()
-                        showLoadingIndicator = false
+                        await mainViewModel.updateAllRecipeDetails()
+                        viewModel.presentLoadingIndicator = false
                     }
                 } label: {
                     Text("Refresh all")
                     Image(systemName: "icloud.and.arrow.down")
                 }
                 
+                Button {
+                    viewModel.presentSettingsView = true
+                } label: {
+                    Text("Settings")
+                    Image(systemName: "gearshape")
+                }
             } label: {
                 Image(systemName: "ellipsis.circle")
             }
@@ -129,18 +134,18 @@ fileprivate struct RecipeTabViewToolBar: ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
                 print("Check server connection")
-                presentPopover = true
+                viewModel.presentConnectionPopover = true
             } label: {
-                if showLoadingIndicator {
+                if viewModel.presentLoadingIndicator {
                     ProgressView()
-                } else if serverConnection {
+                } else if viewModel.serverConnection {
                     Image(systemName: "checkmark.icloud")
                 } else {
                     Image(systemName: "xmark.icloud")
                 }
-            }.popover(isPresented: $presentPopover) {
+            }.popover(isPresented: $viewModel.presentConnectionPopover) {
                 VStack(alignment: .leading) {
-                    Text(serverConnection ? LocalizedStringKey("Connected to server.") : LocalizedStringKey("Unable to connect to server."))
+                    Text(viewModel.serverConnection ? LocalizedStringKey("Connected to server.") : LocalizedStringKey("Unable to connect to server."))
                         .bold()
                         
                     Text("Last updated: \(DateFormatter.utcToString(date: UserSettings.shared.lastUpdate))")
@@ -156,7 +161,7 @@ fileprivate struct RecipeTabViewToolBar: ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
                 print("Add new recipe")
-                showEditView = true
+                viewModel.presentEditView = true
             } label: {
                 Image(systemName: "plus.circle.fill")
             }

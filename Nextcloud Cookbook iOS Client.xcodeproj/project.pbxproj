@@ -14,7 +14,7 @@
 		A70171942AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171932AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientTests.swift */; };
 		A701719E2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A701719D2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITests.swift */; };
 		A70171A02AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A701719F2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift */; };
-		A70171AD2AA8EF4700064C43 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171AC2AA8EF4700064C43 /* MainViewModel.swift */; };
+		A70171AD2AA8EF4700064C43 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171AC2AA8EF4700064C43 /* AppState.swift */; };
 		A70171AF2AB2116B00064C43 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171AE2AB2116B00064C43 /* NetworkHandler.swift */; };
 		A70171B12AB211DF00064C43 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171B02AB211DF00064C43 /* CustomError.swift */; };
 		A70171B42AB2122900064C43 /* NetworkRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171B32AB2122900064C43 /* NetworkRequests.swift */; };
@@ -85,7 +85,7 @@
 		A70171992AA8E72000064C43 /* Nextcloud Cookbook iOS ClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Nextcloud Cookbook iOS ClientUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A701719D2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nextcloud_Cookbook_iOS_ClientUITests.swift; sourceTree = "<group>"; };
 		A701719F2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		A70171AC2AA8EF4700064C43 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		A70171AC2AA8EF4700064C43 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		A70171AE2AB2116B00064C43 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		A70171B02AB211DF00064C43 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		A70171B32AB2122900064C43 /* NetworkRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequests.swift; sourceTree = "<group>"; };
@@ -185,6 +185,7 @@
 				A781E75F2AF8228100452F6F /* RecipeImport */,
 				A9CA6CED2B4C084100F78AB5 /* RecipeExport */,
 				A703226B2ABAF60D00D7C4ED /* Extensions */,
+				A76B8A702AE002AE00096CEC /* Alerts.swift */,
 				A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */,
 				A7AEAE632AD5521400135378 /* Localizable.xcstrings */,
 				A70171852AA8E71F00064C43 /* Assets.xcassets */,
@@ -234,7 +235,7 @@
 		A70171B72AB2445700064C43 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				A70171AC2AA8EF4700064C43 /* MainViewModel.swift */,
+				A70171AC2AA8EF4700064C43 /* AppState.swift */,
 				A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */,
 			);
 			path = ViewModels;
@@ -244,18 +245,12 @@
 			isa = PBXGroup;
 			children = (
 				A70171832AA8E71900064C43 /* MainView.swift */,
+				A70171CC2AB501B100064C43 /* SettingsView.swift */,
 				A977D0DC2B6002DA009783A9 /* Tabs */,
 				A7FB0D782B25C65200A3469E /* Onboarding */,
-				A70171BD2AB4987900064C43 /* CategoryDetailView.swift */,
-				A70171C12AB498C600064C43 /* RecipeCardView.swift */,
-				A70171BF2AB498A900064C43 /* RecipeDetailView.swift */,
-				A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */,
-				A70171CC2AB501B100064C43 /* SettingsView.swift */,
-				A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */,
-				A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */,
-				A76B8A702AE002AE00096CEC /* Alerts.swift */,
-				A7CD3FD12B2C546A00D764AD /* CollapsibleView.swift */,
-				A9D89AAF2B4FE97800F49D92 /* TimerView.swift */,
+				A9C3BE502B630E3900562C79 /* Recipes */,
+				A9C3BE512B630E8300562C79 /* RecipeEditing */,
+				A9C3BE522B630F1300562C79 /* ReusableViews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -333,6 +328,35 @@
 				A977D0E12B60034E009783A9 /* GroceryListTabView.swift */,
 			);
 			path = Tabs;
+			sourceTree = "<group>";
+		};
+		A9C3BE502B630E3900562C79 /* Recipes */ = {
+			isa = PBXGroup;
+			children = (
+				A70171BD2AB4987900064C43 /* CategoryDetailView.swift */,
+				A70171C12AB498C600064C43 /* RecipeCardView.swift */,
+				A70171BF2AB498A900064C43 /* RecipeDetailView.swift */,
+				A9D89AAF2B4FE97800F49D92 /* TimerView.swift */,
+			);
+			path = Recipes;
+			sourceTree = "<group>";
+		};
+		A9C3BE512B630E8300562C79 /* RecipeEditing */ = {
+			isa = PBXGroup;
+			children = (
+				A70D7CA02AC73CA700D53DBF /* RecipeEditView.swift */,
+				A7F3F8E72ACBFC760076C227 /* KeywordPickerView.swift */,
+				A7F3F8E92ACC221C0076C227 /* CategoryPickerView.swift */,
+			);
+			path = RecipeEditing;
+			sourceTree = "<group>";
+		};
+		A9C3BE522B630F1300562C79 /* ReusableViews */ = {
+			isa = PBXGroup;
+			children = (
+				A7CD3FD12B2C546A00D764AD /* CollapsibleView.swift */,
+			);
+			path = ReusableViews;
 			sourceTree = "<group>";
 		};
 		A9CA6CED2B4C084100F78AB5 /* RecipeExport */ = {
@@ -528,7 +552,7 @@
 				A79AA8ED2B063AD5007D25F2 /* NextcloudApi.swift in Sources */,
 				A70171822AA8E71900064C43 /* Nextcloud_Cookbook_iOS_ClientApp.swift in Sources */,
 				A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */,
-				A70171AD2AA8EF4700064C43 /* MainViewModel.swift in Sources */,
+				A70171AD2AA8EF4700064C43 /* AppState.swift in Sources */,
 				A76B8A6F2ADFFA8800096CEC /* SupportedLanguage.swift in Sources */,
 				A977D0E02B600318009783A9 /* RecipeTabView.swift in Sources */,
 				A703226F2ABB1DD700D7C4ED /* ColorExtension.swift in Sources */,

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @MainActor class RecipeEditViewModel: ObservableObject {
-    @ObservedObject var mainViewModel: MainViewModel
+    @ObservedObject var mainViewModel: AppState
     @Published var recipe: RecipeDetail = RecipeDetail()
     
     @Published var prepDuration: DurationComponents = DurationComponents()
@@ -29,12 +29,12 @@ import SwiftUI
     var waitingForUpload: Bool = false
     
     
-    init(mainViewModel: MainViewModel, uploadNew: Bool) {
+    init(mainViewModel: AppState, uploadNew: Bool) {
         self.mainViewModel = mainViewModel
         self.uploadNew = uploadNew
     }
     
-    init(mainViewModel: MainViewModel, recipeDetail: RecipeDetail, uploadNew: Bool) {
+    init(mainViewModel: AppState, recipeDetail: RecipeDetail, uploadNew: Bool) {
         self.mainViewModel = mainViewModel
         self.recipe = recipeDetail
         self.uploadNew = uploadNew

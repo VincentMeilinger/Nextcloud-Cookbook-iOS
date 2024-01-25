@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct RecipeDetailView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: AppState
     @State var recipe: Recipe
     @State var recipeDetail: RecipeDetail?
     @State var recipeImage: UIImage?
@@ -214,7 +214,7 @@ fileprivate struct ShareView: View {
 
 
 fileprivate struct RecipeDurationSection: View {
-    @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: AppState
     @State var recipeDetail: RecipeDetail
     
     var body: some View {

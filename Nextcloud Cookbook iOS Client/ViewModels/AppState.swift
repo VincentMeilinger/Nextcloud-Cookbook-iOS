@@ -10,7 +10,7 @@ import SwiftUI
 import UIKit
 
 
-@MainActor class MainViewModel: ObservableObject {
+@MainActor class AppState: ObservableObject {
     @Published var categories: [Category] = []
     @Published var recipes: [String: [Recipe]] = [:]
     @Published var recipeDetails: [Int: RecipeDetail] = [:]
@@ -513,7 +513,7 @@ import UIKit
 
 
 
-extension MainViewModel {
+extension AppState {
     func loadLocal<T: Codable>(path: String) async -> T? {
         do {
             return try await dataStore.load(fromPath: path)
@@ -612,7 +612,7 @@ extension DateFormatter {
 
 
 // Timer logic
-extension MainViewModel {
+extension AppState {
     func createTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
         let timer = RecipeTimer(duration: duration)
         timers[recipeId] = timer
