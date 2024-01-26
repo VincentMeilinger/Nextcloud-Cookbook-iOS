@@ -40,7 +40,11 @@ struct MainView: View {
             GroceryListTabView()
                 .environmentObject(groceryList)
                 .tabItem {
-                    Label("Grocery List", systemImage: "storefront")
+                    if #available(iOS 17.0, *) {
+                        Label("Grocery List", systemImage: "storefront")
+                    } else {
+                        Label("Grocery List", systemImage: "heart.text.square")
+                    }
                 }
                 .tag(Tab.groceryList)
         }

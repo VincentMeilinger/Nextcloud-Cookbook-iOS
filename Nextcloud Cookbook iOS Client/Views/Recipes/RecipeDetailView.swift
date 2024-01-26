@@ -377,7 +377,11 @@ fileprivate struct RecipeIngredientSection: View {
                         }
                     }
                 } label: {
-                    Image(systemName: "storefront")
+                    if #available(iOS 17.0, *) {
+                        Image(systemName: "storefront")
+                    } else {
+                        Image(systemName: "heart.text.square")
+                    }
                 }
             }
             
@@ -423,8 +427,14 @@ fileprivate struct IngredientListItem: View {
     var body: some View {
         HStack(alignment: .top) {
             if groceryList.containsItem(at: recipeId, item: ingredient) {
-                Image(systemName: "storefront")
-                    .foregroundStyle(Color.green)
+                if #available(iOS 17.0, *) {
+                    Image(systemName: "storefront")
+                        .foregroundStyle(Color.green)
+                } else {
+                    Image(systemName: "heart.text.square")
+                        .foregroundStyle(Color.green)
+                }
+                    
             } else if isSelected {
                 Image(systemName: "checkmark.circle")
             } else {
