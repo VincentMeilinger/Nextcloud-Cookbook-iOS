@@ -31,7 +31,7 @@ You can download the app from the AppStore:
 - [x] Ingredient shopping list
 - [ ] Add code documentation
 
-**Nice-to-haves**
+**Ideas**
 - Sort grocery list items by textual similarity (similar items next to each other)
 - Search for recipes based on left-over ingredients
 
