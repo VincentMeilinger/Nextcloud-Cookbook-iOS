@@ -31,8 +31,9 @@ You can download the app from the AppStore:
 - [x] Ingredient shopping list
 - [ ] Add code documentation
 
-**Ideas**
-- Sort grocery list items by textual similarity (similar items next to each other)
+**Planned Features**
+- Calculate the required amount of a recipe ingredient depending on the number of servings
+- Fuzzy search for recipe titles/keywords
 - Search for recipes based on left-over ingredients
 
       
