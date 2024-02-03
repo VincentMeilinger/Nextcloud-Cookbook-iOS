@@ -111,6 +111,8 @@ fileprivate struct EmptyGroceryListView: View {
 }
 
 
+// Grocery List Logic
+
 
 class GroceryRecipe: Identifiable, Codable {
     let name: String

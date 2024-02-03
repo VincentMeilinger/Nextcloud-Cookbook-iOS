@@ -19,12 +19,10 @@ import UIKit
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
     var lastUpdates: [String: Date] = [:]
     
-    private let api: CookbookApi.Type
     private let dataStore: DataStore
     
-    init(apiVersion api: CookbookApi.Type = CookbookApiV1.self) {
+    init() {
         print("Created MainViewModel")
-        self.api = api
         self.dataStore = DataStore()
         
         if UserSettings.shared.authString == "" {
@@ -47,7 +45,7 @@ import UIKit
      - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
     */
     func getCategories() async {
-        let (categories, _) = await api.getCategories(
+        let (categories, _) = await cookbookApi.getCategories(
             auth: UserSettings.shared.authString
         )
         if let categories = categories {
@@ -95,7 +93,7 @@ import UIKit
         }
         
         func getServer(store: Bool = false) async -> Bool {
-            let (recipes, _) = await api.getCategory(
+            let (recipes, _) = await cookbookApi.getCategory(
                 auth: UserSettings.shared.authString,
                 named: categoryString
             )
@@ -157,7 +155,7 @@ import UIKit
      let recipes = await mainViewModel.getRecipes()
     */
     func getRecipes() async -> [Recipe] {
-        let (recipes, error) = await api.getRecipes(
+        let (recipes, error) = await cookbookApi.getRecipes(
             auth: UserSettings.shared.authString
         )
         if let recipes = recipes {
@@ -197,7 +195,7 @@ import UIKit
         }
         
         func getServer() async -> RecipeDetail? {
-            let (recipe, error) = await api.getRecipe(
+            let (recipe, error) = await cookbookApi.getRecipe(
                 auth: UserSettings.shared.authString,
                 id: id
             )
@@ -290,7 +288,7 @@ import UIKit
         }
         
         func getServer() async -> UIImage? {
-            let (image, _) = await api.getImage(
+            let (image, _) = await cookbookApi.getImage(
                 auth: UserSettings.shared.authString,
                 id: id,
                 size: size
@@ -366,7 +364,7 @@ import UIKit
         }
         
         func getServer() async -> [RecipeKeyword]? {
-            let (tags, _) = await api.getTags(
+            let (tags, _) = await cookbookApi.getTags(
                 auth: UserSettings.shared.authString
             )
             return tags
@@ -419,7 +417,7 @@ import UIKit
      let requestResult = await mainViewModel.deleteRecipe(withId: 123, categoryName: "Desserts")
     */
     func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert? {
-        let (error) = await api.deleteRecipe(
+        let (error) = await cookbookApi.deleteRecipe(
             auth: UserSettings.shared.authString,
             id: id
         )
@@ -450,7 +448,7 @@ import UIKit
      let isConnected = await mainViewModel.checkServerConnection()
     */
     func checkServerConnection() async -> Bool {
-        let (categories, _) = await api.getCategories(
+        let (categories, _) = await cookbookApi.getCategories(
             auth: UserSettings.shared.authString
         )
         if let categories = categories {
@@ -479,12 +477,12 @@ import UIKit
     func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert? {
         var error: NetworkError? = nil
         if createNew {
-            error = await api.createRecipe(
+            error = await cookbookApi.createRecipe(
                 auth: UserSettings.shared.authString,
                 recipe: recipeDetail
             )
         } else {
-            error = await api.updateRecipe(
+            error = await cookbookApi.updateRecipe(
                 auth: UserSettings.shared.authString,
                 recipe: recipeDetail
             )
@@ -497,7 +495,7 @@ import UIKit
     
     func importRecipe(url: String) async -> (RecipeDetail?, RequestAlert?) {
         guard let data = JSONEncoder.safeEncode(RecipeImportRequest(url: url)) else { return (nil, .REQUEST_DROPPED) }
-        let (recipeDetail, error) = await api.importRecipe(
+        let (recipeDetail, error) = await cookbookApi.importRecipe(
             auth: UserSettings.shared.authString,
             data: data
         )

@@ -11,14 +11,12 @@ import UIKit
 
 
 /// The Cookbook API class used for requests to the Nextcloud Cookbook service.
-let cookbookApi: CookbookApi.Type = getApi()
-
-func getApi() -> CookbookApi.Type {
+let cookbookApi: CookbookApi.Type = {
     switch UserSettings.shared.cookbookApiVersion {
     case .v1:
         return CookbookApiV1.self
     }
-}
+}()
 
 /// The Cookbook API version.
 enum CookbookApiVersion: String {

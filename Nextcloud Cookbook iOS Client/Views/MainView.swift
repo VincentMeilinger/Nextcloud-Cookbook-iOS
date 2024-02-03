@@ -11,6 +11,8 @@ import SimilaritySearchKit
 struct MainView: View {
     @StateObject var viewModel = AppState()
     @StateObject var groceryList = GroceryList()
+    
+    // Tab ViewModels
     @StateObject var recipeViewModel = RecipeTabView.ViewModel()
     @StateObject var searchViewModel = SearchTabView.ViewModel()
     

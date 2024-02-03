@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 /// The `NextcloudApi` class provides functionalities to interact with the Nextcloud API, particularly for user authentication.
 class NextcloudApi {
@@ -75,4 +76,47 @@ class NextcloudApi {
         }
         return (loginResponse, nil)
     }
+    
+    static func getAvatar() async -> (UIImage?, NetworkError?) {
+        let request = ApiRequest(
+            path: "/index.php/avatar/\(UserSettings.shared.username)/100",
+            method: .GET,
+            authString: UserSettings.shared.authString,
+            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .IMAGE)]
+        )
+        
+        let (data, error) = await request.send()
+        guard let data = data else { return (nil, error) }
+        return (UIImage(data: data), error)
+    }
+    
+    static func getHoverCard() async -> (UserData?, NetworkError?) {
+        let request = ApiRequest(
+            path: "/ocs/v2.php/hovercard/v1/\(UserSettings.shared.username)",
+            method: .GET,
+            authString: UserSettings.shared.authString,
+            headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
+        )
+        
+        let (data, error) = await request.send()
+        guard let data = data else { return (nil, error) }
+        do {
+            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            let data = (json?["ocs"] as? [String: Any])?["data"] as? [String: Any]
+            let userData = UserData(
+                userId: data?["userId"] as? String ?? "",
+                userDisplayName: data?["displayName"] as? String ?? ""
+            )
+            print(userData)
+            return (userData, nil)
+        } catch {
+            print(error.localizedDescription)
+            return (nil, NetworkError.decodingFailed)
+        }
+    }
+}
+
+struct UserData {
+    let userId: String
+    let userDisplayName: String
 }
