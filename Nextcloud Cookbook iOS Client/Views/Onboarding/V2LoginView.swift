@@ -34,9 +34,7 @@ struct V2LoginView: View {
     
     @State var loginStage: V2LoginStage = .login
     @State var loginRequest: LoginV2Request? = nil
-    
-    @State var userSettings = UserSettings.shared
-    
+        
     // TextField handling
     enum Field {
         case server
@@ -73,14 +71,18 @@ struct V2LoginView: View {
                 
                 HStack {
                     Button {
-                        if userSettings.serverAddress == "" {
+                        if UserSettings.shared.serverAddress == "" {
                             alertMessage = "Please enter a valid server address."
                             showAlert = true
                             return
                         }
                         
                         Task {
-                            await sendLoginV2Request()
+                            let error = await sendLoginV2Request()
+                            if let error = error {
+                                alertMessage = "A network error occured (\(error.rawValue))."
+                                showAlert = true
+                            }
                             if let loginRequest = loginRequest {
                                 await UIApplication.shared.open(URL(string: loginRequest.login)!)
                             } else {
@@ -107,20 +109,27 @@ struct V2LoginView: View {
                         Button {
                             // fetch login v2 response
                             Task {
-                                guard let res = await fetchLoginV2Response() else {
+                                let (response, error) = await fetchLoginV2Response()
+                                
+                                if let error = error {
+                                    alertMessage = "Login failed. Please login via the browser and try again. (\(error.rawValue))"
+                                    showAlert = true
+                                    return
+                                }
+                                guard let response = response else {
                                     alertMessage = "Login failed. Please login via the browser and try again."
                                     showAlert = true
                                     return
                                 }
-                                print("Login successfull for user \(res.loginName)!")
-                                self.userSettings.username = res.loginName
-                                self.userSettings.token = res.appPassword
-                                let loginString = "\(userSettings.username):\(userSettings.token)"
+                                print("Login successful for user \(response.loginName)!")
+                                UserSettings.shared.username = response.loginName
+                                UserSettings.shared.token = response.appPassword
+                                let loginString = "\(UserSettings.shared.username):\(UserSettings.shared.token)"
                                 let loginData = loginString.data(using: String.Encoding.utf8)!
                                 DispatchQueue.main.async {
-                                    userSettings.authString = loginData.base64EncodedString()
+                                    UserSettings.shared.authString = loginData.base64EncodedString()
                                 }
-                                self.userSettings.onboarding = false
+                                UserSettings.shared.onboarding = false
                             }
                         } label: {
                             Text("Validate")
@@ -141,64 +150,14 @@ struct V2LoginView: View {
         }
     }
     
-    func sendLoginV2Request() async {
-        let hostPath = "https://\(userSettings.serverAddress)"
-        let headerFields: [HeaderField] = [
-            //HeaderField.ocsRequest(value: true),
-            //HeaderField.accept(value: .JSON)
-        ]
-        let request = RequestWrapper.customRequest(
-            method: .POST,
-            path: .LOGINV2REQ,
-            headerFields: headerFields
-        )
-        do {
-            let (data, _): (Data?, Error?) = try await NetworkHandler.sendHTTPRequest(
-                request,
-                hostPath: hostPath,
-                authString: nil
-            )
-            
-            guard let data = data else { return }
-            print("Data: \(data)")
-            let loginReq: LoginV2Request? = JSONDecoder.safeDecode(data)
-            self.loginRequest = loginReq
-        } catch {
-            print("Could not establish communication with the server.")
-        }
-        
+    func sendLoginV2Request() async -> NetworkError? {
+        let (req, error) = await NextcloudApi.loginV2Request()
+        self.loginRequest = req
+        return error
     }
     
-    func fetchLoginV2Response() async -> LoginV2Response? {
-        guard let loginRequest = loginRequest else { return nil }
-        let headerFields = [
-            HeaderField.ocsRequest(value: true),
-            HeaderField.accept(value: .JSON),
-            HeaderField.contentType(value: .FORM)
-        ]
-        let request = RequestWrapper.customRequest(
-            method: .POST,
-            path: .NONE,
-            headerFields: headerFields,
-            body: "token=\(loginRequest.poll.token)".data(using: .utf8),
-            authenticate: false
-        )
-        
-        var (data, error): (Data?, Error?) = (nil, nil)
-        do {
-            (data, error) = try await NetworkHandler.sendHTTPRequest(
-                request,
-                hostPath: loginRequest.poll.endpoint,
-                authString: nil
-            )
-        } catch {
-            print("Error: ", error)
-        }
-        guard let data = data else { return nil }
-        if let loginRes: LoginV2Response = JSONDecoder.safeDecode(data) {
-            return loginRes
-        }
-        print("Could not decode.")
-        return nil
+    func fetchLoginV2Response() async -> (LoginV2Response?, NetworkError?) {
+        guard let loginRequest = loginRequest else { return (nil, .parametersNil) }
+        return await NextcloudApi.loginV2Response(req: loginRequest)
     }
 }

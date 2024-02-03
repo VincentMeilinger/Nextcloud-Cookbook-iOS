@@ -87,44 +87,21 @@ struct TokenLoginView: View {
             showAlert = true
             return false
         }
-        let headerFields = [
-            HeaderField.ocsRequest(value: true),
-        ]
-        let request = RequestWrapper.customRequest(
-            method: .GET,
-            path: .CATEGORIES,
-            headerFields: headerFields,
-            authenticate: true
-        )
         
-        var (data, error): (Data?, Error?) = (nil, nil)
-        do {
-            let loginString = "\(userSettings.username):\(userSettings.token)"
-            let loginData = loginString.data(using: String.Encoding.utf8)!
-            let authString = loginData.base64EncodedString()
-            DispatchQueue.main.async {
-                userSettings.authString = authString
-            }
-            (data, error) = try await NetworkHandler.sendHTTPRequest(
-                request,
-                hostPath: "https://\(userSettings.serverAddress)/index.php/apps/cookbook/api/v1/",
-                authString: authString
-            )
-            
-        } catch {
-            print("Error: ", error)
+        UserSettings.shared.setAuthString()
+        let (data, error) = await cookbookApi.getCategories(auth: UserSettings.shared.authString)
+        
+        if let error = error {
+            alertMessage = "Login failed. Please check your inputs and internet connection."
+            showAlert = true
+            return false
         }
+        
         guard let data = data else {
             alertMessage = "Login failed. Please check your inputs."
             showAlert = true
             return false
         }
-        if let testRequest: [Category] = JSONDecoder.safeDecode(data) {
-            print("validationResponse: \(testRequest)")
-            return true
-        }
-        alertMessage = "Login failed. Please check your inputs and internet connection."
-        showAlert = true
-        return false
+        return true
     }
 }

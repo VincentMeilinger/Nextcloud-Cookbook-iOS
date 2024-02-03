@@ -19,7 +19,6 @@ import UIKit
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
     var lastUpdates: [String: Date] = [:]
     
-    
     private let api: CookbookApi.Type
     private let dataStore: DataStore
     

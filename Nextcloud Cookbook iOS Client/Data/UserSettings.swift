@@ -12,7 +12,7 @@ import Combine
 class UserSettings: ObservableObject {
     
     static let shared = UserSettings()
-    
+        
     @Published var username: String {
         didSet {
             UserDefaults.standard.set(username, forKey: "username")
@@ -40,6 +40,12 @@ class UserSettings: ObservableObject {
     @Published var serverProtocol: String {
         didSet {
             UserDefaults.standard.set(serverProtocol, forKey: "serverProtocol")
+        }
+    }
+    
+    @Published var cookbookApiVersion: CookbookApiVersion {
+        didSet {
+            UserDefaults.standard.set(cookbookApiVersion, forKey: "cookbookApiVersion")
         }
     }
     
@@ -115,6 +121,7 @@ class UserSettings: ObservableObject {
         self.authString = UserDefaults.standard.object(forKey: "authString") as? String ?? ""
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
         self.serverProtocol = UserDefaults.standard.object(forKey: "serverProtocol") as? String ?? "https://"
+        self.cookbookApiVersion = UserDefaults.standard.object(forKey: "cookbookApiVersion") as? CookbookApiVersion ?? .v1
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue
@@ -134,15 +141,14 @@ class UserSettings: ObservableObject {
                 authString = loginData.base64EncodedString()
             }
         }
+
     }
     
-    func setAuthString() -> String {
+    func setAuthString() {
         if token != "" && username != "" {
             let loginString = "\(self.username):\(self.token)"
             let loginData = loginString.data(using: String.Encoding.utf8)!
-            return loginData.base64EncodedString()
-        } else {
-            return ""
+            self.authString = loginData.base64EncodedString()
         }
     }
 }

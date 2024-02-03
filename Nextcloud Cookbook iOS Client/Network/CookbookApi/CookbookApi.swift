@@ -10,7 +10,26 @@ import OSLog
 import UIKit
 
 
+/// The Cookbook API class used for requests to the Nextcloud Cookbook service.
+let cookbookApi: CookbookApi.Type = getApi()
+
+func getApi() -> CookbookApi.Type {
+    switch UserSettings.shared.cookbookApiVersion {
+    case .v1:
+        return CookbookApiV1.self
+    }
+}
+
+/// The Cookbook API version.
+enum CookbookApiVersion: String {
+    case v1 = "v1"
+}
+
+
+/// A protocol defining common API endpoints that are likely to remain the same over future Cookbook API versions.
 protocol CookbookApi {
+    static var basePath: String { get }
+    
     /// Not implemented yet.
     static func importRecipe(
         auth: String,
