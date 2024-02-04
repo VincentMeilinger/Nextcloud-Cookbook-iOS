@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "similarity-search-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ZachNagengast/similarity-search-kit",
+      "state" : {
+        "revision" : "ddc8e458d0e826b2fe5dbce6f6eac96a8935e8eb",
+        "version" : "0.0.13"
+      }
+    },
+    {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",

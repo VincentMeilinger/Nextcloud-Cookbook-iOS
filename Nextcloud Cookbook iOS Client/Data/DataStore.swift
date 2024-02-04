@@ -10,7 +10,7 @@ import SwiftUI
 
 class DataStore {
     let fileManager = FileManager.default
-    
+    static let shared = DataStore()
     
     private static func fileURL(appending: String) throws -> URL {
         try FileManager.default.url(
@@ -87,7 +87,28 @@ class DataStore {
         return true
         
     }
+}
+
+// SimilarityIndex loading and saving
+import SimilaritySearchKit
+extension DataStore {
+    func loadIndex() async -> [IndexItem]? {
+        do {
+            let indexItems = try await SimilarityIndex().loadIndex(fromDirectory: Self.fileURL(appending: "similarity_index"))
+            return indexItems
+        } catch {
+            print("Unable to load SimilarityIndex")
+            return nil
+        }
+    }
     
+    func saveIndex(_ index: SimilarityIndex) {
+        do {
+            try index.saveIndex(toDirectory: Self.fileURL(appending: "similarity_index"))
+        } catch {
+            print("Unable to save SimilarityIndex")
+        }
+    }
 }
 
 

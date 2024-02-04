@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import SimilaritySearchKit
 
 struct SearchTabView: View {
     @EnvironmentObject var viewModel: SearchTabView.ViewModel
@@ -17,6 +17,13 @@ struct SearchTabView: View {
         NavigationStack {
             VStack {
                 ScrollView(showsIndicators: false) {
+                    /*
+                    Picker("Topping", selection: $viewModel.searchMode) {
+                        ForEach(ViewModel.SearchMode.allCases, id: \.self) { mode in
+                            Text(mode.rawValue)
+                        }
+                    }.pickerStyle(.segmented)
+                     */
                     LazyVStack {
                         ForEach(viewModel.recipesFiltered(), id: \.recipe_id) { recipe in
                             NavigationLink(value: recipe) {
@@ -47,13 +54,26 @@ struct SearchTabView: View {
     class ViewModel: ObservableObject {
         @Published var allRecipes: [Recipe] = []
         @Published var searchText: String = ""
+        @Published var searchMode: SearchMode = .name
+        
+        var similarityIndex: SimilarityIndex? = nil
+        var similaritySearchResults: [SearchResult] = []
+
+        enum SearchMode: String, CaseIterable {
+            case name = "Name & Keywords", ingredient = "Ingredients"
+        }
         
         func recipesFiltered() -> [Recipe] {
-            guard searchText != "" else { return allRecipes }
-            return allRecipes.filter { recipe in
-                recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
-                (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
+            if searchMode == .name {
+                guard searchText != "" else { return allRecipes }
+                return allRecipes.filter { recipe in
+                    recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
+                    (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
+                }
+            } else if searchMode == .ingredient {
+                // TODO: Fuzzy ingredient search
             }
+            return []
         }
     }
 }

@@ -50,6 +50,7 @@
 		A977D0DE2B600300009783A9 /* SearchTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0DD2B600300009783A9 /* SearchTabView.swift */; };
 		A977D0E02B600318009783A9 /* RecipeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0DF2B600318009783A9 /* RecipeTabView.swift */; };
 		A977D0E22B60034E009783A9 /* GroceryListTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0E12B60034E009783A9 /* GroceryListTabView.swift */; };
+		A99DC7BC2B6411A7000118AA /* SimilaritySearchKit in Frameworks */ = {isa = PBXBuildFile; productRef = A99DC7BB2B6411A7000118AA /* SimilaritySearchKit */; };
 		A9CA6CEF2B4C086100F78AB5 /* RecipeExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CA6CEE2B4C086100F78AB5 /* RecipeExporter.swift */; };
 		A9CA6CF62B4C63F200F78AB5 /* TPPDF in Frameworks */ = {isa = PBXBuildFile; productRef = A9CA6CF52B4C63F200F78AB5 /* TPPDF */; };
 		A9D89AB02B4FE97800F49D92 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D89AAF2B4FE97800F49D92 /* TimerView.swift */; };
@@ -131,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A74D33BE2AF82AAE00D06555 /* SwiftSoup in Frameworks */,
+				A99DC7BC2B6411A7000118AA /* SimilaritySearchKit in Frameworks */,
 				A9CA6CF62B4C63F200F78AB5 /* TPPDF in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -180,7 +182,7 @@
 				A70171812AA8E71900064C43 /* Nextcloud_Cookbook_iOS_ClientApp.swift */,
 				A70171C72AB4C4A100064C43 /* Data */,
 				A70171BA2AB4980100064C43 /* Views */,
-				A70171B72AB2445700064C43 /* ViewModels */,
+				A70171B72AB2445700064C43 /* Models */,
 				A70171B22AB211F000064C43 /* Network */,
 				A781E75F2AF8228100452F6F /* RecipeImport */,
 				A9CA6CED2B4C084100F78AB5 /* RecipeExport */,
@@ -223,6 +225,7 @@
 		A70171B22AB211F000064C43 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */,
 				A79AA8EE2B063B33007D25F2 /* NextcloudApi */,
 				A79AA8E72B062DB6007D25F2 /* CookbookApi */,
 				A70171B32AB2122900064C43 /* NetworkRequests.swift */,
@@ -232,13 +235,13 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		A70171B72AB2445700064C43 /* ViewModels */ = {
+		A70171B72AB2445700064C43 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				A70171AC2AA8EF4700064C43 /* AppState.swift */,
 				A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */,
 			);
-			path = ViewModels;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		A70171BA2AB4980100064C43 /* Views */ = {
@@ -295,7 +298,6 @@
 		A79AA8E72B062DB6007D25F2 /* CookbookApi */ = {
 			isa = PBXGroup;
 			children = (
-				A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */,
 				A79AA8E32B02A961007D25F2 /* CookbookApi.swift */,
 				A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */,
 			);
@@ -394,6 +396,7 @@
 			packageProductDependencies = (
 				A74D33BD2AF82AAE00D06555 /* SwiftSoup */,
 				A9CA6CF52B4C63F200F78AB5 /* TPPDF */,
+				A99DC7BB2B6411A7000118AA /* SimilaritySearchKit */,
 			);
 			productName = "Nextcloud Cookbook iOS Client";
 			productReference = A701717E2AA8E71900064C43 /* Nextcloud Cookbook iOS Client.app */;
@@ -473,6 +476,7 @@
 			packageReferences = (
 				A74D33BC2AF82AAE00D06555 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				A9CA6CF42B4C63F200F78AB5 /* XCRemoteSwiftPackageReference "TPPDF" */,
+				A99DC7BA2B6411A7000118AA /* XCRemoteSwiftPackageReference "similarity-search-kit" */,
 			);
 			productRefGroup = A701717F2AA8E71900064C43 /* Products */;
 			projectDirPath = "";
@@ -738,7 +742,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8.1;
+				MARKETING_VERSION = 1.9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -781,7 +785,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8.1;
+				MARKETING_VERSION = 1.9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -937,6 +941,14 @@
 				minimumVersion = 2.6.1;
 			};
 		};
+		A99DC7BA2B6411A7000118AA /* XCRemoteSwiftPackageReference "similarity-search-kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ZachNagengast/similarity-search-kit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.13;
+			};
+		};
 		A9CA6CF42B4C63F200F78AB5 /* XCRemoteSwiftPackageReference "TPPDF" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/techprimate/TPPDF.git";
@@ -952,6 +964,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A74D33BC2AF82AAE00D06555 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		A99DC7BB2B6411A7000118AA /* SimilaritySearchKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A99DC7BA2B6411A7000118AA /* XCRemoteSwiftPackageReference "similarity-search-kit" */;
+			productName = SimilaritySearchKit;
 		};
 		A9CA6CF52B4C63F200F78AB5 /* TPPDF */ = {
 			isa = XCSwiftPackageProductDependency;

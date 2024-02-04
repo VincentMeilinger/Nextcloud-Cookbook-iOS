@@ -11,18 +11,40 @@ import SwiftUI
 
 
 struct SettingsView: View {
-    @EnvironmentObject var viewModel: AppState
+    @EnvironmentObject var appState: AppState
     @ObservedObject var userSettings = UserSettings.shared
-    
-    @State fileprivate var alertType: SettingsAlert = .NONE
-    @State var showAlert: Bool = false
+    @ObservedObject var viewModel = ViewModel()
     
     var body: some View {
         Form {
+            HStack(alignment: .center) {
+                if let avatarImage = viewModel.avatarImage {
+                    Image(uiImage: avatarImage)
+                        .resizable()
+                        .clipShape(Circle())
+                        .frame(width: 100, height: 100)
+                        
+                }
+                if let userData = viewModel.userData {
+                    VStack(alignment: .leading) {
+                        Text(userData.userDisplayName)
+                            .font(.title)
+                            .padding(.leading)
+                        Text("Username: \(userData.userId)")
+                            .font(.subheadline)
+                            .padding(.leading)
+                        
+                        
+                        // TODO: Add actions
+                    }
+                }
+                Spacer()
+            }
+            
             Section {
                 Picker("Select a default cookbook", selection: $userSettings.defaultCategory) {
                     Text("None").tag("None")
-                    ForEach(viewModel.categories, id: \.name) { category in
+                    ForEach(appState.categories, id: \.name) { category in
                         Text(category.name == "*" ? "Other" : category.name).tag(category)
                     }
                 }
@@ -100,19 +122,19 @@ struct SettingsView: View {
             Section {
                 Button("Log out") {
                     print("Log out.")
-                    alertType = .LOG_OUT
-                    showAlert = true
+                    viewModel.alertType = .LOG_OUT
+                    viewModel.showAlert = true
                     
                 }
                 .tint(.red)
                 
                 Button("Delete local data") {
                     print("Clear cache.")
-                    alertType = .DELETE_CACHE
-                    showAlert = true
+                    viewModel.alertType = .DELETE_CACHE
+                    viewModel.showAlert = true
                 }
                 .tint(.red)
-                            
+                
             } header: {
                 Text("Other")
             } footer: {
@@ -136,24 +158,27 @@ struct SettingsView: View {
                 }
             }
         }
+        
         .navigationTitle("Settings")
-        .alert(alertType.getTitle(), isPresented: $showAlert) {
+        .alert(viewModel.alertType.getTitle(), isPresented: $viewModel.showAlert) {
             Button("Cancel", role: .cancel) { }
-            if alertType == .LOG_OUT {
+            if viewModel.alertType == .LOG_OUT {
                 Button("Log out", role: .destructive) { logOut() }
-            } else if alertType == .DELETE_CACHE {
+            } else if viewModel.alertType == .DELETE_CACHE {
                 Button("Delete", role: .destructive) { deleteCache() }
             }
         } message: {
-            Text(alertType.getMessage())
+            Text(viewModel.alertType.getMessage())
         }
         .onDisappear {
             Task {
                 userSettings.lastUpdate = .distantPast
-                await viewModel.updateAllRecipeDetails()
+                await appState.updateAllRecipeDetails()
             }
         }
-        
+        .task {
+            await viewModel.getUserData()
+        }
     }
     
     func logOut() {
@@ -161,35 +186,54 @@ struct SettingsView: View {
         userSettings.username = ""
         userSettings.token = ""
         userSettings.authString = ""
-        viewModel.deleteAllData()
+        appState.deleteAllData()
         userSettings.onboarding = true
     }
     
     func deleteCache() {
-        viewModel.deleteAllData()
+        appState.deleteAllData()
+    }
+}
+
+extension SettingsView {
+    class ViewModel: ObservableObject {
+        @Published var avatarImage: UIImage? = nil
+        @Published var userData: UserData? = nil
+        
+        @Published var showAlert: Bool = false
+        fileprivate var alertType: SettingsAlert = .NONE
+        
+        enum SettingsAlert {
+            case LOG_OUT,
+                 DELETE_CACHE,
+                 NONE
+            
+            func getTitle() -> String {
+                switch self {
+                case .LOG_OUT: return "Log out"
+                case .DELETE_CACHE: return "Delete local data"
+                default: return "Please confirm your action."
+                }
+            }
+            
+            func getMessage() -> String {
+                switch self {
+                case .LOG_OUT: return "Are you sure that you want to log out of your account?"
+                case .DELETE_CACHE: return "Are you sure that you want to delete the downloaded recipes? This action will not affect any recipes stored on your server."
+                default: return ""
+                }
+            }
+        }
+        
+        func getUserData() async {
+            let (data, _) = await NextcloudApi.getAvatar()
+            avatarImage = data
+            
+            let (userData, _) = await NextcloudApi.getHoverCard()
+            self.userData = userData
+        }
     }
 }
 
 
 
-fileprivate enum SettingsAlert {
-    case LOG_OUT,
-         DELETE_CACHE,
-         NONE
-    
-    func getTitle() -> String {
-        switch self {
-        case .LOG_OUT: return "Log out"
-        case .DELETE_CACHE: return "Delete local data"
-        default: return "Please confirm your action."
-        }
-    }
-    
-    func getMessage() -> String {
-        switch self {
-        case .LOG_OUT: return "Are you sure that you want to log out of your account?"
-        case .DELETE_CACHE: return "Are you sure that you want to delete the downloaded recipes? This action will not affect any recipes stored on your server."
-        default: return ""
-        }
-    }
-}

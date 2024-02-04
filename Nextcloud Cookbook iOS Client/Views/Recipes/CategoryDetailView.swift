@@ -15,22 +15,33 @@ struct CategoryDetailView: View {
     @State var searchText: String = ""
     @ObservedObject var viewModel: AppState
     @Binding var showEditView: Bool
+    @State var selectedRecipe: Recipe? = nil
+    @State var presentRecipeView: Bool = false
     
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
-                    NavigationLink(value: recipe) {
+                    //NavigationLink(value: recipe) {
                         RecipeCardView(viewModel: viewModel, recipe: recipe)
                             .shadow(radius: 2)
+                            
+                    //}
+                    //.buttonStyle(.plain)
+                    .onTapGesture {
+                        selectedRecipe = recipe
+                        presentRecipeView = true
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
+        .fullScreenCover(isPresented: $presentRecipeView) {
+            RecipeDetailView(viewModel: viewModel, recipe: selectedRecipe!)
+        }
+        /*
         .navigationDestination(for: Recipe.self) { recipe in
             RecipeDetailView(viewModel: viewModel, recipe: recipe)
-        }
+        }*/
         .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

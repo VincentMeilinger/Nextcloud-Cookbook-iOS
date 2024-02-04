@@ -16,7 +16,6 @@ struct ApiRequest {
     let body: Data?
     
     /// The path to the Cookbook application on the nextcloud server.
-    let cookbookPath = "/index.php/apps/cookbook"
         
     init(
         path: String,
@@ -32,11 +31,11 @@ struct ApiRequest {
         self.body = body
     }
     
-    func send() async -> (Data?, NetworkError?) {
+    func send(pathCompletion: Bool = true) async -> (Data?, NetworkError?) {
         Logger.network.debug("\(method.rawValue) \(path) sending ...")
         
         // Prepare URL
-        let urlString = UserSettings.shared.serverProtocol + UserSettings.shared.serverAddress + cookbookPath + path
+        let urlString = pathCompletion ? UserSettings.shared.serverProtocol + UserSettings.shared.serverAddress + path : path
         print("Full path: \(urlString)")
         //Logger.network.debug("Full path: \(urlString)")
         guard let urlStringSanitized = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return (nil, .unknownError) }
@@ -78,9 +77,10 @@ struct ApiRequest {
                 return (nil, error)
             }
             if let data = data {
-                print(data, String(data: data, encoding: .utf8))
+                print(data, String(data: data, encoding: .utf8) as Any)
+                return (data, nil)
             }
-            return (data!, nil)
+            return (nil, .unknownError)
         } catch {
             let error = decodeURLResponse(response: response as? HTTPURLResponse)
             Logger.network.debug("\(method.rawValue) \(path) FAILURE: \(error.debugDescription)")

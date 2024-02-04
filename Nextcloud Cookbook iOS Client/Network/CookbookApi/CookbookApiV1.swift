@@ -10,9 +10,11 @@ import UIKit
 
 
 class CookbookApiV1: CookbookApi {
+    static let basePath: String = "/index.php/apps/cookbook/api/v1"
+    
     static func importRecipe(auth: String, data: Data) async -> (RecipeDetail?, NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/import",
+            path: basePath + "/import",
             method: .POST,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON), HeaderField.contentType(value: .JSON)]
@@ -26,7 +28,7 @@ class CookbookApiV1: CookbookApi {
     static func getImage(auth: String, id: Int, size: RecipeImage.RecipeImageSize) async -> (UIImage?, NetworkError?) {
         let imageSize = (size == .FULL ? "full" : "thumb")
         let request = ApiRequest(
-            path: "/api/v1/recipes/\(id)/image?size=\(imageSize)",
+            path: basePath + "/recipes/\(id)/image?size=\(imageSize)",
             method: .GET,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .IMAGE)]
@@ -39,7 +41,7 @@ class CookbookApiV1: CookbookApi {
     
     static func getRecipes(auth: String) async -> ([Recipe]?, NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/recipes",
+            path: basePath + "/recipes",
             method: .GET,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
@@ -56,7 +58,7 @@ class CookbookApiV1: CookbookApi {
         }
         
         let request = ApiRequest(
-            path: "/api/v1/recipes",
+            path: basePath + "/recipes",
             method: .POST,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON), HeaderField.contentType(value: .JSON)],
@@ -80,7 +82,7 @@ class CookbookApiV1: CookbookApi {
     
     static func getRecipe(auth: String, id: Int) async -> (RecipeDetail?, NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/recipes/\(id)",
+            path: basePath + "/recipes/\(id)",
             method: .GET,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
@@ -96,7 +98,7 @@ class CookbookApiV1: CookbookApi {
             return .dataError
         }
         let request = ApiRequest(
-            path: "/api/v1/recipes/\(recipe.id)",
+            path: basePath + "/recipes/\(recipe.id)",
             method: .PUT,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON), HeaderField.contentType(value: .JSON)],
@@ -120,7 +122,7 @@ class CookbookApiV1: CookbookApi {
     
     static func deleteRecipe(auth: String, id: Int) async -> (NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/recipes/\(id)",
+            path: basePath + "/recipes/\(id)",
             method: .DELETE,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
@@ -133,7 +135,7 @@ class CookbookApiV1: CookbookApi {
     
     static func getCategories(auth: String) async -> ([Category]?, NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/categories",
+            path: basePath + "/categories",
             method: .GET,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
@@ -146,7 +148,7 @@ class CookbookApiV1: CookbookApi {
     
     static func getCategory(auth: String, named categoryName: String) async -> ([Recipe]?, NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/category/\(categoryName)",
+            path: basePath + "/category/\(categoryName)",
             method: .GET,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
@@ -159,7 +161,7 @@ class CookbookApiV1: CookbookApi {
     
     static func renameCategory(auth: String, named categoryName: String, newName: String) async -> (NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/category/\(categoryName)",
+            path: basePath + "/category/\(categoryName)",
             method: .PUT,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
@@ -172,7 +174,7 @@ class CookbookApiV1: CookbookApi {
     
     static func getTags(auth: String) async -> ([RecipeKeyword]?, NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/keywords",
+            path: basePath + "/keywords",
             method: .GET,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]
@@ -185,7 +187,7 @@ class CookbookApiV1: CookbookApi {
     
     static func getRecipesTagged(auth: String, keyword: String) async -> ([Recipe]?, NetworkError?) {
         let request = ApiRequest(
-            path: "/api/v1/tags/\(keyword)",
+            path: basePath + "/tags/\(keyword)",
             method: .GET,
             authString: auth,
             headerFields: [HeaderField.ocsRequest(value: true), HeaderField.accept(value: .JSON)]

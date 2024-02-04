@@ -3181,6 +3181,9 @@
         }
       }
     },
+    "Username: %@" : {
+
+    },
     "Validate" : {
       "localizations" : {
         "de" : {
