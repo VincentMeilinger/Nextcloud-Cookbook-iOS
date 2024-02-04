@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import WebKit
 
 enum V2LoginStage: LoginStage {
     case login, validate
@@ -34,6 +35,7 @@ struct V2LoginView: View {
     
     @State var loginStage: V2LoginStage = .login
     @State var loginRequest: LoginV2Request? = nil
+    @State var presentBrowser = false
         
     // TextField handling
     enum Field {
@@ -84,7 +86,8 @@ struct V2LoginView: View {
                                 showAlert = true
                             }
                             if let loginRequest = loginRequest {
-                                await UIApplication.shared.open(URL(string: loginRequest.login)!)
+                                presentBrowser = true
+                                //await UIApplication.shared.open(URL(string: loginRequest.login)!)
                             } else {
                                 alertMessage = "Unable to reach server. Please check your server address and internet connection."
                                 showAlert = true
@@ -110,26 +113,7 @@ struct V2LoginView: View {
                             // fetch login v2 response
                             Task {
                                 let (response, error) = await fetchLoginV2Response()
-                                
-                                if let error = error {
-                                    alertMessage = "Login failed. Please login via the browser and try again. (\(error.rawValue))"
-                                    showAlert = true
-                                    return
-                                }
-                                guard let response = response else {
-                                    alertMessage = "Login failed. Please login via the browser and try again."
-                                    showAlert = true
-                                    return
-                                }
-                                print("Login successful for user \(response.loginName)!")
-                                UserSettings.shared.username = response.loginName
-                                UserSettings.shared.token = response.appPassword
-                                let loginString = "\(UserSettings.shared.username):\(UserSettings.shared.token)"
-                                let loginData = loginString.data(using: String.Encoding.utf8)!
-                                DispatchQueue.main.async {
-                                    UserSettings.shared.authString = loginData.base64EncodedString()
-                                }
-                                UserSettings.shared.onboarding = false
+                                checkLogin(response: response, error: error)
                             }
                         } label: {
                             Text("Validate")
@@ -148,6 +132,16 @@ struct V2LoginView: View {
                 }
             }
         }
+        .sheet(isPresented: $presentBrowser, onDismiss: {
+            Task {
+                let (response, error) = await fetchLoginV2Response()
+                checkLogin(response: response, error: error)
+            }
+        }) {
+            if let loginRequest = loginRequest {
+                WebViewSheet(url: loginRequest.login)
+            }
+        }
     }
     
     func sendLoginV2Request() async -> NetworkError? {
@@ -159,5 +153,59 @@ struct V2LoginView: View {
     func fetchLoginV2Response() async -> (LoginV2Response?, NetworkError?) {
         guard let loginRequest = loginRequest else { return (nil, .parametersNil) }
         return await NextcloudApi.loginV2Response(req: loginRequest)
+    }
+    
+    func checkLogin(response: LoginV2Response?, error: NetworkError?) {
+        if let error = error {
+            alertMessage = "Login failed. Please login via the browser and try again. (\(error.rawValue))"
+            showAlert = true
+            return
+        }
+        guard let response = response else {
+            alertMessage = "Login failed. Please login via the browser and try again."
+            showAlert = true
+            return
+        }
+        print("Login successful for user \(response.loginName)!")
+        UserSettings.shared.username = response.loginName
+        UserSettings.shared.token = response.appPassword
+        let loginString = "\(UserSettings.shared.username):\(UserSettings.shared.token)"
+        let loginData = loginString.data(using: String.Encoding.utf8)!
+        DispatchQueue.main.async {
+            UserSettings.shared.authString = loginData.base64EncodedString()
+        }
+        UserSettings.shared.onboarding = false
+    }
+}
+
+
+
+// Login WebView logic
+
+struct WebViewSheet: View {
+    @Environment(\.dismiss) var dismiss
+    @State var url: String
+
+    var body: some View {
+        NavigationView {
+            WebView(url: URL(string: url)!)
+                .navigationBarTitle(Text("Nextcloud Login"), displayMode: .inline)
+                .navigationBarItems(trailing: Button("Done") {
+                    dismiss()
+                })
+        }
+    }
+}
+
+struct WebView: UIViewRepresentable {
+    let url: URL
+
+    func makeUIView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        uiView.load(request)
     }
 }
