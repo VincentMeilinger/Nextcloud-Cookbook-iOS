@@ -53,7 +53,7 @@ struct RecipeTabView: View {
         } detail: {
             NavigationStack {
                 if let category = viewModel.selectedCategory {
-                    CategoryDetailView(
+                    RecipeListView(
                         categoryName: category.name,
                         viewModel: mainViewModel,
                         showEditView: $viewModel.presentEditView

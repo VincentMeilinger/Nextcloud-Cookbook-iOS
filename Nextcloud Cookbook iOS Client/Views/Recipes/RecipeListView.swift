@@ -10,7 +10,7 @@ import SwiftUI
 
 
 
-struct CategoryDetailView: View {
+struct RecipeListView: View {
     @State var categoryName: String
     @State var searchText: String = ""
     @ObservedObject var viewModel: AppState
@@ -36,7 +36,7 @@ struct CategoryDetailView: View {
             }
         }
         .navigationDestination(for: Recipe.self) { recipe in
-            RecipeDetailView(viewModel: viewModel, recipe: recipe)
+            RecipeView(appState: viewModel, viewModel: RecipeView.ViewModel(recipe: recipe))
         }
         .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
         .toolbar {

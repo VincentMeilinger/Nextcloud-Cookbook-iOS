@@ -408,7 +408,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fügen Sie dieser Liste Rezeptzutaten hinzu, indem Sie entweder den Button neben einer Zutatenliste in einem Rezept verwenden, um alle Zutaten hinzuzufügen, oder indem Sie einzelne Zutaten eines Rezepts nach rechts wischen."
+            "value" : "Wenn du alle Zutaten eines Rezepts auf einmal hinzufügen möchtest, klicke einfach auf den „Einkaufsliste“-Button, den du neben der Zutatenliste des Rezepts findest. Möchtest du nur einzelne Zutaten hinzufügen, wische die gewünschte Zutat in der Liste des Rezepts einfach nach rechts."
           }
         },
         "es" : {
@@ -492,6 +492,7 @@
       }
     },
     "An unknown server error occured." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -557,6 +558,9 @@
         }
       }
     },
+    "Calories" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "de" : {
@@ -578,6 +582,9 @@
           }
         }
       }
+    },
+    "Carbohydrate content" : {
+
     },
     "Category" : {
       "localizations" : {
@@ -623,12 +630,15 @@
         }
       }
     },
+    "Cholesterol content" : {
+
+    },
     "Configure what is stored on your device." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Legen Sie fest, was lokal auf diesem Gerät gespeichert werden soll."
+            "value" : "Legt fest, was lokal auf diesem Gerät gespeichert werden soll."
           }
         },
         "es" : {
@@ -650,7 +660,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Legen Sie fest, welche Rezept-Abschnitte standardmäßig gezeigt werden."
+            "value" : "Legt fest, welche Rezept-Abschnitte standardmäßig gezeigt werden."
           }
         },
         "es" : {
@@ -980,7 +990,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das Löschen lokaler Daten hat keine Auswirkungen auf die Rezeptdaten, die auf Ihrem Server gespeichert sind."
+            "value" : "Das Löschen lokaler Daten hat keine Auswirkungen auf die Rezeptdaten, die auf dem Server gespeichert sind."
           }
         },
         "es" : {
@@ -1019,8 +1029,18 @@
         }
       }
     },
-    "Done" : {
+    "Disable deletion" : {
 
+    },
+    "Done" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig"
+          }
+        }
+      }
     },
     "Downloads" : {
       "localizations" : {
@@ -1045,6 +1065,7 @@
       }
     },
     "Duplicate Recipe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1131,6 +1152,9 @@
           }
         }
       }
+    },
+    "Enable deletion" : {
+
     },
     "Error" : {
       "localizations" : {
@@ -1242,6 +1266,12 @@
         }
       }
     },
+    "Fat content" : {
+
+    },
+    "Fiber content" : {
+
+    },
     "General" : {
       "localizations" : {
         "de" : {
@@ -1313,7 +1343,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn \"Systemsprache\" ausgewählt ist und Ihre Systemsprache noch nicht unterstützt wird, wird standardmäßig Englisch verwendet."
+            "value" : "Wenn \"Systemsprache\" ausgewählt ist und die Systemsprache noch nicht unterstützt wird, wird standardmäßig Englisch verwendet."
           }
         },
         "es" : {
@@ -1335,7 +1365,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn der Anmeldebutton Ihren Browser nicht öffnet, verwenden Sie den 'Link kopieren' Button und fügen Sie den Link manuell in Ihren Browser ein."
+            "value" : "Falls sich der Browser beim Klicken auf den Anmeldebutton nicht öffnet, klicke einfach auf den Button „Link kopieren“. Anschließend kann der kopierte Link manuell in den Browser eingefügt werden."
           }
         },
         "es" : {
@@ -1357,7 +1387,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn Sie Interesse daran haben, zu diesem Projekt beizutragen oder einfach den Quellcode überprüfen möchten, ermutigen wir Sie, das GitHub-Repository für diese Anwendung zu besuchen."
+            "value" : "Möchtest du einen Beitrag zu diesem Projekt leisten oder einfach nur einen Blick in den Quellcode werfen? Wir freuen uns über jedes Interesse und laden dich ein, das GitHub-Repository unserer Anwendung zu besuchen."
           }
         },
         "es" : {
@@ -1379,7 +1409,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn Sie Anfragen oder Rückmeldungen haben, oder Unterstützung benötigen, finden Sie unter diesem Link die Kontaktinformationen."
+            "value" : "Bei Fragen, Feedback oder benötigter Unterstützung finden sich alle Kontaktinformationen unter diesem Link."
           }
         },
         "es" : {
@@ -1397,6 +1427,7 @@
       }
     },
     "Image MIME Error" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1490,6 +1521,9 @@
         }
       }
     },
+    "Ingredient" : {
+
+    },
     "Ingredients" : {
       "localizations" : {
         "de" : {
@@ -1556,6 +1590,9 @@
         }
       }
     },
+    "Instruction" : {
+
+    },
     "Instructions" : {
       "localizations" : {
         "de" : {
@@ -1599,6 +1636,9 @@
           }
         }
       }
+    },
+    "Keyword" : {
+
     },
     "Keywords" : {
       "localizations" : {
@@ -1781,7 +1821,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stellen Sie sicher, dass Sie die Serveradresse in der Form 'beispiel.com' eingeben, oder '<Serveradresse>:<Port>', wenn ein nicht standardmäßiger Port verwendet wird."
+            "value" : "Stelle sicher, dass die Serveradresse im Format 'beispiel.com' eingegeben wurde oder als '<Serveradresse>:<Port>', falls ein nicht standardmäßiger Port genutzt wird."
           }
         },
         "es" : {
@@ -1799,6 +1839,7 @@
       }
     },
     "Missing Name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1843,6 +1884,7 @@
       }
     },
     "Missing Request Body" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2155,7 +2197,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fügen Sie hier den Link einer Website ein, von der Sie ein Rezept importieren möchten. Dies funktioniert nicht mit allen Seiten. Falls eine Seite nicht unterstützt wird, kontaktieren Sie uns gerne um uns darauf Aufmerksam zu machen."
+            "value" : "Den Link zum Importieren eines Rezepts hier einfügen. Dies funktioniert nicht mit allen Webseiten. Sollte eine Seite nicht unterstützt werden, kontaktiere uns gerne um uns darauf aufmerksam zu machen. Jedes Feedback hilft dabei, den Service zu verbessern."
           }
         },
         "es" : {
@@ -2199,7 +2241,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte überprüfen Sie die eingegebenen Link."
+            "value" : "Bitte überprüfe den eingegebenen Link."
           }
         },
         "es" : {
@@ -2221,7 +2263,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte überprüfen Sie Ihre Anmeldedaten oder Ihre Internetverbindung."
+            "value" : "Bitte überprüfe die Anmeldedaten oder die Internetverbindung."
           }
         },
         "es" : {
@@ -2243,7 +2285,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte tragen Sie einen Rezeptnamen ein."
+            "value" : "Bitte einen Rezeptnamen eintragen."
           }
         },
         "es" : {
@@ -2303,6 +2345,9 @@
           }
         }
       }
+    },
+    "Protein content" : {
+
     },
     "Recipe" : {
       "localizations" : {
@@ -2392,6 +2437,9 @@
         }
       }
     },
+    "Saturated fat content" : {
+
+    },
     "Search" : {
       "localizations" : {
         "de" : {
@@ -2463,7 +2511,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wählen Sie ein Standard-Kochbuch"
+            "value" : "Standard-Kochbuch"
           }
         },
         "es" : {
@@ -2634,6 +2682,9 @@
         }
       }
     },
+    "Sodium content" : {
+
+    },
     "Store recipe images locally" : {
       "localizations" : {
         "de" : {
@@ -2699,6 +2750,9 @@
           }
         }
       }
+    },
+    "Sugar content" : {
+
     },
     "Support" : {
       "localizations" : {
@@ -2771,7 +2825,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der 'Anmelden'-Button wird einen Webbrowser öffnen. Bitte folgen Sie den dort angegebenen Anmeldeanweisungen.\nNach einer erfolgreichen Anmeldung kehren Sie zu dieser Anwendung zurück und drücken Sie 'Validieren'."
+            "value" : "Durch Klicken auf den 'Anmelden'-Button wird ein Webbrowser geöffnet. Bitte den dort angegebenen Anmeldeanweisungen folgen. Nach erfolgreicher Anmeldung zur Anwendung zurückkehren und 'Validieren' drücken."
           }
         },
         "es" : {
@@ -2789,6 +2843,7 @@
       }
     },
     "The recipe has no image whose MIME type matches the Accept header" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2833,6 +2888,7 @@
       }
     },
     "There was no name in the request given for the recipe. Cannot save the recipe." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2881,7 +2937,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diese Anwendung ist ein Open-Source-Projekt. Wenn Sie daran interessiert sind, neue Funktionen vorzuschlagen oder beizutragen, oder wenn Sie auf Probleme stoßen, nutzen Sie bitte den Kontakt-Link oder besuchen Sie das GitHub-Repository in den App-Einstellungen."
+            "value" : "Diese Anwendung ist ein Open-Source-Projekt. Bei bestehendem Interesse neue Funktionen vorzuschlagen oder beizutragen, oder wenn Probleme auftreten, nutze den Kontakt-Link oder besuche das GitHub-Repository in den App-Einstellungen."
           }
         },
         "es" : {
@@ -2903,7 +2959,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diese Website wird möglicherweise noch nicht unterstützt. Falls Sie das ändern möchten, können Sie uns gerne darauf aufmerksam machen."
+            "value" : "Diese Website wird möglicherweise derzeit nicht unterstützt. Wenn sich das ändern soll, kann die Support-Option in den App-Einstellungen genutzt werden, um auf dieses Problem aufmerksam zu machen."
           }
         },
         "es" : {
@@ -2941,6 +2997,9 @@
           }
         }
       }
+    },
+    "Tool" : {
+
     },
     "Tools" : {
       "localizations" : {
@@ -3030,6 +3089,9 @@
         }
       }
     },
+    "Trans fat content" : {
+
+    },
     "Unable to complete action." : {
       "localizations" : {
         "de" : {
@@ -3079,7 +3141,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Inhalt der Website konnte nicht geladen werden. Bitte überprüfen Sie Ihre Internetverbindung."
+            "value" : "Der Inhalt der Website konnte nicht geladen werden. Bitte überprüfe die Internetverbindung."
           }
         },
         "es" : {
@@ -3101,7 +3163,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Es ist nicht möglich, Ihr Rezept hochzuladen. Bitte überprüfen Sie Ihre Internetverbindung."
+            "value" : "Es ist nicht möglich, das Rezept hochzuladen. Bitte überprüfe die Internetverbindung."
           }
         },
         "es" : {
@@ -3117,6 +3179,9 @@
           }
         }
       }
+    },
+    "Unsaturated fat content" : {
+
     },
     "Upload" : {
       "localizations" : {
@@ -3185,7 +3250,14 @@
       }
     },
     "Username: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzername: %@"
+          }
+        }
+      }
     },
     "Validate" : {
       "localizations" : {
@@ -3236,7 +3308,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sie sind bereit zum Kochen 🍓"
+            "value" : "Bereit zum Kochen 🍓"
           }
         },
         "es" : {
@@ -3258,7 +3330,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ihre Einkaufsliste wird lokal gespeichert und daher nicht auf andere Geräte übertragen."
+            "value" : "Die Einkaufsliste wird lokal gespeichert und daher nicht auf andere Geräte übertragen."
           }
         },
         "es" : {
