@@ -46,7 +46,7 @@ class ObservableRecipeDetail: ObservableObject {
     init(_ recipeDetail: RecipeDetail) {
         id = recipeDetail.id
         name = recipeDetail.name
-        keywords = recipeDetail.keywords.components(separatedBy: ",")
+        keywords = recipeDetail.keywords.isEmpty ? [] : recipeDetail.keywords.components(separatedBy: ",")
         imageUrl = recipeDetail.imageUrl
         prepTime = DurationComponents.fromPTString(recipeDetail.prepTime ?? "")
         cookTime = DurationComponents.fromPTString(recipeDetail.cookTime ?? "")

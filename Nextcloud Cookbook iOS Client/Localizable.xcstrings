@@ -1361,6 +1361,9 @@
         }
       }
     },
+    "Hours" : {
+
+    },
     "If 'Same as Device' is selected and your device language is not supported yet, this option will default to english." : {
       "localizations" : {
         "de" : {
@@ -1857,6 +1860,9 @@
           }
         }
       }
+    },
+    "Minutes" : {
+
     },
     "Missing Name" : {
       "extractionState" : "stale",
