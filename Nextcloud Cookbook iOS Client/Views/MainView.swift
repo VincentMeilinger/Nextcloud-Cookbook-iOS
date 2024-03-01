@@ -9,7 +9,7 @@ import SwiftUI
 import SimilaritySearchKit
 
 struct MainView: View {
-    @StateObject var viewModel = AppState()
+    @StateObject var appState = AppState()
     @StateObject var groceryList = GroceryList()
     
     // Tab ViewModels
@@ -24,7 +24,7 @@ struct MainView: View {
         TabView {
             RecipeTabView()
                 .environmentObject(recipeViewModel)
-                .environmentObject(viewModel)
+                .environmentObject(appState)
                 .environmentObject(groceryList)
                 .tabItem {
                     Label("Recipes", systemImage: "book.closed.fill")
@@ -33,7 +33,7 @@ struct MainView: View {
             
             SearchTabView()
                 .environmentObject(searchViewModel)
-                .environmentObject(viewModel)
+                .environmentObject(appState)
                 .environmentObject(groceryList)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
@@ -53,12 +53,12 @@ struct MainView: View {
         }
         .task {
             recipeViewModel.presentLoadingIndicator = true
-            await viewModel.getCategories()
-            await viewModel.updateAllRecipeDetails()
+            await appState.getCategories()
+            await appState.updateAllRecipeDetails()
             
             // Open detail view for default category
             if UserSettings.shared.defaultCategory != "" {
-                if let cat = viewModel.categories.first(where: { c in
+                if let cat = appState.categories.first(where: { c in
                     if c.name == UserSettings.shared.defaultCategory {
                         return true
                     }

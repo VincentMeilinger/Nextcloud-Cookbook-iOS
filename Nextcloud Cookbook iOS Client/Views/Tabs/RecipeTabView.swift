@@ -50,12 +50,14 @@ struct RecipeTabView: View {
             .navigationDestination(isPresented: $viewModel.presentSettingsView) {
                 SettingsView()
             }
+            .navigationDestination(isPresented: $viewModel.presentEditView) {
+                RecipeView(viewModel: RecipeView.ViewModel())
+            }
         } detail: {
             NavigationStack {
                 if let category = viewModel.selectedCategory {
                     RecipeListView(
                         categoryName: category.name,
-                        viewModel: mainViewModel,
                         showEditView: $viewModel.presentEditView
                     )
                     .id(category.id) // Workaround: This is needed to update the detail view when the selection changes
@@ -63,7 +65,8 @@ struct RecipeTabView: View {
             }
         }
         .tint(.nextcloudBlue)
-        .sheet(isPresented: $viewModel.presentEditView) {
+        
+        /*.sheet(isPresented: $viewModel.presentEditView) {
             RecipeEditView(
                 viewModel:
                     RecipeEditViewModel(
@@ -72,7 +75,7 @@ struct RecipeTabView: View {
                     ),
                 isPresented: $viewModel.presentEditView
             )
-        }
+        }*/
         .task {
             viewModel.serverConnection = await mainViewModel.checkServerConnection()
         }

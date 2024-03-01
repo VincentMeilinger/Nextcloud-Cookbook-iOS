@@ -18,13 +18,9 @@ struct Category: Codable {
     }
 }
 
-
 extension Category: Identifiable, Hashable {
     var id: String { name }
 }
-
-
-
 
 
 

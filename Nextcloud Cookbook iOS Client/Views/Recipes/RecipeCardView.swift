@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct RecipeCardView: View {
-    @State var viewModel: AppState
+    @EnvironmentObject var appState: AppState
     @State var recipe: Recipe
     @State var recipeThumb: UIImage?
     @State var isDownloaded: Bool? = nil
@@ -50,18 +50,18 @@ struct RecipeCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 17))
         .padding(.horizontal)
         .task {
-            recipeThumb = await viewModel.getImage(
+            recipeThumb = await appState.getImage(
                 id: recipe.recipe_id,
                 size: .THUMB,
                 fetchMode: UserSettings.shared.storeThumb ? .preferLocal : .onlyServer
             )
             if recipe.storedLocally == nil {
-                recipe.storedLocally = viewModel.recipeDetailExists(recipeId: recipe.recipe_id)
+                recipe.storedLocally = appState.recipeDetailExists(recipeId: recipe.recipe_id)
             }
             isDownloaded = recipe.storedLocally
         }
         .refreshable {
-            recipeThumb = await viewModel.getImage(
+            recipeThumb = await appState.getImage(
                 id: recipe.recipe_id,
                 size: .THUMB,
                 fetchMode: UserSettings.shared.storeThumb ? .preferServer : .onlyServer

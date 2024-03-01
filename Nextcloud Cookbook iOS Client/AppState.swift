@@ -18,6 +18,7 @@ import UIKit
     var recipeImages: [Int: [String: UIImage]] = [:]
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
     var lastUpdates: [String: Date] = [:]
+    var allKeywords: [RecipeKeyword] = []
     
     private let dataStore: DataStore
     

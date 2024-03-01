@@ -111,6 +111,16 @@
         }
       }
     },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "de" : {
@@ -151,6 +161,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld h"
+          }
+        }
+      }
+    },
+    "%lld h %lld min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld h %2$lld min"
           }
         }
       }
@@ -559,7 +579,7 @@
       }
     },
     "Calories" : {
-
+      "comment" : "Calories"
     },
     "Cancel" : {
       "localizations" : {
@@ -584,7 +604,7 @@
       }
     },
     "Carbohydrate content" : {
-
+      "comment" : "Carbohydrate content"
     },
     "Category" : {
       "localizations" : {
@@ -631,7 +651,7 @@
       }
     },
     "Cholesterol content" : {
-
+      "comment" : "Cholesterol content"
     },
     "Configure what is stored on your device." : {
       "localizations" : {
@@ -1153,6 +1173,9 @@
         }
       }
     },
+    "Edit keywords" : {
+
+    },
     "Enable deletion" : {
 
     },
@@ -1267,10 +1290,10 @@
       }
     },
     "Fat content" : {
-
+      "comment" : "Fat content"
     },
     "Fiber content" : {
-
+      "comment" : "Fiber content"
     },
     "General" : {
       "localizations" : {
@@ -1637,9 +1660,6 @@
         }
       }
     },
-    "Keyword" : {
-
-    },
     "Keywords" : {
       "localizations" : {
         "de" : {
@@ -1971,6 +1991,9 @@
           }
         }
       }
+    },
+    "New Recipe" : {
+
     },
     "Nextcloud Login" : {
       "localizations" : {
@@ -2347,7 +2370,7 @@
       }
     },
     "Protein content" : {
-
+      "comment" : "Protein content"
     },
     "Recipe" : {
       "localizations" : {
@@ -2370,6 +2393,9 @@
           }
         }
       }
+    },
+    "Recipe Name" : {
+
     },
     "Recipes" : {
       "localizations" : {
@@ -2438,7 +2464,7 @@
       }
     },
     "Saturated fat content" : {
-
+      "comment" : "Saturated fat content"
     },
     "Search" : {
       "localizations" : {
@@ -2528,6 +2554,9 @@
         }
       }
     },
+    "Select Item" : {
+
+    },
     "Selected keywords:" : {
       "localizations" : {
         "de" : {
@@ -2549,6 +2578,9 @@
           }
         }
       }
+    },
+    "Serving size" : {
+      "comment" : "Serving size"
     },
     "Servings:" : {
       "localizations" : {
@@ -2683,7 +2715,7 @@
       }
     },
     "Sodium content" : {
-
+      "comment" : "Sodium content"
     },
     "Store recipe images locally" : {
       "localizations" : {
@@ -2752,7 +2784,7 @@
       }
     },
     "Sugar content" : {
-
+      "comment" : "Sugar content"
     },
     "Support" : {
       "localizations" : {
@@ -3090,7 +3122,7 @@
       }
     },
     "Trans fat content" : {
-
+      "comment" : "Trans fat content"
     },
     "Unable to complete action." : {
       "localizations" : {
@@ -3181,7 +3213,7 @@
       }
     },
     "Unsaturated fat content" : {
-
+      "comment" : "Unsaturated fat content"
     },
     "Upload" : {
       "localizations" : {

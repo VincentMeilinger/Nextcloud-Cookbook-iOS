@@ -58,6 +58,21 @@ class DurationComponents: ObservableObject {
         }
     }
     
+    var displayString: String {
+        let intHour = Int(hourComponent) ?? 0
+        let intMinute = Int(minuteComponent) ?? 0
+        
+        if intHour != 0 && intMinute != 0 {
+            return "\(intHour) h \(intMinute) min"
+        } else if intHour == 0 && intMinute != 0 {
+            return "\(intMinute) min"
+        } else if intHour != 0 && intMinute == 0 {
+            return "\(intHour) h"
+        } else {
+            return "-"
+        }
+    }
+    
     static func fromPTString(_ PTRepresentation: String) -> DurationComponents {
         let duration = DurationComponents()
         let hourRegex = /([0-9]{1,2})H/
@@ -84,21 +99,6 @@ class DurationComponents: ObservableObject {
     
     func toPTString() -> String {
         return "PT\(hourComponent)H\(minuteComponent)M00S"
-    }
-    
-    func toText() -> LocalizedStringKey {
-        let intHour = Int(hourComponent) ?? 0
-        let intMinute = Int(minuteComponent) ?? 0
-        
-        if intHour != 0 && intMinute != 0 {
-            return "\(intHour) h, \(intMinute) min"
-        } else if intHour == 0 && intMinute != 0 {
-            return "\(intMinute) min"
-        } else if intHour != 0 && intMinute == 0 {
-            return "\(intHour) h"
-        } else {
-            return "-"
-        }
     }
     
     func toTimerText() -> String {
@@ -152,4 +152,5 @@ class DurationComponents: ObservableObject {
             return nil
         }
     }
+    
 }

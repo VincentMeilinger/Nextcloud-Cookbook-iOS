@@ -132,7 +132,7 @@ struct RecipeEditView: View {
                     
                     Section() {
                         NavigationLink(viewModel.recipe.recipeCategory == "" ? "Category" : "Category: \(viewModel.recipe.recipeCategory)") {
-                            CategoryPickerView(
+                            CategoryPickerViewOld(
                                 title: "Category",
                                 searchSuggestions: viewModel.mainViewModel.categories.map({ category in
                                     category.name == "*" ? "Other" : category.name

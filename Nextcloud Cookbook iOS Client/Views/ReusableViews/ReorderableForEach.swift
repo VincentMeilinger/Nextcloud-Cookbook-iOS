@@ -58,8 +58,6 @@ struct ReorderableForEach<Item: Any, Content: View>: View {
                 } label: {
                     Text(allowDeletion ? "Disable deletion" : "Enable deletion")
                         .bold()
-                        .padding(.vertical, 3)
-                        .padding(.horizontal)
                 }
                 .tint(Color.red)
                 Spacer()
@@ -68,11 +66,11 @@ struct ReorderableForEach<Item: Any, Content: View>: View {
                 } label: {
                     Image(systemName: "plus")
                         .bold()
-                        .padding(.vertical, 3)
+                        .padding(.vertical, 2)
                         .padding(.horizontal)
                 }
                 .buttonStyle(.borderedProminent)
-            }
+            }.padding(.top, 3)
         }.animation(.default, value: allowDeletion)
     }
 }

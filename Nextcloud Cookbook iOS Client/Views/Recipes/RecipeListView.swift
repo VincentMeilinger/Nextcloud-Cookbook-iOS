@@ -11,9 +11,9 @@ import SwiftUI
 
 
 struct RecipeListView: View {
+    @EnvironmentObject var appState: AppState
     @State var categoryName: String
     @State var searchText: String = ""
-    @ObservedObject var viewModel: AppState
     @Binding var showEditView: Bool
     @State var selectedRecipe: Recipe? = nil
     @State var presentRecipeView: Bool = false
@@ -23,7 +23,7 @@ struct RecipeListView: View {
             LazyVStack {
                 ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
                     NavigationLink(value: recipe) {
-                        RecipeCardView(viewModel: viewModel, recipe: recipe)
+                        RecipeCardView(recipe: recipe)
                             .shadow(radius: 2)
                             
                     }
@@ -36,7 +36,7 @@ struct RecipeListView: View {
             }
         }
         .navigationDestination(for: Recipe.self) { recipe in
-            RecipeView(appState: viewModel, viewModel: RecipeView.ViewModel(recipe: recipe))
+            RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
         }
         .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
         .toolbar {
@@ -51,13 +51,13 @@ struct RecipeListView: View {
         }
         .searchable(text: $searchText, prompt: "Search recipes/keywords")
         .task {
-            await viewModel.getCategory(
+            await appState.getCategory(
                 named: categoryName,
                 fetchMode: UserSettings.shared.storeRecipes ? .preferLocal : .onlyServer
             )
         }
         .refreshable {
-            await viewModel.getCategory(
+            await appState.getCategory(
                 named: categoryName,
                 fetchMode: UserSettings.shared.storeRecipes ? .preferServer : .onlyServer
             )
@@ -65,7 +65,7 @@ struct RecipeListView: View {
     }
     
     func recipesFiltered() -> [Recipe] {
-        guard let recipes = viewModel.recipes[categoryName] else { return [] }
+        guard let recipes = appState.recipes[categoryName] else { return [] }
         guard searchText != "" else { return recipes }
         return recipes.filter { recipe in
             recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term

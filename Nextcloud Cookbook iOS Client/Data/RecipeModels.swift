@@ -146,7 +146,8 @@ struct RecipeKeyword: Codable {
 
 
 enum Nutrition: CaseIterable {
-    case calories,
+    case servingSize,
+         calories,
          carbohydrateContent,
          cholesterolContent,
          fatContent,
@@ -158,35 +159,39 @@ enum Nutrition: CaseIterable {
          sodiumContent,
          sugarContent
     
-    var localizedDescription: LocalizedStringKey {
+    var localizedDescription: String {
         switch self {
+        case .servingSize:
+            return NSLocalizedString("Serving size", comment: "Serving size")
         case .calories:
-            "Calories"
+            return NSLocalizedString("Calories", comment: "Calories")
         case .carbohydrateContent:
-            "Carbohydrate content"
+            return NSLocalizedString("Carbohydrate content", comment: "Carbohydrate content")
         case .cholesterolContent:
-            "Cholesterol content"
+            return NSLocalizedString("Cholesterol content", comment: "Cholesterol content")
         case .fatContent:
-            "Fat content"
+            return NSLocalizedString("Fat content", comment: "Fat content")
         case .saturatedFatContent:
-            "Saturated fat content"
+            return NSLocalizedString("Saturated fat content", comment: "Saturated fat content")
         case .unsaturatedFatContent:
-            "Unsaturated fat content"
+            return NSLocalizedString("Unsaturated fat content", comment: "Unsaturated fat content")
         case .transFatContent:
-            "Trans fat content"
+            return NSLocalizedString("Trans fat content", comment: "Trans fat content")
         case .fiberContent:
-            "Fiber content"
+            return NSLocalizedString("Fiber content", comment: "Fiber content")
         case .proteinContent:
-            "Protein content"
+            return NSLocalizedString("Protein content", comment: "Protein content")
         case .sodiumContent:
-            "Sodium content"
+            return NSLocalizedString("Sodium content", comment: "Sodium content")
         case .sugarContent:
-            "Sugar content"
+            return NSLocalizedString("Sugar content", comment: "Sugar content")
         }
     }
     
     var dictKey: String {
         switch self {
+        case .servingSize:
+            "servingSize"
         case .calories:
             "calories"
         case .carbohydrateContent:

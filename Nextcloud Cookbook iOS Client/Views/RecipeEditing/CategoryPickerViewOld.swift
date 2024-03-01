@@ -10,7 +10,7 @@ import SwiftUI
 
 
 
-struct CategoryPickerView: View {
+struct CategoryPickerViewOld: View {
     @State var title: String
     @State var searchSuggestions: [String]
     @Binding var selection: String

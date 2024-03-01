@@ -11,7 +11,7 @@ import SimilaritySearchKit
 
 struct SearchTabView: View {
     @EnvironmentObject var viewModel: SearchTabView.ViewModel
-    @EnvironmentObject var mainViewModel: AppState
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         NavigationStack {
@@ -27,7 +27,7 @@ struct SearchTabView: View {
                     LazyVStack {
                         ForEach(viewModel.recipesFiltered(), id: \.recipe_id) { recipe in
                             NavigationLink(value: recipe) {
-                                RecipeCardView(viewModel: mainViewModel, recipe: recipe)
+                                RecipeCardView(recipe: recipe)
                                     .shadow(radius: 2)
                             }
                             .buttonStyle(.plain)
@@ -35,7 +35,7 @@ struct SearchTabView: View {
                     }
                 }
                 .navigationDestination(for: Recipe.self) { recipe in
-                    RecipeView(appState: mainViewModel, viewModel: RecipeView.ViewModel(recipe: recipe))
+                    RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
                 }
                 .searchable(text: $viewModel.searchText, prompt: "Search recipes/keywords")
             }
@@ -43,11 +43,11 @@ struct SearchTabView: View {
         }
         .task {
             if viewModel.allRecipes.isEmpty {
-                viewModel.allRecipes = await mainViewModel.getRecipes()
+                viewModel.allRecipes = await appState.getRecipes()
             }
         }
         .refreshable {
-            viewModel.allRecipes = await mainViewModel.getRecipes()
+            viewModel.allRecipes = await appState.getRecipes()
         }
     }
     

@@ -11,6 +11,7 @@ import SwiftUI
 
 
 struct KeywordPickerView: View {
+    @Environment(\.presentationMode) var presentationMode
     @State var title: String
     @State var searchSuggestions: [RecipeKeyword]
     @Binding var selection: [String]
@@ -20,6 +21,14 @@ struct KeywordPickerView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            HStack {
+                Spacer()
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Done")
+                }.padding()
+            }
             TextField(title, text: $searchText)
                 .textFieldStyle(.roundedBorder)
                 .padding()
