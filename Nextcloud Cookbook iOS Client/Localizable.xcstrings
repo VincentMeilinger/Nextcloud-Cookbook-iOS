@@ -225,6 +225,9 @@
         }
       }
     },
+    "%lld serving(s)" : {
+
+    },
     "%lld." : {
       "localizations" : {
         "de" : {
@@ -652,6 +655,9 @@
     },
     "Cholesterol content" : {
       "comment" : "Cholesterol content"
+    },
+    "Choose" : {
+
     },
     "Configure what is stored on your device." : {
       "localizations" : {
@@ -1172,9 +1178,6 @@
           }
         }
       }
-    },
-    "Edit keywords" : {
-
     },
     "Enable deletion" : {
 
@@ -2563,6 +2566,9 @@
     "Select Item" : {
 
     },
+    "Select Keywords" : {
+
+    },
     "Selected keywords:" : {
       "localizations" : {
         "de" : {
@@ -2587,6 +2593,9 @@
     },
     "Serving size" : {
       "comment" : "Serving size"
+    },
+    "Servings" : {
+
     },
     "Servings:" : {
       "localizations" : {
@@ -3242,6 +3251,12 @@
           }
         }
       }
+    },
+    "Upload Changes" : {
+
+    },
+    "Upload Recipe" : {
+
     },
     "URL (e.g. example.com/recipe)" : {
       "localizations" : {

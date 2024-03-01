@@ -16,44 +16,93 @@ struct RecipeMetadataSection: View {
     
     @State var categories: [String] = []
     @State var keywords: [RecipeKeyword] = []
-    @State var presentKeywordPopover: Bool = false
+    @State var presentKeywordSheet: Bool = false
+    @State var presentServingsPopover: Bool = false
+    @State var presentCategoryPopover: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
-            CategoryPickerView(items: $categories, input: $viewModel.observableRecipeDetail.recipeCategory, titleKey: "Category")
+            //CategoryPickerView(items: $categories, input: $viewModel.observableRecipeDetail.recipeCategory, titleKey: "Category")
+            SecondaryLabel(text: "Category")
+            HStack {
+                TextField("Category", text: $viewModel.observableRecipeDetail.recipeCategory)
+                    .lineLimit(1)
+                    .textFieldStyle(.roundedBorder)
+                    
+                Button {
+                    presentCategoryPopover.toggle()
+                } label: {
+                    Text("Choose")
+                }
+            }
             
             SecondaryLabel(text: "Keywords")
-                .padding()
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(viewModel.observableRecipeDetail.keywords, id: \.self) { keyword in
-                        Text(keyword)
+            if !viewModel.observableRecipeDetail.keywords.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(viewModel.observableRecipeDetail.keywords, id: \.self) { keyword in
+                            Text(keyword)
+                        }
                     }
                 }
-            }.padding(.horizontal)
-            
+            }
             Button {
-                presentKeywordPopover.toggle()
+                presentKeywordSheet.toggle()
             } label: {
-                Text("Edit keywords")
+                Text("Select Keywords")
                 Image(systemName: "chevron.right")
             }
-            .padding(.horizontal)
             
+            
+            VStack(alignment: .leading) {
+                SecondaryLabel(text: "Servings")
+                Button {
+                    presentServingsPopover.toggle()
+                } label: {
+                    Text("\(viewModel.observableRecipeDetail.recipeYield) serving(s)")
+                        .lineLimit(1)
+                }
+            }
         }
+        .padding()
+        .background(Rectangle().foregroundStyle(Color.white.opacity(0.1)))
         .task {
             categories = appState.categories.map({ category in category.name })
         }
-        .sheet(isPresented: $presentKeywordPopover) {
+        .sheet(isPresented: $presentKeywordSheet) {
             KeywordPickerView(title: "Keywords", searchSuggestions: appState.allKeywords, selection: $viewModel.observableRecipeDetail.keywords)
+        }
+        .popover(isPresented: $presentServingsPopover) {
+            PickerPopoverView(value: $viewModel.observableRecipeDetail.recipeYield, items: 0..<99, titleKey: "Servings")
+        }
+        .popover(isPresented: $presentCategoryPopover) {
+            PickerPopoverView(value: $viewModel.observableRecipeDetail.recipeCategory, items: categories, titleKey: "Category")
         }
     }
 }
 
+fileprivate struct PickerPopoverView<Item: Hashable & CustomStringConvertible, Collection: Sequence>: View where Collection.Element == Item {
+    @Binding var value: Item
+    @State var items: Collection
+    var titleKey: LocalizedStringKey = ""
+    
+    var body: some View {
+        HStack {
+            Picker(selection: $value, label: Text(titleKey)) {
+                ForEach(Array(items), id: \.self) { item in
+                    Text(item.description).tag(item)
+                }
+            }
+            .pickerStyle(WheelPickerStyle())
+            .frame(width: 100, height: 150)
+            .clipped()
+        }
+        .padding()
+    }
+}
 
-
-struct CategoryPickerView: View {
+fileprivate struct CategoryPickerView: View {
     @Binding var items: [String]
     @Binding var input: String
     @State private var pickerChoice: String = ""

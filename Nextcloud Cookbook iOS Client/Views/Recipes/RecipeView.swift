@@ -15,6 +15,8 @@ struct RecipeView: View {
     @StateObject var viewModel: ViewModel
     @State var imageHeight: CGFloat = 350
     
+    
+    
     private enum CoordinateSpaces {
         case scrollView
     }
@@ -36,6 +38,9 @@ struct RecipeView: View {
                 }
                 
                 VStack(alignment: .leading) {
+                    if viewModel.editMode {
+                        RecipeImportSection(viewModel: viewModel, importRecipe: importRecipe)
+                    }
                     HStack {
                         EditableText(text: $viewModel.observableRecipeDetail.name, editMode: $viewModel.editMode, titleKey: "Recipe Name")
                             .font(.title)
@@ -102,13 +107,49 @@ struct RecipeView: View {
                         viewModel.editMode = false
                     }
                 }
+                
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button {
                         // TODO: POST edited recipe
                         if viewModel.newRecipe {
                             presentationMode.wrappedValue.dismiss()
                         } else {
                             viewModel.editMode = false
+                        }
+                    } label: {
+                        if viewModel.newRecipe {
+                            Text("Upload Recipe")
+                        } else {
+                            Text("Upload Changes")
+                        }
+                    }
+                }
+                if !viewModel.newRecipe {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Menu {
+                            Button {
+                                print("Delete recipe.")
+                                viewModel.alertType = RecipeAlert.CONFIRM_DELETE
+                                viewModel.alertAction = {
+                                    if let res = await deleteRecipe() {
+                                        viewModel.alertType = res
+                                        viewModel.alertAction = { }
+                                        viewModel.presentAlert = true
+                                    } else {
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                                }
+                                viewModel.presentAlert = true
+                            } label: {
+                                Image(systemName: "trash")
+                                    .foregroundStyle(.red)
+                                Text("Delete recipe")
+                                    .foregroundStyle(.red)
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .font(.title3)
+                                .padding()
                         }
                     }
                 }
@@ -177,6 +218,27 @@ struct RecipeView: View {
                 viewModel.isDownloaded = false
             }
         }
+        .alert(viewModel.alertType.localizedTitle, isPresented: $viewModel.presentAlert) {
+            ForEach(viewModel.alertType.alertButtons) { buttonType in
+                if buttonType == .OK {
+                    Button(AlertButton.OK.rawValue, role: .cancel) {
+                        Task {
+                            await viewModel.alertAction()
+                        }
+                    }
+                } else if buttonType == .CANCEL {
+                    Button(AlertButton.CANCEL.rawValue, role: .cancel) { }
+                } else if buttonType == .DELETE {
+                    Button(AlertButton.DELETE.rawValue, role: .destructive) {
+                        Task {
+                            await viewModel.alertAction()
+                        }
+                    }
+                }
+            }
+        } message: {
+            Text(viewModel.alertType.localizedDescription)
+        }
         .onAppear {
             if UserSettings.shared.keepScreenAwake {
                 UIApplication.shared.isIdleTimerDisabled = true
@@ -207,12 +269,17 @@ struct RecipeView: View {
         @Published var presentShareSheet: Bool = false
         @Published var showTitle: Bool = false
         @Published var isDownloaded: Bool? = nil
-        var newRecipe: Bool = false
-        
+        @Published var importUrl: String = ""
         var recipe: Recipe
         var sharedURL: URL? = nil
+        var newRecipe: Bool = false
         
+        // Alerts
+        @Published var presentAlert = false
+        var alertType: UserAlert = RecipeAlert.GENERIC
+        var alertAction: () async -> () = { }
         
+        // Initializers
         init(recipe: Recipe) {
             self.recipe = recipe
         }
@@ -229,12 +296,122 @@ struct RecipeView: View {
                 recipe_id: 0)
         }
         
+        // View setup
         func setupView(recipeDetail: RecipeDetail) {
             self.recipeDetail = recipeDetail
             self.observableRecipeDetail = ObservableRecipeDetail(recipeDetail)
         }
-        
     }
 }
 
 
+extension RecipeView {
+    func importRecipe(from url: String) async -> UserAlert? {
+        let (scrapedRecipe, error) = await appState.importRecipe(url: url)
+        if let scrapedRecipe = scrapedRecipe {
+            viewModel.setupView(recipeDetail: scrapedRecipe)
+            return nil
+        }
+        
+        do {
+            let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: url)
+            if let scrapedRecipe = scrapedRecipe {
+                viewModel.setupView(recipeDetail: scrapedRecipe)
+            }
+            if let error = error {
+                return error
+            }
+        } catch {
+            print("Error")
+            
+        }
+        return nil
+    }
+    
+    func uploadNewRecipe() async -> UserAlert? {
+        print("Uploading new recipe.")
+        if let recipeValidationError = recipeValid() {
+            return recipeValidationError
+        }
+        
+        return await appState.uploadRecipe(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(), createNew: true)
+    }
+    
+    func uploadEditedRecipe() async -> UserAlert? {
+        print("Uploading changed recipe.")
+        
+        guard let recipeId = Int(viewModel.observableRecipeDetail.id) else { return RequestAlert.REQUEST_DROPPED }
+        
+        return await appState.uploadRecipe(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(), createNew: false)
+    }
+    
+    func deleteRecipe() async -> RequestAlert? {
+        guard let id = Int(viewModel.observableRecipeDetail.id) else {
+            return .REQUEST_DROPPED
+        }
+        return await appState.deleteRecipe(withId: id, categoryName: viewModel.observableRecipeDetail.recipeCategory)
+    }
+    
+    func recipeValid() -> RecipeAlert? {
+        // Check if the recipe has a name
+        if viewModel.observableRecipeDetail.name.replacingOccurrences(of: " ", with: "") == "" {
+            return RecipeAlert.NO_TITLE
+        }
+        
+        // Check if the recipe has a unique name
+        for recipeList in appState.recipes.values {
+            for r in recipeList {
+                if r.name
+                    .replacingOccurrences(of: " ", with: "")
+                    .lowercased() ==
+                    viewModel.observableRecipeDetail.name
+                    .replacingOccurrences(of: " ", with: "")
+                    .lowercased()
+                {
+                    return RecipeAlert.DUPLICATE
+                }
+            }
+        }
+        
+        return nil
+    }
+}
+
+
+// MARK: - Recipe Import Section
+
+fileprivate struct RecipeImportSection: View {
+    @ObservedObject var viewModel: RecipeView.ViewModel
+    var importRecipe: (String) async -> UserAlert?
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            SecondaryLabel(text: "Import Recipe")
+                
+            Text(LocalizedStringKey("Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings."))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            
+            HStack {
+                TextField(LocalizedStringKey("URL (e.g. example.com/recipe)"), text: $viewModel.importUrl)
+                    .textFieldStyle(.roundedBorder)
+                Button {
+                    Task {
+                        if let res = await importRecipe(viewModel.importUrl) {
+                            viewModel.alertType = RecipeAlert.CUSTOM(
+                                title: res.localizedTitle,
+                                description: res.localizedDescription
+                            )
+                            viewModel.alertAction = { }
+                            viewModel.presentAlert = true
+                        }
+                    }
+                } label: {
+                    Text(LocalizedStringKey("Import"))
+                }
+            }.padding(.top, 5)
+        }
+        .padding()
+        .background(Rectangle().foregroundStyle(Color.white.opacity(0.1)))
+    }
+}
