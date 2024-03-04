@@ -12,21 +12,43 @@ import SwiftUI
 
 struct RecipeDurationSection: View {
     @ObservedObject var viewModel: RecipeView.ViewModel
+    @State var presentPopover: Bool = false
     
     var body: some View {
-        if viewModel.editMode {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 200, maximum: .infinity), alignment: .leading)]) {
-                EditableDurationView(time: viewModel.observableRecipeDetail.prepTime, title: LocalizedStringKey("Preparation"))
-                EditableDurationView(time: viewModel.observableRecipeDetail.cookTime, title: LocalizedStringKey("Cooking"))
-                EditableDurationView(time: viewModel.observableRecipeDetail.totalTime, title: LocalizedStringKey("Total time"))
-            }
-        } else {
+        if !viewModel.editMode {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 200, maximum: .infinity), alignment: .leading)]) {
                 DurationView(time: viewModel.observableRecipeDetail.prepTime, title: LocalizedStringKey("Preparation"))
                 DurationView(time: viewModel.observableRecipeDetail.cookTime, title: LocalizedStringKey("Cooking"))
                 DurationView(time: viewModel.observableRecipeDetail.totalTime, title: LocalizedStringKey("Total time"))
             }
+        } else {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 200, maximum: .infinity), alignment: .leading)]) {
+                Button {
+                    presentPopover.toggle()
+                } label: {
+                    DurationView(time: viewModel.observableRecipeDetail.prepTime, title: LocalizedStringKey("Preparation"))
+                }
+                Button {
+                    presentPopover.toggle()
+                } label: {
+                    DurationView(time: viewModel.observableRecipeDetail.cookTime, title: LocalizedStringKey("Cooking"))
+                }
+                Button {
+                    presentPopover.toggle()
+                } label: {
+                    DurationView(time: viewModel.observableRecipeDetail.totalTime, title: LocalizedStringKey("Total time"))
+                }
+            }
+            .popover(isPresented: $presentPopover) {
+                EditableDurationView(
+                    prepTime: viewModel.observableRecipeDetail.prepTime,
+                    cookTime: viewModel.observableRecipeDetail.cookTime,
+                    totalTime: viewModel.observableRecipeDetail.totalTime
+                )
+            }
         }
+        
+        
     }
 }
 
@@ -52,48 +74,30 @@ fileprivate struct DurationView: View {
 }
 
 fileprivate struct EditableDurationView: View {
-    @ObservedObject var time: DurationComponents
-    @State var title: LocalizedStringKey
-    @State var presentPopoverView: Bool = false
-    @State var hour: Int = 0
-    @State var minute: Int = 0
+    @ObservedObject var prepTime: DurationComponents
+    @ObservedObject var cookTime: DurationComponents
+    @ObservedObject var totalTime: DurationComponents
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                SecondaryLabel(text: title)
-                Spacer()
-            }
-            Button {
-                presentPopoverView.toggle()
-            } label: {
+        ScrollView {
+            VStack(alignment: .leading) {
                 HStack {
-                    Image(systemName: "clock")
-                        .foregroundStyle(.secondary)
-                    Text(time.displayString)
-                        .lineLimit(1)
+                    SecondaryLabel(text: "Preparation")
+                    Spacer()
                 }
+                TimePickerView(selectedHour: $prepTime.hourComponent, selectedMinute: $prepTime.minuteComponent)
+                SecondaryLabel(text: "Cooking")
+                TimePickerView(selectedHour: $cookTime.hourComponent, selectedMinute: $cookTime.minuteComponent)
+                SecondaryLabel(text: "Total")
+                TimePickerView(selectedHour: $totalTime.hourComponent, selectedMinute: $totalTime.minuteComponent)
             }
-        }
-        .padding()
-        .popover(isPresented: $presentPopoverView) {
-            TimePickerPopoverView(selectedHour: $hour, selectedMinute: $minute)
-        }
-        .onChange(of: presentPopoverView) { presentPopover in
-            if !presentPopover {
-                time.hourComponent = String(hour)
-                time.minuteComponent = String(minute)
-            }
-        }
-        .onAppear {
-            minute = Int(time.minuteComponent) ?? 0
-            hour = Int(time.hourComponent) ?? 0
+            .padding()
         }
     }
 }
 
 
-fileprivate struct TimePickerPopoverView: View {
+fileprivate struct TimePickerView: View {
     @Binding var selectedHour: Int
     @Binding var selectedMinute: Int
     

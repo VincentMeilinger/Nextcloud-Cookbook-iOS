@@ -14,14 +14,19 @@ struct RecipeMetadataSection: View {
     @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: RecipeView.ViewModel
     
-    @State var categories: [String] = []
     @State var keywords: [RecipeKeyword] = []
+    var categories: [String] {
+        appState.categories.map({ category in category.name })
+    }
+    
+    
     @State var presentKeywordSheet: Bool = false
     @State var presentServingsPopover: Bool = false
     @State var presentCategoryPopover: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
+            // Category
             //CategoryPickerView(items: $categories, input: $viewModel.observableRecipeDetail.recipeCategory, titleKey: "Category")
             SecondaryLabel(text: "Category")
             HStack {
@@ -29,13 +34,16 @@ struct RecipeMetadataSection: View {
                     .lineLimit(1)
                     .textFieldStyle(.roundedBorder)
                     
-                Button {
-                    presentCategoryPopover.toggle()
-                } label: {
-                    Text("Choose")
+                Picker("Choose", selection: $viewModel.observableRecipeDetail.recipeCategory) {
+                    Text("").tag("")
+                    ForEach(categories, id: \.self) { item in
+                        Text(item)
+                    }
                 }
+                .pickerStyle(.menu)
             }
             
+            // Keywords
             SecondaryLabel(text: "Keywords")
             
             if !viewModel.observableRecipeDetail.keywords.isEmpty {
@@ -54,7 +62,7 @@ struct RecipeMetadataSection: View {
                 Image(systemName: "chevron.right")
             }
             
-            
+            // Servings / Yield
             VStack(alignment: .leading) {
                 SecondaryLabel(text: "Servings")
                 Button {
@@ -63,21 +71,15 @@ struct RecipeMetadataSection: View {
                     Text("\(viewModel.observableRecipeDetail.recipeYield) serving(s)")
                         .lineLimit(1)
                 }
+                .popover(isPresented: $presentServingsPopover) {
+                    PickerPopoverView(value: $viewModel.observableRecipeDetail.recipeYield, items: 0..<99, titleKey: "Servings")
+                }
             }
         }
         .padding()
         .background(Rectangle().foregroundStyle(Color.white.opacity(0.1)))
-        .task {
-            categories = appState.categories.map({ category in category.name })
-        }
         .sheet(isPresented: $presentKeywordSheet) {
             KeywordPickerView(title: "Keywords", searchSuggestions: appState.allKeywords, selection: $viewModel.observableRecipeDetail.keywords)
-        }
-        .popover(isPresented: $presentServingsPopover) {
-            PickerPopoverView(value: $viewModel.observableRecipeDetail.recipeYield, items: 0..<99, titleKey: "Servings")
-        }
-        .popover(isPresented: $presentCategoryPopover) {
-            PickerPopoverView(value: $viewModel.observableRecipeDetail.recipeCategory, items: categories, titleKey: "Category")
         }
     }
 }
@@ -95,7 +97,7 @@ fileprivate struct PickerPopoverView<Item: Hashable & CustomStringConvertible, C
                 }
             }
             .pickerStyle(WheelPickerStyle())
-            .frame(width: 100, height: 150)
+            .frame(width: 150, height: 150)
             .clipped()
         }
         .padding()

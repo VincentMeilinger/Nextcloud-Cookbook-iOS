@@ -102,19 +102,33 @@ struct RecipeView: View {
         .navigationTitle(viewModel.showTitle ? viewModel.recipe.name : "")
         .toolbar {
             if viewModel.editMode {
+                // Cancel Button
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
                         viewModel.editMode = false
                     }
                 }
                 
+                // Upload Button
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         // TODO: POST edited recipe
-                        if viewModel.newRecipe {
-                            presentationMode.wrappedValue.dismiss()
-                        } else {
-                            viewModel.editMode = false
+                        Task {
+                            if viewModel.newRecipe {
+                                if let res = await uploadNewRecipe() {
+                                    viewModel.alertType = res
+                                    viewModel.presentAlert = true
+                                } else {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                            } else {
+                                if let res = await uploadEditedRecipe() {
+                                    viewModel.alertType = res
+                                    viewModel.presentAlert = true
+                                } else {
+                                    viewModel.editMode = false
+                                }
+                            }
                         }
                     } label: {
                         if viewModel.newRecipe {
@@ -124,6 +138,8 @@ struct RecipeView: View {
                         }
                     }
                 }
+                
+                // Delete Button
                 if !viewModel.newRecipe {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {

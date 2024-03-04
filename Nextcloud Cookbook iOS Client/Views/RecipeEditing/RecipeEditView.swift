@@ -267,17 +267,7 @@ fileprivate struct DurationPicker: View {
     var body: some View {
         HStack {
             Text(title)
-            Spacer()
-            TextField("00", text: $duration.hourComponent)
-                .keyboardType(.decimalPad)
-                .textFieldStyle(.roundedBorder)
-                .multilineTextAlignment(.trailing)
-                .frame(maxWidth: 40)
-            Text(":")
-            TextField("00", text: $duration.minuteComponent)
-                .keyboardType(.decimalPad)
-                .textFieldStyle(.roundedBorder)
-                .frame(maxWidth: 40)
+            
         }
         .frame(maxHeight: 40)
         .clipped()
