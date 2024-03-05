@@ -12,6 +12,9 @@ extension Color {
     public static var nextcloudBlue: Color {
         return Color("ncblue")
     }
+    public static var nextcloudDarkBlue: Color {
+        return Color("ncdarkblue")
+    }
     public static var backgroundHighlight: Color {
         return Color("backgroundHighlight")
     }

@@ -59,27 +59,93 @@ struct EditableText: View {
 }
 
 
-struct EditableStringList<Content: View>: View {
-    @Binding var items: [ReorderableItem<String>]
-    @Binding var editMode: Bool
+struct EditableListView: View {
+    @Binding var isPresented: Bool
+    @Binding var items: [String]
+    @State var title: LocalizedStringKey
+    @State var emptyListText: LocalizedStringKey
     @State var titleKey: LocalizedStringKey = ""
     @State var lineLimit: ClosedRange<Int> = 0...50
     @State var axis: Axis = .vertical
     
-    var content: () -> Content
-    
     var body: some View {
-        if editMode {
-            VStack {
-                ReorderableForEach(items: $items, defaultItem: ReorderableItem(item: "")) { ix, item in
-                    TextField("", text: $items[ix].item, axis: axis)
-                        .textFieldStyle(.roundedBorder)
-                        .lineLimit(lineLimit)
+        NavigationView {
+            ZStack {
+                List {
+                    if items.isEmpty {
+                        Text(emptyListText)
+                    }
+                    
+                    ForEach(items.indices, id: \.self) { ix in
+                        TextField(titleKey, text: $items[ix], axis: axis)
+                            .lineLimit(lineLimit)
+                    }
+                    .onDelete(perform: deleteItem)
+                    .onMove(perform: moveItem)
+                }
+                VStack {
+                    Spacer()
+                    
+                    Button {
+                        addItem()
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundStyle(.white)
+                            .bold()
+                            .padding()
+                            .background(Circle().fill(Color.nextcloudBlue))
+                    }
+                    .padding()
                 }
             }
-            .transition(.slide)
-        } else {
-            content()
+            .navigationBarTitle(title, displayMode: .inline)
+            .navigationBarItems(
+                trailing: Button(action: { isPresented = false }) {
+                    Text("Done")
+                }
+            )
+            .environment(\.editMode, .constant(.active)) // Bind edit mode to your state variable
         }
+    }
+    
+    private func addItem() {
+        withAnimation {
+            items.append("")
+        }
+    }
+
+    private func deleteItem(at offsets: IndexSet) {
+        withAnimation {
+            items.remove(atOffsets: offsets)
+        }
+    }
+
+    private func moveItem(from source: IndexSet, to destination: Int) {
+        withAnimation {
+            items.move(fromOffsets: source, toOffset: destination)
+        }
+    }
+}
+
+
+
+// MARK: - Previews
+
+struct EditableListView_Previews: PreviewProvider {
+    // Sample keywords for preview
+    @State static var sampleList: [String] = [
+        /*"3 Eggs",
+        "1 kg Potatos",
+        "3 g Sugar",
+        "1 ml Milk",
+        "Salt, Pepper"*/
+    ]
+    
+    static var previews: some View {
+        Color.white
+            .sheet(isPresented: .constant(true), content: {
+                EditableListView(isPresented: .constant(true), items: $sampleList, title: "Ingredient", emptyListText: "Add cooking steps for fellow chefs to follow.")
+            })
+            
     }
 }

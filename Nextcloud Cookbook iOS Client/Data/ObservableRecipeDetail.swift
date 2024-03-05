@@ -20,9 +20,9 @@ class ObservableRecipeDetail: ObservableObject {
     @Published var url: String
     @Published var recipeYield: Int
     @Published var recipeCategory: String
-    @Published var tool: [ReorderableItem<String>]
-    @Published var recipeIngredient: [ReorderableItem<String>]
-    @Published var recipeInstructions: [ReorderableItem<String>]
+    @Published var tool: [String]
+    @Published var recipeIngredient: [String]
+    @Published var recipeInstructions: [String]
     @Published var nutrition: [String:String]
     
     init() {
@@ -55,9 +55,9 @@ class ObservableRecipeDetail: ObservableObject {
         url = recipeDetail.url
         recipeYield = recipeDetail.recipeYield
         recipeCategory = recipeDetail.recipeCategory
-        tool = ReorderableItem.list(items: recipeDetail.tool)
-        recipeIngredient = ReorderableItem.list(items: recipeDetail.recipeIngredient)
-        recipeInstructions = ReorderableItem.list(items: recipeDetail.recipeInstructions)
+        tool = recipeDetail.tool
+        recipeIngredient = recipeDetail.recipeIngredient
+        recipeInstructions = recipeDetail.recipeInstructions
         nutrition = recipeDetail.nutrition
     }
     
@@ -76,9 +76,9 @@ class ObservableRecipeDetail: ObservableObject {
             url: self.url,
             recipeYield: self.recipeYield,
             recipeCategory: self.recipeCategory,
-            tool: ReorderableItem.items(self.tool),
-            recipeIngredient: ReorderableItem.items(self.recipeIngredient),
-            recipeInstructions: ReorderableItem.items(self.recipeInstructions),
+            tool: self.tool,
+            recipeIngredient: self.recipeIngredient,
+            recipeInstructions: self.recipeInstructions,
             nutrition: self.nutrition
         )
     }

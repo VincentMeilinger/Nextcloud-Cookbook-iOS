@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import SimilaritySearchKit
 
 struct SearchTabView: View {
     @EnvironmentObject var viewModel: SearchTabView.ViewModel
@@ -56,8 +55,7 @@ struct SearchTabView: View {
         @Published var searchText: String = ""
         @Published var searchMode: SearchMode = .name
         
-        var similarityIndex: SimilarityIndex? = nil
-        var similaritySearchResults: [SearchResult] = []
+
 
         enum SearchMode: String, CaseIterable {
             case name = "Name & Keywords", ingredient = "Ingredients"

@@ -34,6 +34,16 @@ struct RecipeView: View {
                             .scaledToFill()
                             .frame(maxHeight: imageHeight + 200)
                             .clipped()
+                    } else {
+                        Rectangle()
+                            .frame(height: 400)
+                            .foregroundStyle(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.white, .nextcloudBlue]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
                     }
                 }
                 
@@ -41,6 +51,11 @@ struct RecipeView: View {
                     if viewModel.editMode {
                         RecipeImportSection(viewModel: viewModel, importRecipe: importRecipe)
                     }
+                    
+                    if viewModel.editMode {
+                        RecipeMetadataSection(viewModel: viewModel)
+                    }
+                    
                     HStack {
                         EditableText(text: $viewModel.observableRecipeDetail.name, editMode: $viewModel.editMode, titleKey: "Recipe Name")
                             .font(.title)
@@ -66,10 +81,6 @@ struct RecipeView: View {
 
                     Divider()
                     
-                    if viewModel.editMode {
-                        RecipeMetadataSection(viewModel: viewModel)
-                    }
-                    
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
                         if(!viewModel.observableRecipeDetail.recipeIngredient.isEmpty || viewModel.editMode) {
                             RecipeIngredientSection(viewModel: viewModel)
@@ -83,13 +94,12 @@ struct RecipeView: View {
                         RecipeNutritionSection(viewModel: viewModel)
                     }
                     
-                    Divider()
-                    
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
-                        if !viewModel.editMode {
+                    if !viewModel.editMode {
+                        Divider()
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
                             RecipeKeywordSection(viewModel: viewModel)
+                            MoreInformationSection(viewModel: viewModel)
                         }
-                        MoreInformationSection(viewModel: viewModel)
                     }
                 }
                 .padding(.horizontal, 5)
@@ -99,6 +109,7 @@ struct RecipeView: View {
         .coordinateSpace(name: CoordinateSpaces.scrollView)
         .ignoresSafeArea(.container, edges: .top)
         .navigationBarTitleDisplayMode(.inline)
+        //.toolbarTitleDisplayMode(.inline)
         .navigationTitle(viewModel.showTitle ? viewModel.recipe.name : "")
         .toolbar {
             if viewModel.editMode {
@@ -112,7 +123,6 @@ struct RecipeView: View {
                 // Upload Button
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        // TODO: POST edited recipe
                         Task {
                             if viewModel.newRecipe {
                                 if let res = await uploadNewRecipe() {
@@ -191,6 +201,7 @@ struct RecipeView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
+                    
                 }
             }
         }
@@ -198,6 +209,36 @@ struct RecipeView: View {
             ShareView(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(),
                       recipeImage: viewModel.recipeImage,
                       presentShareSheet: $viewModel.presentShareSheet)
+        }
+        .sheet(isPresented: $viewModel.presentInstructionEditView) {
+            EditableListView(
+                isPresented: $viewModel.presentInstructionEditView,
+                items: $viewModel.observableRecipeDetail.recipeInstructions,
+                title: "Instructions",
+                emptyListText: "Add cooking steps for fellow chefs to follow.",
+                titleKey: "Instruction",
+                lineLimit: 0...10,
+                axis: .vertical)
+        }
+        .sheet(isPresented: $viewModel.presentIngredientEditView) {
+            EditableListView(
+                isPresented: $viewModel.presentIngredientEditView,
+                items: $viewModel.observableRecipeDetail.recipeIngredient,
+                title: "Ingredients",
+                emptyListText: "Start by adding your first ingredient! 🥬",
+                titleKey: "Ingredient",
+                lineLimit: 0...1,
+                axis: .horizontal)
+        }
+        .sheet(isPresented: $viewModel.presentToolEditView) {
+            EditableListView(
+                isPresented: $viewModel.presentToolEditView,
+                items: $viewModel.observableRecipeDetail.tool,
+                title: "Tools",
+                emptyListText: "List your tools here. 🍴",
+                titleKey: "Tool",
+                lineLimit: 0...1,
+                axis: .horizontal)
         }
         
         .task {
@@ -282,10 +323,15 @@ struct RecipeView: View {
         @Published var recipeDetail: RecipeDetail = RecipeDetail.error
         @Published var recipeImage: UIImage? = nil
         @Published var editMode: Bool = false
-        @Published var presentShareSheet: Bool = false
         @Published var showTitle: Bool = false
         @Published var isDownloaded: Bool? = nil
         @Published var importUrl: String = ""
+        
+        @Published var presentShareSheet: Bool = false
+        @Published var presentInstructionEditView: Bool = false
+        @Published var presentIngredientEditView: Bool = false
+        @Published var presentToolEditView: Bool = false
+        
         var recipe: Recipe
         var sharedURL: URL? = nil
         var newRecipe: Bool = false
@@ -408,26 +454,28 @@ fileprivate struct RecipeImportSection: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             
-            HStack {
+            
                 TextField(LocalizedStringKey("URL (e.g. example.com/recipe)"), text: $viewModel.importUrl)
                     .textFieldStyle(.roundedBorder)
-                Button {
-                    Task {
-                        if let res = await importRecipe(viewModel.importUrl) {
-                            viewModel.alertType = RecipeAlert.CUSTOM(
-                                title: res.localizedTitle,
-                                description: res.localizedDescription
-                            )
-                            viewModel.alertAction = { }
-                            viewModel.presentAlert = true
-                        }
+                    .padding(.top, 5)
+            Button {
+                Task {
+                    if let res = await importRecipe(viewModel.importUrl) {
+                        viewModel.alertType = RecipeAlert.CUSTOM(
+                            title: res.localizedTitle,
+                            description: res.localizedDescription
+                        )
+                        viewModel.alertAction = { }
+                        viewModel.presentAlert = true
                     }
-                } label: {
-                    Text(LocalizedStringKey("Import"))
                 }
-            }.padding(.top, 5)
+            } label: {
+                Text(LocalizedStringKey("Import"))
+            }
+            .buttonStyle(.bordered)
         }
         .padding()
-        .background(Rectangle().foregroundStyle(Color.white.opacity(0.1)))
+        .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.white.opacity(0.1)))
+        .padding()
     }
 }

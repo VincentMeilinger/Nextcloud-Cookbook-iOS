@@ -19,9 +19,19 @@ struct RecipeToolSection: View {
                 SecondaryLabel(text: "Tools")
                 Spacer()
             }
-            EditableStringList(items: $viewModel.observableRecipeDetail.tool, editMode: $viewModel.editMode, titleKey: "Tool", lineLimit: 0...1, axis: .horizontal) {
-                RecipeListSection(list: ReorderableItem.items(viewModel.observableRecipeDetail.tool))
+            
+            RecipeListSection(list: viewModel.observableRecipeDetail.tool)
+            
+            if viewModel.editMode {
+                Button {
+                    viewModel.presentToolEditView.toggle()
+                } label: {
+                    Text("Edit")
+                }
+                .buttonStyle(.borderedProminent)
             }
         }.padding()
     }
+    
+    
 }

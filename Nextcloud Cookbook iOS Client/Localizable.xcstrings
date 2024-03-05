@@ -230,6 +230,7 @@
 
     },
     "%lld." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -407,6 +408,7 @@
       }
     },
     "Add" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -427,6 +429,9 @@
           }
         }
       }
+    },
+    "Add cooking steps for fellow chefs to follow." : {
+
     },
     "Add groceries to this list by either using the button next to an ingredient list in a recipe, or by swiping right on individual ingredients of a recipe." : {
       "localizations" : {
@@ -634,6 +639,7 @@
       }
     },
     "Category: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -816,6 +822,7 @@
       }
     },
     "Cooking duration:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1057,9 +1064,6 @@
         }
       }
     },
-    "Disable deletion" : {
-
-    },
     "Done" : {
       "localizations" : {
         "de" : {
@@ -1180,9 +1184,6 @@
           }
         }
       }
-    },
-    "Enable deletion" : {
-
     },
     "Error" : {
       "localizations" : {
@@ -1525,6 +1526,7 @@
       }
     },
     "Import recipe from a website" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1756,6 +1758,9 @@
         }
       }
     },
+    "List your tools here. 🍴" : {
+
+    },
     "Log out" : {
       "localizations" : {
         "de" : {
@@ -1982,6 +1987,7 @@
       }
     },
     "New recipe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2359,6 +2365,7 @@
       }
     },
     "Preparation duration:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2565,9 +2572,6 @@
         }
       }
     },
-    "Select Item" : {
-
-    },
     "Select Keywords" : {
 
     },
@@ -2600,6 +2604,7 @@
 
     },
     "Servings:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2733,6 +2738,9 @@
     },
     "Sodium content" : {
       "comment" : "Sodium content"
+    },
+    "Start by adding your first ingredient! 🥬" : {
+
     },
     "Store recipe images locally" : {
       "localizations" : {
@@ -3026,6 +3034,7 @@
       }
     },
     "Title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3072,10 +3081,8 @@
         }
       }
     },
-    "Total" : {
-
-    },
     "Total duration:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3236,6 +3243,7 @@
       "comment" : "Unsaturated fat content"
     },
     "Upload" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

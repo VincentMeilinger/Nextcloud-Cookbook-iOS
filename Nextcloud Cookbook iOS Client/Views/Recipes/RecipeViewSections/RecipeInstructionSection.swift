@@ -19,19 +19,27 @@ struct RecipeInstructionSection: View {
                 SecondaryLabel(text: LocalizedStringKey("Instructions"))
                 Spacer()
             }
-            EditableStringList(items: $viewModel.observableRecipeDetail.recipeInstructions, editMode: $viewModel.editMode, titleKey: "Instruction", lineLimit: 0...15, axis: .vertical) {
-                ForEach(0..<viewModel.observableRecipeDetail.recipeInstructions.count, id: \.self) { ix in
-                    RecipeInstructionListItem(instruction: viewModel.observableRecipeDetail.recipeInstructions[ix], index: ix+1)
-                }
+            ForEach(viewModel.observableRecipeDetail.recipeInstructions.indices, id: \.self) { ix in
+                RecipeInstructionListItem(instruction: $viewModel.observableRecipeDetail.recipeInstructions[ix], index: ix+1)
             }
-        }.padding()
+            if viewModel.editMode {
+                Button {
+                    viewModel.presentInstructionEditView.toggle()
+                } label: {
+                    Text("Edit")
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding()
+        
     }
 }
 
 
 
 fileprivate struct RecipeInstructionListItem: View {
-    @State var instruction: ReorderableItem<String>
+    @Binding var instruction: String
     @State var index: Int
     @State var isSelected: Bool = false
     
@@ -39,7 +47,7 @@ fileprivate struct RecipeInstructionListItem: View {
         HStack(alignment: .top) {
             Text("\(index)")
                 .monospaced()
-            Text(instruction.item)
+            Text(instruction)
         }.padding(4)
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)
         .onTapGesture {

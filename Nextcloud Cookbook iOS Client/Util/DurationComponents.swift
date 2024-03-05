@@ -137,4 +137,10 @@ class DurationComponents: ObservableObject {
         }
     }
     
+    static func + (lhs: DurationComponents, rhs: DurationComponents) -> DurationComponents {
+        let totalSeconds = lhs.toSeconds() + rhs.toSeconds()
+        let result = DurationComponents()
+        result.fromSeconds(Int(totalSeconds))
+        return result
+    }
 }

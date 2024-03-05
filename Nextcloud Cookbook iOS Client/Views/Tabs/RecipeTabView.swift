@@ -65,17 +65,6 @@ struct RecipeTabView: View {
             }
         }
         .tint(.nextcloudBlue)
-        
-        /*.sheet(isPresented: $viewModel.presentEditView) {
-            RecipeEditView(
-                viewModel:
-                    RecipeEditViewModel(
-                        mainViewModel: mainViewModel,
-                        uploadNew: true
-                    ),
-                isPresented: $viewModel.presentEditView
-            )
-        }*/
         .task {
             viewModel.serverConnection = await mainViewModel.checkServerConnection()
         }

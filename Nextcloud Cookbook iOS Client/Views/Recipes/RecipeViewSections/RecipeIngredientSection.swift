@@ -31,7 +31,7 @@ struct RecipeIngredientSection: View {
                             groceryList.deleteGroceryRecipe(viewModel.observableRecipeDetail.id)
                         } else {
                             groceryList.addItems(
-                                ReorderableItem.items(viewModel.observableRecipeDetail.recipeIngredient),
+                                viewModel.observableRecipeDetail.recipeIngredient,
                                 toRecipe: viewModel.observableRecipeDetail.id,
                                 recipeName: viewModel.observableRecipeDetail.name
                             )
@@ -46,17 +46,23 @@ struct RecipeIngredientSection: View {
                 }
             }
             
-            EditableStringList(items: $viewModel.observableRecipeDetail.recipeIngredient, editMode: $viewModel.editMode, titleKey: "Ingredient", lineLimit: 0...1, axis: .horizontal) {
-                ForEach(0..<viewModel.observableRecipeDetail.recipeIngredient.count, id: \.self) { ix in
-                    IngredientListItem(ingredient: viewModel.observableRecipeDetail.recipeIngredient[ix], recipeId: viewModel.observableRecipeDetail.id) {
-                        groceryList.addItem(
-                            viewModel.observableRecipeDetail.recipeIngredient[ix].item,
-                            toRecipe: viewModel.observableRecipeDetail.id,
-                            recipeName: viewModel.observableRecipeDetail.name
-                        )
-                    }
-                    .padding(4)
+            ForEach(0..<viewModel.observableRecipeDetail.recipeIngredient.count, id: \.self) { ix in
+                IngredientListItem(ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix], recipeId: viewModel.observableRecipeDetail.id) {
+                    groceryList.addItem(
+                        viewModel.observableRecipeDetail.recipeIngredient[ix],
+                        toRecipe: viewModel.observableRecipeDetail.id,
+                        recipeName: viewModel.observableRecipeDetail.name
+                    )
                 }
+                .padding(4)
+            }
+            if viewModel.editMode {
+                Button {
+                    viewModel.presentIngredientEditView.toggle()
+                } label: {
+                    Text("Edit")
+                }
+                .buttonStyle(.borderedProminent)
             }
         }.padding()
     }
@@ -66,7 +72,7 @@ struct RecipeIngredientSection: View {
 
 fileprivate struct IngredientListItem: View {
     @EnvironmentObject var groceryList: GroceryList
-    @State var ingredient: ReorderableItem<String>
+    @Binding var ingredient: String
     @State var recipeId: String
     let addToGroceryListAction: () -> Void
     @State var isSelected: Bool = false
@@ -78,7 +84,7 @@ fileprivate struct IngredientListItem: View {
     
     var body: some View {
         HStack(alignment: .top) {
-            if groceryList.containsItem(at: recipeId, item: ingredient.item) {
+            if groceryList.containsItem(at: recipeId, item: ingredient) {
                 if #available(iOS 17.0, *) {
                     Image(systemName: "storefront")
                         .foregroundStyle(Color.green)
@@ -93,7 +99,7 @@ fileprivate struct IngredientListItem: View {
                 Image(systemName: "circle")
             }
             
-            Text("\(ingredient.item)")
+            Text("\(ingredient)")
                 .multilineTextAlignment(.leading)
                 .lineLimit(5)
             Spacer()
@@ -119,15 +125,13 @@ fileprivate struct IngredientListItem: View {
                 .onEnded { gesture in
                     withAnimation {
                         if dragOffset > maxDragDistance * 0.3 { // Swipe threshold
-                            if groceryList.containsItem(at: recipeId, item: ingredient.item) {
-                                groceryList.deleteItem(ingredient.item, fromRecipe: recipeId)
+                            if groceryList.containsItem(at: recipeId, item: ingredient) {
+                                groceryList.deleteItem(ingredient, fromRecipe: recipeId)
                                 } else {
                                     addToGroceryListAction()
                                 }
-                            
                         }
                         // Animate back to original position
-                    
                         self.dragOffset = 0
                         self.animationStartOffset = 0
                     }

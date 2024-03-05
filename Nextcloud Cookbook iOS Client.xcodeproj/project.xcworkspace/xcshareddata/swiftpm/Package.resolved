@@ -1,21 +1,21 @@
 {
   "pins" : [
     {
-      "identity" : "similarity-search-kit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ZachNagengast/similarity-search-kit",
-      "state" : {
-        "revision" : "ddc8e458d0e826b2fe5dbce6f6eac96a8935e8eb",
-        "version" : "0.0.13"
-      }
-    },
-    {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
         "revision" : "8b6cf29eead8841a1fa7822481cb3af4ddaadba6",
         "version" : "2.6.1"
+      }
+    },
+    {
+      "identity" : "swipeactions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/aheze/SwipeActions",
+      "state" : {
+        "revision" : "41e6f6dce02d8cfa164f8c5461a41340850ca3ab",
+        "version" : "1.1.0"
       }
     },
     {

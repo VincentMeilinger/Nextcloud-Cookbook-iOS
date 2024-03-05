@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 
-
+/*
 struct CategoryPickerViewOld: View {
     @State var title: String
     @State var searchSuggestions: [String]
@@ -61,3 +61,4 @@ struct CategoryPickerViewOld: View {
     }
 }
 
+*/

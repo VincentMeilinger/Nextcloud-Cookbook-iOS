@@ -19,7 +19,6 @@ struct RecipeMetadataSection: View {
         appState.categories.map({ category in category.name })
     }
     
-    
     @State var presentKeywordSheet: Bool = false
     @State var presentServingsPopover: Bool = false
     @State var presentCategoryPopover: Bool = false
@@ -27,7 +26,6 @@ struct RecipeMetadataSection: View {
     var body: some View {
         VStack(alignment: .leading) {
             // Category
-            //CategoryPickerView(items: $categories, input: $viewModel.observableRecipeDetail.recipeCategory, titleKey: "Category")
             SecondaryLabel(text: "Category")
             HStack {
                 TextField("Category", text: $viewModel.observableRecipeDetail.recipeCategory)
@@ -42,6 +40,7 @@ struct RecipeMetadataSection: View {
                 }
                 .pickerStyle(.menu)
             }
+            .padding(.bottom)
             
             // Keywords
             SecondaryLabel(text: "Keywords")
@@ -51,6 +50,8 @@ struct RecipeMetadataSection: View {
                     HStack {
                         ForEach(viewModel.observableRecipeDetail.keywords, id: \.self) { keyword in
                             Text(keyword)
+                                .padding(5)
+                                .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.primary.opacity(0.1)))
                         }
                     }
                 }
@@ -61,6 +62,7 @@ struct RecipeMetadataSection: View {
                 Text("Select Keywords")
                 Image(systemName: "chevron.right")
             }
+            .padding(.bottom)
             
             // Servings / Yield
             VStack(alignment: .leading) {
@@ -77,7 +79,8 @@ struct RecipeMetadataSection: View {
             }
         }
         .padding()
-        .background(Rectangle().foregroundStyle(Color.white.opacity(0.1)))
+        .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.white.opacity(0.1)))
+        .padding()
         .sheet(isPresented: $presentKeywordSheet) {
             KeywordPickerView(title: "Keywords", searchSuggestions: appState.allKeywords, selection: $viewModel.observableRecipeDetail.keywords)
         }
@@ -101,47 +104,6 @@ fileprivate struct PickerPopoverView<Item: Hashable & CustomStringConvertible, C
             .clipped()
         }
         .padding()
-    }
-}
-
-fileprivate struct CategoryPickerView: View {
-    @Binding var items: [String]
-    @Binding var input: String
-    @State private var pickerChoice: String = ""
-
-    var titleKey: LocalizedStringKey
-
-    var body: some View {
-        VStack(alignment: .leading) {
-            SecondaryLabel(text: "Category")
-                .padding([.top, .horizontal])
-            HStack {
-                TextField(titleKey, text: $input)
-                    .lineLimit(1)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-                    .onSubmit {
-                        pickerChoice = ""
-                    }
-                
-                Picker("Select Item", selection: $pickerChoice) {
-                    Text("").tag("")
-                    ForEach(items, id: \.self) { item in
-                        Text(item)
-                    }
-                }
-                .pickerStyle(.menu)
-                .padding()
-                .onChange(of: pickerChoice) { newValue in
-                    if pickerChoice != "" {
-                        input = newValue
-                    }
-                }
-            }
-        }
-        .onAppear {
-            pickerChoice = input
-        }
     }
 }
 

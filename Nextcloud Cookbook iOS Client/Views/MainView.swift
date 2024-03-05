@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SimilaritySearchKit
 
 struct MainView: View {
     @StateObject var appState = AppState()
