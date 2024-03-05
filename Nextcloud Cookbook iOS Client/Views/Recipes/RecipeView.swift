@@ -37,9 +37,9 @@ struct RecipeView: View {
                             .frame(height: 400)
                             .foregroundStyle(
                                 LinearGradient(
-                                    gradient: Gradient(colors: [.white, .nextcloudBlue]),
-                                    startPoint: .top,
-                                    endPoint: .bottom
+                                    gradient: Gradient(colors: [.nextcloudBlue, .nextcloudDarkBlue]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
                                 )
                             )
                     }
@@ -172,8 +172,6 @@ struct RecipeView: View {
                 )
                 if let image = viewModel.recipeImage {
                     imageHeight = image.size.height < 350 ? image.size.height : 350
-                } else {
-                    imageHeight = 100
                 }
             } else {
                 // Prepare view for a new recipe
@@ -373,6 +371,7 @@ struct RecipeViewToolBar: ToolbarContent {
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
+                
             }
         }
     }
