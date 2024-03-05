@@ -12,7 +12,7 @@ import SwiftUI
 
 
 struct RecipeListSection: View {
-    @State var list: [String]
+    @Binding var list: [String]
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -74,14 +74,17 @@ struct EditableListView: View {
                 List {
                     if items.isEmpty {
                         Text(emptyListText)
+                    } else {
+                        ForEach(items.indices, id: \.self) { ix in
+                            TextField(titleKey, text: $items[ix], axis: axis)
+                                .lineLimit(lineLimit)
+                                .padding(5)
+                        }
+                        .onDelete(perform: deleteItem)
+                        .onMove(perform: moveItem)
+                        .scrollDismissesKeyboard(.immediately)
+                        
                     }
-                    
-                    ForEach(items.indices, id: \.self) { ix in
-                        TextField(titleKey, text: $items[ix], axis: axis)
-                            .lineLimit(lineLimit)
-                    }
-                    .onDelete(perform: deleteItem)
-                    .onMove(perform: moveItem)
                 }
                 VStack {
                     Spacer()
@@ -104,7 +107,7 @@ struct EditableListView: View {
                     Text("Done")
                 }
             )
-            .environment(\.editMode, .constant(.active)) // Bind edit mode to your state variable
+            .environment(\.editMode, .constant(.active))
         }
     }
     

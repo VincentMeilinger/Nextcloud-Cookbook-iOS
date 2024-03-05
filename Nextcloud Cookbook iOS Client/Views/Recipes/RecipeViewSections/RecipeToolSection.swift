@@ -20,7 +20,7 @@ struct RecipeToolSection: View {
                 Spacer()
             }
             
-            RecipeListSection(list: viewModel.observableRecipeDetail.tool)
+            RecipeListSection(list: $viewModel.observableRecipeDetail.tool)
             
             if viewModel.editMode {
                 Button {

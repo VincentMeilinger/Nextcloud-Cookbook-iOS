@@ -977,6 +977,7 @@
       }
     },
     "Delete recipe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -997,6 +998,9 @@
           }
         }
       }
+    },
+    "Delete Recipe" : {
+
     },
     "Delete recipe?" : {
       "localizations" : {
@@ -2693,6 +2697,7 @@
       }
     },
     "Share recipe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2713,6 +2718,9 @@
           }
         }
       }
+    },
+    "Share Recipe" : {
+
     },
     "Show help" : {
       "localizations" : {

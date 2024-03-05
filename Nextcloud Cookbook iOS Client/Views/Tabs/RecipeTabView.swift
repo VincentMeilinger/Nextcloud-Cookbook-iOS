@@ -51,7 +51,7 @@ struct RecipeTabView: View {
                 SettingsView()
             }
             .navigationDestination(isPresented: $viewModel.presentEditView) {
-                RecipeView(viewModel: RecipeView.ViewModel())
+                RecipeView(isPresented: $viewModel.presentEditView, viewModel: RecipeView.ViewModel())
             }
         } detail: {
             NavigationStack {

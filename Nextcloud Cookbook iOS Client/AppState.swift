@@ -430,7 +430,7 @@ import UIKit
         dataStore.delete(path: path)
         if recipes[categoryName] != nil {
             recipes[categoryName]!.removeAll(where: { recipe in
-                recipe.recipe_id == id ? true : false
+                recipe.recipe_id == id
             })
             recipeDetails.removeValue(forKey: id)
         }

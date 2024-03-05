@@ -18,7 +18,7 @@ struct RecipeKeywordSection: View {
         CollapsibleView(titleColor: .secondary, isCollapsed: !UserSettings.shared.expandKeywordSection) {
             Group {
                 if !viewModel.observableRecipeDetail.keywords.isEmpty && !viewModel.editMode {
-                    RecipeListSection(list: viewModel.observableRecipeDetail.keywords)
+                    RecipeListSection(list: $viewModel.observableRecipeDetail.keywords)
                 } else {
                     Text(LocalizedStringKey("No keywords."))
                 }

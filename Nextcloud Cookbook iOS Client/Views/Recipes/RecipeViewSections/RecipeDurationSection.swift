@@ -21,13 +21,15 @@ struct RecipeDurationSection: View {
                 DurationView(time: viewModel.observableRecipeDetail.cookTime, title: LocalizedStringKey("Cooking"))
                 DurationView(time: viewModel.observableRecipeDetail.totalTime, title: LocalizedStringKey("Total time"))
             }
-            Button {
-                presentPopover.toggle()
-            } label: {
-                Text("Edit")
+            if viewModel.editMode {
+                Button {
+                    presentPopover.toggle()
+                } label: {
+                    Text("Edit")
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.top, 5)
             }
-            .buttonStyle(.borderedProminent)
-            .padding(.top, 5)
         }
         .padding()
         .popover(isPresented: $presentPopover) {

@@ -10,12 +10,10 @@ import SwiftUI
 
 
 struct RecipeView: View {
-    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var appState: AppState
+    @Binding var isPresented: Bool
     @StateObject var viewModel: ViewModel
     @State var imageHeight: CGFloat = 350
-    
-    
     
     private enum CoordinateSpaces {
         case scrollView
@@ -112,98 +110,7 @@ struct RecipeView: View {
         //.toolbarTitleDisplayMode(.inline)
         .navigationTitle(viewModel.showTitle ? viewModel.recipe.name : "")
         .toolbar {
-            if viewModel.editMode {
-                // Cancel Button
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        viewModel.editMode = false
-                    }
-                }
-                
-                // Upload Button
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        Task {
-                            if viewModel.newRecipe {
-                                if let res = await uploadNewRecipe() {
-                                    viewModel.alertType = res
-                                    viewModel.presentAlert = true
-                                } else {
-                                    presentationMode.wrappedValue.dismiss()
-                                }
-                            } else {
-                                if let res = await uploadEditedRecipe() {
-                                    viewModel.alertType = res
-                                    viewModel.presentAlert = true
-                                } else {
-                                    viewModel.editMode = false
-                                }
-                            }
-                        }
-                    } label: {
-                        if viewModel.newRecipe {
-                            Text("Upload Recipe")
-                        } else {
-                            Text("Upload Changes")
-                        }
-                    }
-                }
-                
-                // Delete Button
-                if !viewModel.newRecipe {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Menu {
-                            Button {
-                                print("Delete recipe.")
-                                viewModel.alertType = RecipeAlert.CONFIRM_DELETE
-                                viewModel.alertAction = {
-                                    if let res = await deleteRecipe() {
-                                        viewModel.alertType = res
-                                        viewModel.alertAction = { }
-                                        viewModel.presentAlert = true
-                                    } else {
-                                        presentationMode.wrappedValue.dismiss()
-                                    }
-                                }
-                                viewModel.presentAlert = true
-                            } label: {
-                                Image(systemName: "trash")
-                                    .foregroundStyle(.red)
-                                Text("Delete recipe")
-                                    .foregroundStyle(.red)
-                            }
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                                .font(.title3)
-                                .padding()
-                        }
-                    }
-                }
-            } else {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            viewModel.editMode = true
-                        } label: {
-                            HStack {
-                                Text("Edit")
-                                Image(systemName: "pencil")
-                            }
-                        }
-                        
-                        Button {
-                            print("Sharing recipe ...")
-                            viewModel.presentShareSheet = true
-                        } label: {
-                            Text("Share recipe")
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                    }
-                    
-                }
-            }
+            RecipeViewToolBar(isPresented: $isPresented, viewModel: viewModel)
         }
         .sheet(isPresented: $viewModel.presentShareSheet) {
             ShareView(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(),
@@ -363,6 +270,12 @@ struct RecipeView: View {
             self.recipeDetail = recipeDetail
             self.observableRecipeDetail = ObservableRecipeDetail(recipeDetail)
         }
+        
+        func presentAlert(_ type: UserAlert, action: @escaping () async -> () = {}) {
+            alertType = type
+            alertAction = action
+            presentAlert = true
+        }
     }
 }
 
@@ -390,28 +303,123 @@ extension RecipeView {
         return nil
     }
     
-    func uploadNewRecipe() async -> UserAlert? {
-        print("Uploading new recipe.")
-        if let recipeValidationError = recipeValid() {
-            return recipeValidationError
+    
+}
+
+
+// MARK: - Tool Bar
+
+
+struct RecipeViewToolBar: ToolbarContent {
+    @EnvironmentObject var appState: AppState
+    @Binding var isPresented: Bool
+    @ObservedObject var viewModel: RecipeView.ViewModel
+    
+
+    var body: some ToolbarContent {
+        if viewModel.editMode {
+            ToolbarItemGroup(placement: .topBarLeading){
+                Button("Cancel") {
+                    viewModel.editMode = false
+                    isPresented = false
+                }
+                
+                if !viewModel.newRecipe {
+                    Menu {
+                        Button(role: .destructive) {
+                            viewModel.presentAlert(
+                                RecipeAlert.CONFIRM_DELETE,
+                                action: {
+                                    await handleDelete()
+                                }
+                            )
+                        } label: {
+                            Label("Delete Recipe", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                    }
+                }
+            }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    Task {
+                        await handleUpload()
+                    }
+                } label: {
+                    if viewModel.newRecipe {
+                        Text("Upload Recipe")
+                    } else {
+                        Text("Upload Changes")
+                    }
+                }
+            }
+        } else {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button {
+                        viewModel.editMode = true
+                    } label: {
+                        Label("Edit", systemImage: "pencil")
+                    }
+
+                    Button {
+                        print("Sharing recipe ...")
+                        viewModel.presentShareSheet = true
+                    } label: {
+                        Label("Share Recipe", systemImage: "square.and.arrow.up")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+            }
         }
-        
-        return await appState.uploadRecipe(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(), createNew: true)
     }
     
-    func uploadEditedRecipe() async -> UserAlert? {
-        print("Uploading changed recipe.")
-        
-        guard let recipeId = Int(viewModel.observableRecipeDetail.id) else { return RequestAlert.REQUEST_DROPPED }
-        
-        return await appState.uploadRecipe(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(), createNew: false)
+    func handleUpload() async {
+        if viewModel.newRecipe {
+            print("Uploading new recipe.")
+            if let recipeValidationError = recipeValid() {
+                viewModel.presentAlert(recipeValidationError)
+                return
+            }
+            
+            if let alert = await appState.uploadRecipe(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(), createNew: true) {
+                viewModel.presentAlert(alert)
+                return
+            }
+        } else {
+            print("Uploading changed recipe.")
+            
+            guard let _ = Int(viewModel.observableRecipeDetail.id) else {
+                viewModel.presentAlert(RequestAlert.REQUEST_DROPPED)
+                return
+            }
+            
+            if let alert = await appState.uploadRecipe(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(), createNew: false) {
+                viewModel.presentAlert(alert)
+                return
+            }
+        }
+        await appState.getCategories()
+        await appState.getCategory(named: viewModel.observableRecipeDetail.recipeCategory, fetchMode: .preferServer)
+        viewModel.editMode = false
     }
     
-    func deleteRecipe() async -> RequestAlert? {
+    func handleDelete() async {
+        let category = viewModel.observableRecipeDetail.recipeCategory
         guard let id = Int(viewModel.observableRecipeDetail.id) else {
-            return .REQUEST_DROPPED
+            viewModel.presentAlert(RequestAlert.REQUEST_DROPPED)
+            return
         }
-        return await appState.deleteRecipe(withId: id, categoryName: viewModel.observableRecipeDetail.recipeCategory)
+        if let alert = await appState.deleteRecipe(withId: id, categoryName: viewModel.observableRecipeDetail.recipeCategory) {
+            viewModel.presentAlert(alert)
+            return
+        }
+        await appState.getCategories()
+        await appState.getCategory(named: category, fetchMode: .preferServer)
+        self.isPresented = false
     }
     
     func recipeValid() -> RecipeAlert? {
@@ -434,7 +442,6 @@ extension RecipeView {
                 }
             }
         }
-        
         return nil
     }
 }
@@ -461,12 +468,12 @@ fileprivate struct RecipeImportSection: View {
             Button {
                 Task {
                     if let res = await importRecipe(viewModel.importUrl) {
-                        viewModel.alertType = RecipeAlert.CUSTOM(
-                            title: res.localizedTitle,
-                            description: res.localizedDescription
+                        viewModel.presentAlert(
+                            RecipeAlert.CUSTOM(
+                                title: res.localizedTitle,
+                                description: res.localizedDescription
+                            )
                         )
-                        viewModel.alertAction = { }
-                        viewModel.presentAlert = true
                     }
                 }
             } label: {
