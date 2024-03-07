@@ -13,7 +13,12 @@ struct RecipeView: View {
     @EnvironmentObject var appState: AppState
     @Binding var isPresented: Bool
     @StateObject var viewModel: ViewModel
-    @State var imageHeight: CGFloat = 350
+    var imageHeight: CGFloat {
+        if let image = viewModel.recipeImage {
+            return image.size.height < 350 ? image.size.height : 350
+        }
+        return 200
+    }
     
     private enum CoordinateSpaces {
         case scrollView
@@ -37,7 +42,7 @@ struct RecipeView: View {
                             .frame(height: 400)
                             .foregroundStyle(
                                 LinearGradient(
-                                    gradient: Gradient(colors: [.nextcloudBlue, .nextcloudDarkBlue]),
+                                    gradient: Gradient(colors: [.ncGradientDark, .ncGradientLight]),
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
@@ -107,6 +112,7 @@ struct RecipeView: View {
         .coordinateSpace(name: CoordinateSpaces.scrollView)
         .ignoresSafeArea(.container, edges: .top)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.visible, for: .navigationBar)
         //.toolbarTitleDisplayMode(.inline)
         .navigationTitle(viewModel.showTitle ? viewModel.recipe.name : "")
         .toolbar {
@@ -170,9 +176,7 @@ struct RecipeView: View {
                     size: .FULL,
                     fetchMode: UserSettings.shared.storeImages ? .preferLocal : .onlyServer
                 )
-                if let image = viewModel.recipeImage {
-                    imageHeight = image.size.height < 350 ? image.size.height : 350
-                }
+                
             } else {
                 // Prepare view for a new recipe
                 viewModel.setupView(recipeDetail: RecipeDetail())
@@ -278,6 +282,7 @@ struct RecipeView: View {
 }
 
 
+
 extension RecipeView {
     func importRecipe(from url: String) async -> UserAlert? {
         let (scrapedRecipe, error) = await appState.importRecipe(url: url)
@@ -300,8 +305,6 @@ extension RecipeView {
         }
         return nil
     }
-    
-    
 }
 
 
@@ -446,42 +449,3 @@ struct RecipeViewToolBar: ToolbarContent {
 }
 
 
-// MARK: - Recipe Import Section
-
-fileprivate struct RecipeImportSection: View {
-    @ObservedObject var viewModel: RecipeView.ViewModel
-    var importRecipe: (String) async -> UserAlert?
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            SecondaryLabel(text: "Import Recipe")
-                
-            Text(LocalizedStringKey("Paste the url of a recipe you would like to import in the above, and we will try to fill in the fields for you. This feature does not work with every website. If your favourite website is not supported, feel free to reach out for help. You can find the contact details in the app settings."))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            
-            
-                TextField(LocalizedStringKey("URL (e.g. example.com/recipe)"), text: $viewModel.importUrl)
-                    .textFieldStyle(.roundedBorder)
-                    .padding(.top, 5)
-            Button {
-                Task {
-                    if let res = await importRecipe(viewModel.importUrl) {
-                        viewModel.presentAlert(
-                            RecipeAlert.CUSTOM(
-                                title: res.localizedTitle,
-                                description: res.localizedDescription
-                            )
-                        )
-                    }
-                }
-            } label: {
-                Text(LocalizedStringKey("Import"))
-            }
-            .buttonStyle(.bordered)
-        }
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.white.opacity(0.1)))
-        .padding()
-    }
-}

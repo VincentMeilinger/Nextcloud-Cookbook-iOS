@@ -43,7 +43,7 @@ struct RecipeIngredientSection: View {
                     } else {
                         Image(systemName: "heart.text.square")
                     }
-                }
+                }.disabled(viewModel.editMode)
             }
             
             ForEach(0..<viewModel.observableRecipeDetail.recipeIngredient.count, id: \.self) { ix in

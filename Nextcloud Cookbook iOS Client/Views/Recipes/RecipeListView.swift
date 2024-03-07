@@ -12,6 +12,7 @@ import SwiftUI
 
 struct RecipeListView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var groceryList: GroceryList
     @State var categoryName: String
     @State var searchText: String = ""
     @Binding var showEditView: Bool
@@ -37,6 +38,8 @@ struct RecipeListView: View {
         }
         .navigationDestination(for: Recipe.self) { recipe in
             RecipeView(isPresented: .constant(true), viewModel: RecipeView.ViewModel(recipe: recipe))
+                .environmentObject(appState)
+                .environmentObject(groceryList)
         }
         .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
         .toolbar {

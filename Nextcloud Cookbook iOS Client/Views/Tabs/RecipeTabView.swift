@@ -10,6 +10,8 @@ import SwiftUI
 
 
 struct RecipeTabView: View {
+    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var groceryList: GroceryList
     @EnvironmentObject var viewModel: RecipeTabView.ViewModel
     @EnvironmentObject var mainViewModel: AppState
     
@@ -49,9 +51,12 @@ struct RecipeTabView: View {
             }
             .navigationDestination(isPresented: $viewModel.presentSettingsView) {
                 SettingsView()
+                    .environmentObject(appState)
             }
             .navigationDestination(isPresented: $viewModel.presentEditView) {
                 RecipeView(isPresented: $viewModel.presentEditView, viewModel: RecipeView.ViewModel())
+                    .environmentObject(appState)
+                    .environmentObject(groceryList)
             }
         } detail: {
             NavigationStack {
@@ -62,6 +67,7 @@ struct RecipeTabView: View {
                     )
                     .id(category.id) // Workaround: This is needed to update the detail view when the selection changes
                 }
+                
             }
         }
         .tint(.nextcloudBlue)

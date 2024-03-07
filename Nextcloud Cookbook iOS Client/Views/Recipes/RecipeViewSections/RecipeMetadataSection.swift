@@ -70,17 +70,17 @@ struct RecipeMetadataSection: View {
                 Button {
                     presentServingsPopover.toggle()
                 } label: {
-                    Text("\(viewModel.observableRecipeDetail.recipeYield) serving(s)")
+                    Text("\(viewModel.observableRecipeDetail.recipeYield) Serving(s)")
                         .lineLimit(1)
                 }
                 .popover(isPresented: $presentServingsPopover) {
-                    PickerPopoverView(value: $viewModel.observableRecipeDetail.recipeYield, items: 0..<99, titleKey: "Servings")
+                    PickerPopoverView(isPresented: $presentServingsPopover, value: $viewModel.observableRecipeDetail.recipeYield, items: 0..<99, title: "Servings", titleKey: "Servings")
                 }
             }
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.white.opacity(0.1)))
-        .padding()
+        .padding([.horizontal, .bottom], 5)
         .sheet(isPresented: $presentKeywordSheet) {
             KeywordPickerView(title: "Keywords", searchSuggestions: appState.allKeywords, selection: $viewModel.observableRecipeDetail.keywords)
         }
@@ -88,20 +88,35 @@ struct RecipeMetadataSection: View {
 }
 
 fileprivate struct PickerPopoverView<Item: Hashable & CustomStringConvertible, Collection: Sequence>: View where Collection.Element == Item {
+    @Binding var isPresented: Bool
     @Binding var value: Item
     @State var items: Collection
+    var title: LocalizedStringKey
     var titleKey: LocalizedStringKey = ""
     
     var body: some View {
-        HStack {
-            Picker(selection: $value, label: Text(titleKey)) {
-                ForEach(Array(items), id: \.self) { item in
-                    Text(item.description).tag(item)
+        VStack {
+            HStack {
+                SecondaryLabel(text: title)
+                Spacer()
+                Button {
+                    isPresented = false
+                } label: {
+                    Text("Done")
                 }
             }
-            .pickerStyle(WheelPickerStyle())
-            .frame(width: 150, height: 150)
-            .clipped()
+            Spacer()
+            HStack {
+                Picker(selection: $value, label: Text(titleKey)) {
+                    ForEach(Array(items), id: \.self) { item in
+                        Text(item.description).tag(item)
+                    }
+                }
+                .pickerStyle(WheelPickerStyle())
+                .frame(width: 150, height: 150)
+                .clipped()
+            }
+            Spacer()
         }
         .padding()
     }

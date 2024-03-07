@@ -21,4 +21,10 @@ extension Color {
     public static var background: Color {
         return Color(UIColor.systemBackground)
     }
+    public static var ncGradientDark: Color {
+        return Color("ncgradientdarkblue")
+    }
+    public static var ncGradientLight: Color {
+        return Color("ncgradientlightblue")
+    }
 }

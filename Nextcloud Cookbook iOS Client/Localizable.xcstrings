@@ -114,9 +114,27 @@
     },
     "%@: %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "%1$@: %2$@"
           }
         }
@@ -168,9 +186,27 @@
     },
     "%lld h %lld min" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h %2$lld min"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "%1$lld h %2$lld min"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h %2$lld min"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "%1$lld h %2$lld min"
           }
         }
@@ -226,8 +262,27 @@
         }
       }
     },
-    "%lld serving(s)" : {
-
+    "%lld Serving(s)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Portion(en)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Porción(es)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Portion(s)"
+          }
+        }
+      }
     },
     "%lld." : {
       "extractionState" : "stale",
@@ -431,14 +486,33 @@
       }
     },
     "Add cooking steps for fellow chefs to follow." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier ist Platz für eine Rezeptanleitung."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay pasos de cocina."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n'y a pas encore d'étapes de cuisson."
+          }
+        }
+      }
     },
     "Add groceries to this list by either using the button next to an ingredient list in a recipe, or by swiping right on individual ingredients of a recipe." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn du alle Zutaten eines Rezepts auf einmal hinzufügen möchtest, klicke einfach auf den „Einkaufsliste“-Button, den du neben der Zutatenliste des Rezepts findest. Möchtest du nur einzelne Zutaten hinzufügen, wische die gewünschte Zutat in der Liste des Rezepts einfach nach rechts."
+            "value" : "Für das Hinzufügen aller Zutaten eines Rezepts kann der „Einkaufsliste“-Button neben der Zutatenliste eines Rezepts benutzt werden. Sollen nur einzelne Zutaten hinzugefügt werden, kann die gewünschte Zutat in der Liste des Rezepts nach rechts gewischt werden."
           }
         },
         "es" : {
@@ -589,7 +663,27 @@
       }
     },
     "Calories" : {
-      "comment" : "Calories"
+      "comment" : "Calories",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalorien"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calorías"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calories"
+          }
+        }
+      }
     },
     "Cancel" : {
       "localizations" : {
@@ -614,7 +708,27 @@
       }
     },
     "Carbohydrate content" : {
-      "comment" : "Carbohydrate content"
+      "comment" : "Carbohydrate content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kohlenhydratgehalt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carbohidratos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glucides"
+          }
+        }
+      }
     },
     "Category" : {
       "localizations" : {
@@ -662,10 +776,49 @@
       }
     },
     "Cholesterol content" : {
-      "comment" : "Cholesterol content"
+      "comment" : "Cholesterol content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cholesteringehalt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colesterol"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cholestérol"
+          }
+        }
+      }
     },
     "Choose" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auswählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elija"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez"
+          }
+        }
+      }
     },
     "Configure what is stored on your device." : {
       "localizations" : {
@@ -821,29 +974,6 @@
         }
       }
     },
-    "Cooking duration:" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kochen:"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duración de cocción:"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temps de cuisson:"
-          }
-        }
-      }
-    },
     "Cooking time" : {
       "localizations" : {
         "de" : {
@@ -982,7 +1112,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rezept Löschen"
+            "value" : "Rezept löschen"
           }
         },
         "es" : {
@@ -1000,7 +1130,26 @@
       }
     },
     "Delete Recipe" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept löschen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la recette"
+          }
+        }
+      }
     },
     "Delete recipe?" : {
       "localizations" : {
@@ -1074,6 +1223,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fertig"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer"
           }
         }
       }
@@ -1300,10 +1461,50 @@
       }
     },
     "Fat content" : {
-      "comment" : "Fat content"
+      "comment" : "Fat content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fett"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grasas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lipides"
+          }
+        }
+      }
     },
     "Fiber content" : {
-      "comment" : "Fiber content"
+      "comment" : "Fiber content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ballaststoffgehalt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fibra dietética"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fibres alimentaires"
+          }
+        }
+      }
     },
     "General" : {
       "localizations" : {
@@ -1372,7 +1573,26 @@
       }
     },
     "Hours" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stunden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heures"
+          }
+        }
+      }
     },
     "If 'Same as Device' is selected and your device language is not supported yet, this option will default to english." : {
       "localizations" : {
@@ -1423,7 +1643,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Möchtest du einen Beitrag zu diesem Projekt leisten oder einfach nur einen Blick in den Quellcode werfen? Wir freuen uns über jedes Interesse und laden dich ein, das GitHub-Repository unserer Anwendung zu besuchen."
+            "value" : "Wir freuen uns über jedes Interesse und laden Nutzer ein, das GitHub-Repository dieser Anwendung zu besuchen, um einen Beitrag zu diesem Projekt zu leisten oder einfach nur einen Blick in den Quellcode zu werfen. "
           }
         },
         "es" : {
@@ -1458,29 +1678,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Si vous avez des questions, des commentaires ou avez besoin d'aide, veuillez consulter la page d'assistance pour obtenir les informations de contact."
-          }
-        }
-      }
-    },
-    "Image MIME Error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MIME fehler"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
           }
         }
       }
@@ -1529,37 +1726,27 @@
         }
       }
     },
-    "Import recipe from a website" : {
-      "extractionState" : "stale",
+    "Ingredient" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rezept von einer Website importieren (Experimentell)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import recipe from a website (Experimental)"
+            "value" : "Zutat"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importar receta desde un sitio web (Experimental)"
+            "value" : "Ingrediente"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importer une recette depuis un site web (Expérimental)"
+            "value" : "Ingrédient"
           }
         }
       }
-    },
-    "Ingredient" : {
-
     },
     "Ingredients" : {
       "localizations" : {
@@ -1628,7 +1815,26 @@
       }
     },
     "Instruction" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anleitung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instrucción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instruction"
+          }
+        }
+      }
     },
     "Instructions" : {
       "localizations" : {
@@ -1763,7 +1969,26 @@
       }
     },
     "List your tools here. 🍴" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Küchenutensilien können hier notiert werden. 🍴"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enumera tus utensilios de cocina aquí. 🍴"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listez vos ustensiles de cuisine ici. 🍴"
+          }
+        }
+      }
     },
     "Log out" : {
       "localizations" : {
@@ -1876,7 +2101,26 @@
       }
     },
     "Minutes" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minutos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minutes"
+          }
+        }
+      }
     },
     "Missing Name" : {
       "extractionState" : "stale",
@@ -2014,7 +2258,26 @@
       }
     },
     "New Recipe" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Rezept"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle recette"
+          }
+        }
+      }
     },
     "Nextcloud Login" : {
       "localizations" : {
@@ -2307,7 +2570,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte überprüfe die Anmeldedaten oder die Internetverbindung."
+            "value" : "Bitte die Anmeldedaten und die Internetverbindung überprüfen."
           }
         },
         "es" : {
@@ -2392,7 +2655,27 @@
       }
     },
     "Protein content" : {
-      "comment" : "Protein content"
+      "comment" : "Protein content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proteingehalt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proteínas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protéines"
+          }
+        }
+      }
     },
     "Recipe" : {
       "localizations" : {
@@ -2417,7 +2700,26 @@
       }
     },
     "Recipe Name" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept-Titel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título de la receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre de la recette"
+          }
+        }
+      }
     },
     "Recipes" : {
       "localizations" : {
@@ -2486,7 +2788,27 @@
       }
     },
     "Saturated fat content" : {
-      "comment" : "Saturated fat content"
+      "comment" : "Saturated fat content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesättigte Fettsäuren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grasas saturadas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graisses saturées"
+          }
+        }
+      }
     },
     "Search" : {
       "localizations" : {
@@ -2577,7 +2899,26 @@
       }
     },
     "Select Keywords" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlagwörter auswählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccione palabras clave"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez les mots-clés"
+          }
+        }
+      }
     },
     "Selected keywords:" : {
       "localizations" : {
@@ -2602,10 +2943,49 @@
       }
     },
     "Serving size" : {
-      "comment" : "Serving size"
+      "comment" : "Serving size",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portionen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portions"
+          }
+        }
+      }
     },
     "Servings" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portionen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portions"
+          }
+        }
+      }
     },
     "Servings:" : {
       "extractionState" : "stale",
@@ -2720,7 +3100,26 @@
       }
     },
     "Share Recipe" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir receta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partager la recette"
+          }
+        }
+      }
     },
     "Show help" : {
       "localizations" : {
@@ -2745,10 +3144,49 @@
       }
     },
     "Sodium content" : {
-      "comment" : "Sodium content"
+      "comment" : "Sodium content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natriumgehalt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sodio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sodium"
+          }
+        }
+      }
     },
     "Start by adding your first ingredient! 🥬" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier fehlen Zutaten! 🥬"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Empieza por añadir tu primer ingrediente! 🥬"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencez par ajouter votre premier ingrédient ! 🥬"
+          }
+        }
+      }
     },
     "Store recipe images locally" : {
       "localizations" : {
@@ -2817,7 +3255,27 @@
       }
     },
     "Sugar content" : {
-      "comment" : "Sugar content"
+      "comment" : "Sugar content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuckergehalt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azúcares"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sucres"
+          }
+        }
+      }
     },
     "Support" : {
       "localizations" : {
@@ -3002,7 +3460,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diese Anwendung ist ein Open-Source-Projekt. Bei bestehendem Interesse neue Funktionen vorzuschlagen oder beizutragen, oder wenn Probleme auftreten, nutze den Kontakt-Link oder besuche das GitHub-Repository in den App-Einstellungen."
+            "value" : "Diese Anwendung ist ein Open-Source-Projekt. Bei bestehendem Interesse neue Funktionen vorzuschlagen oder beizutragen, oder wenn Probleme auftreten, den Kontakt-Link nutzen oder das GitHub-Repository in den App-Einstellungen besuchen."
           }
         },
         "es" : {
@@ -3065,7 +3523,26 @@
       }
     },
     "Tool" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Küchenutensilie"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utensilio de cocina"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustensile de cuisine"
+          }
+        }
+      }
     },
     "Tools" : {
       "localizations" : {
@@ -3157,7 +3634,27 @@
       }
     },
     "Trans fat content" : {
-      "comment" : "Trans fat content"
+      "comment" : "Trans fat content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transfettgehalt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grasas trans"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graisses trans"
+          }
+        }
+      }
     },
     "Unable to complete action." : {
       "localizations" : {
@@ -3208,7 +3705,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Inhalt der Website konnte nicht geladen werden. Bitte überprüfe die Internetverbindung."
+            "value" : "Der Inhalt der Website konnte nicht geladen werden. Bitte die Internetverbindung überprüfen."
           }
         },
         "es" : {
@@ -3230,7 +3727,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Es ist nicht möglich, das Rezept hochzuladen. Bitte überprüfe die Internetverbindung."
+            "value" : "Es ist nicht möglich, das Rezept hochzuladen. Bitte die Internetverbindung überprüfen."
           }
         },
         "es" : {
@@ -3248,7 +3745,27 @@
       }
     },
     "Unsaturated fat content" : {
-      "comment" : "Unsaturated fat content"
+      "comment" : "Unsaturated fat content",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ungesättigte Fettsäuren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grasas insaturadas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graisses insaturées"
+          }
+        }
+      }
     },
     "Upload" : {
       "extractionState" : "stale",
@@ -3274,10 +3791,48 @@
       }
     },
     "Upload Changes" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichern"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Télécharger"
+          }
+        }
+      }
     },
     "Upload Recipe" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichern"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Télécharger"
+          }
+        }
+      }
     },
     "URL (e.g. example.com/recipe)" : {
       "localizations" : {
@@ -3329,6 +3884,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nutzername: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de usuario: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom d'utilisateur: %@"
           }
         }
       }

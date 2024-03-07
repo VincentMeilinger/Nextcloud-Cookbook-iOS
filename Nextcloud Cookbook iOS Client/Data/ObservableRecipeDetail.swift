@@ -82,6 +82,13 @@ class ObservableRecipeDetail: ObservableObject {
             nutrition: self.nutrition
         )
     }
+    
+    func ingredients(for servings: Int) -> [String] {
+        for ingredient in recipeIngredient {
+            // TODO: Parse ingredient strings, adjust them for yield
+        }
+        return []
+    }
 }
 
 
