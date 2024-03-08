@@ -406,6 +406,9 @@ struct RecipeViewToolBar: ToolbarContent {
         }
         await appState.getCategories()
         await appState.getCategory(named: viewModel.observableRecipeDetail.recipeCategory, fetchMode: .preferServer)
+        if let id = Int(viewModel.observableRecipeDetail.id) {
+            await appState.getRecipe(id: id, fetchMode: .onlyServer, save: true)
+        }
         viewModel.editMode = false
     }
     
