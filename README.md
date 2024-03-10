@@ -7,9 +7,8 @@ A Nextcloud Cookbook native iOS/iPadOS/MacOS client, built using Swift and Swift
 See [here](https://github.com/nextcloud/cookbook) for the corresponding Nextcloud server application.
 
 You can download the app from the AppStore:
-  
-[<img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" alt="Download on the App Store" height="80" width="160">](https://apps.apple.com/de/app/cookbook-client/id6467141985)
 
+[<img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" alt="Download on the App Store" height="80" width="160">](https://apps.apple.com/de/app/cookbook-client/id6467141985)
 
 ## Features
 
@@ -27,16 +26,30 @@ You can download the app from the AppStore:
 - [x] Share recipes (by name and keyword)
 - [x] Import recipes
 - [x] Keep display awake when viewing recipes
-- [ ] Cooking timer for recipes
 - [x] Ingredient shopping list
-- [ ] Add code documentation
 
-**Planned Features**
-- Calculate the required amount of a recipe ingredient depending on the number of servings
-- Fuzzy search for recipe titles/keywords
-- Search for recipes based on left-over ingredients
+## Roadmap
 
-      
+- [ ] **Version 1.9**: Enhancements to recipe editing for better intuitiveness; user interface design improvements for recipe viewing.
+
+- [ ] **Version 1.10**: Recipe ingredient calculator: Enables calculation of ingredient quantities based on a specifiable yield number.
+
+- [ ] **Version 1.11**: Decoupling of internal recipe representation from the Nextcloud Cookbook recipe representation. This change provides increased flexibility for API updates and enables the introduction of features not currently supported by the Cookbook API, such as uploading images.
+
+- [ ] **Version 1.12 and beyond** (Ideas for the future; integration not guaranteed!): 
+  
+  - Fuzzy search for recipe names and keywords.
+  
+  - In-app timer for the cook time specified in a recipe.
+  
+  - Search for recipes based on left-over ingredients.
+  
+  - An option to use the app without a Nextcloud account.
+  
+  - An option to specify the recipe folder in the Files app, to enable the app to work on the recipe files directly.
+  
+**If you would like to suggest new features/improvements or report bugs, please open an Issue!**
+
 ## Screenshots
 
 The following screenshots might not be up to date, since there can always be minor user interface changes.
