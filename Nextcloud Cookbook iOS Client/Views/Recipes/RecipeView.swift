@@ -11,8 +11,10 @@ import SwiftUI
 
 struct RecipeView: View {
     @EnvironmentObject var appState: AppState
-    @Binding var isPresented: Bool
+    @Environment(\.dismiss) private var dismiss
     @StateObject var viewModel: ViewModel
+    @GestureState private var dragOffset = CGSize.zero
+    
     var imageHeight: CGFloat {
         if let image = viewModel.recipeImage {
             return image.size.height < 350 ? image.size.height : 350
@@ -115,8 +117,9 @@ struct RecipeView: View {
         .toolbar(.visible, for: .navigationBar)
         //.toolbarTitleDisplayMode(.inline)
         .navigationTitle(viewModel.showTitle ? viewModel.recipe.name : "")
+            
         .toolbar {
-            RecipeViewToolBar(isPresented: $isPresented, viewModel: viewModel)
+            RecipeViewToolBar(viewModel: viewModel)
         }
         .sheet(isPresented: $viewModel.presentShareSheet) {
             ShareView(recipeDetail: viewModel.observableRecipeDetail.toRecipeDetail(),
@@ -313,16 +316,18 @@ extension RecipeView {
 
 struct RecipeViewToolBar: ToolbarContent {
     @EnvironmentObject var appState: AppState
-    @Binding var isPresented: Bool
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: RecipeView.ViewModel
     
 
     var body: some ToolbarContent {
         if viewModel.editMode {
-            ToolbarItemGroup(placement: .topBarLeading){
+            ToolbarItemGroup(placement: .topBarLeading) {
                 Button("Cancel") {
                     viewModel.editMode = false
-                    isPresented = false
+                    if viewModel.newRecipe {
+                        dismiss()
+                    }
                 }
                 
                 if !viewModel.newRecipe {
@@ -407,9 +412,10 @@ struct RecipeViewToolBar: ToolbarContent {
         await appState.getCategories()
         await appState.getCategory(named: viewModel.observableRecipeDetail.recipeCategory, fetchMode: .preferServer)
         if let id = Int(viewModel.observableRecipeDetail.id) {
-            await appState.getRecipe(id: id, fetchMode: .onlyServer, save: true)
+            let _ = await appState.getRecipe(id: id, fetchMode: .onlyServer, save: true)
         }
         viewModel.editMode = false
+        viewModel.presentAlert(RecipeAlert.UPLOAD_SUCCESS)
     }
     
     func handleDelete() async {
@@ -424,7 +430,8 @@ struct RecipeViewToolBar: ToolbarContent {
         }
         await appState.getCategories()
         await appState.getCategory(named: category, fetchMode: .preferServer)
-        self.isPresented = false
+        viewModel.presentAlert(RecipeAlert.DELETE_SUCCESS)
+        dismiss()
     }
     
     func recipeValid() -> RecipeAlert? {

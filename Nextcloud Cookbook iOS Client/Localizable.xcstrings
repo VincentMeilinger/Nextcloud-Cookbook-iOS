@@ -1195,6 +1195,9 @@
         }
       }
     },
+    "Deletion successful." : {
+
+    },
     "Description" : {
       "localizations" : {
         "de" : {
@@ -2721,6 +2724,9 @@
         }
       }
     },
+    "Recipe upload successful." : {
+
+    },
     "Recipes" : {
       "localizations" : {
         "de" : {
@@ -3253,6 +3259,9 @@
           }
         }
       }
+    },
+    "Success!" : {
+
     },
     "Sugar content" : {
       "comment" : "Sugar content",

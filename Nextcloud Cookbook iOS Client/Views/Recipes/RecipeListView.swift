@@ -37,7 +37,7 @@ struct RecipeListView: View {
             }
         }
         .navigationDestination(for: Recipe.self) { recipe in
-            RecipeView(isPresented: .constant(true), viewModel: RecipeView.ViewModel(recipe: recipe))
+            RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
                 .environmentObject(appState)
                 .environmentObject(groceryList)
         }

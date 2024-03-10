@@ -54,7 +54,7 @@ struct RecipeTabView: View {
                     .environmentObject(appState)
             }
             .navigationDestination(isPresented: $viewModel.presentEditView) {
-                RecipeView(isPresented: $viewModel.presentEditView, viewModel: RecipeView.ViewModel())
+                RecipeView(viewModel: RecipeView.ViewModel())
                     .environmentObject(appState)
                     .environmentObject(groceryList)
             }

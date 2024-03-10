@@ -34,7 +34,7 @@ struct SearchTabView: View {
                     }
                 }
                 .navigationDestination(for: Recipe.self) { recipe in
-                    RecipeView(isPresented: .constant(true), viewModel: RecipeView.ViewModel(recipe: recipe))
+                    RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
                 }
                 .searchable(text: $viewModel.searchText, prompt: "Search recipes/keywords")
             }
