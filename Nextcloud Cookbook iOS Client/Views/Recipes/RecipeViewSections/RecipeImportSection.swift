@@ -44,7 +44,7 @@ struct RecipeImportSection: View {
             .buttonStyle(.bordered)
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.white.opacity(0.1)))
+        .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.primary.opacity(0.1)))
         .padding(5)
         .padding(.top, 5)
     }

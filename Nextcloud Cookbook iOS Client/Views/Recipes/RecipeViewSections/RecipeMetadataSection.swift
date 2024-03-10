@@ -79,7 +79,7 @@ struct RecipeMetadataSection: View {
             }
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.white.opacity(0.1)))
+        .background(RoundedRectangle(cornerRadius: 20).foregroundStyle(Color.primary.opacity(0.1)))
         .padding([.horizontal, .bottom], 5)
         .sheet(isPresented: $presentKeywordSheet) {
             KeywordPickerView(title: "Keywords", searchSuggestions: appState.allKeywords, selection: $viewModel.observableRecipeDetail.keywords)
