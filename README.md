@@ -30,7 +30,7 @@ You can download the app from the AppStore:
 
 ## Roadmap
 
-- [ ] **Version 1.9**: Enhancements to recipe editing for better intuitiveness; user interface design improvements for recipe viewing.
+- [x] **Version 1.9**: Enhancements to recipe editing for better intuitiveness; user interface design improvements for recipe viewing.
 
 - [ ] **Version 1.10**: Recipe ingredient calculator: Enables calculation of ingredient quantities based on a specifiable yield number.
 
@@ -68,8 +68,8 @@ If you wish to see additional languages supported, please don't hesitate to open
 
 - [x] English
 - [x] German
-- [x] Spanish
-- [x] French
+- [x] Spanish (mostly machine translated)
+- [x] French (mostly machine translated)
 
 ## Further information
 
