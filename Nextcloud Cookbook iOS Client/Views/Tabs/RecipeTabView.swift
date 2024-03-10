@@ -13,13 +13,12 @@ struct RecipeTabView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var groceryList: GroceryList
     @EnvironmentObject var viewModel: RecipeTabView.ViewModel
-    @EnvironmentObject var mainViewModel: AppState
     
     var body: some View {
         NavigationSplitView {
             List(selection: $viewModel.selectedCategory) {
                 // Categories
-                ForEach(mainViewModel.categories) { category in
+                ForEach(appState.categories) { category in
                     if category.recipe_count != 0 {
                         NavigationLink(value: category) {
                             HStack(alignment: .center) {
@@ -72,11 +71,17 @@ struct RecipeTabView: View {
         }
         .tint(.nextcloudBlue)
         .task {
-            viewModel.serverConnection = await mainViewModel.checkServerConnection()
+            let connection = await appState.checkServerConnection()
+            DispatchQueue.main.async {
+                viewModel.serverConnection = connection
+            }
         }
         .refreshable {
-            viewModel.serverConnection = await mainViewModel.checkServerConnection()
-            await mainViewModel.getCategories()
+            let connection = await appState.checkServerConnection()
+            DispatchQueue.main.async {
+                viewModel.serverConnection = connection
+            }
+            await appState.getCategories()
         }
     }
     

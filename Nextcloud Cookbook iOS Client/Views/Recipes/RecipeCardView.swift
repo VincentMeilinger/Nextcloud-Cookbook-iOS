@@ -48,7 +48,6 @@ struct RecipeCardView: View {
         }
         .background(Color.backgroundHighlight)
         .clipShape(RoundedRectangle(cornerRadius: 17))
-        .padding(.horizontal)
         .task {
             recipeThumb = await appState.getImage(
                 id: recipe.recipe_id,
@@ -67,5 +66,6 @@ struct RecipeCardView: View {
                 fetchMode: UserSettings.shared.storeThumb ? .preferServer : .onlyServer
             )
         }
+        .frame(height: 80)
     }
 }

@@ -17,10 +17,9 @@ struct RecipeListView: View {
     @State var searchText: String = ""
     @Binding var showEditView: Bool
     @State var selectedRecipe: Recipe? = nil
-    @State var presentRecipeView: Bool = false
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        /*ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
                     NavigationLink(value: recipe) {
@@ -31,17 +30,35 @@ struct RecipeListView: View {
                     .buttonStyle(.plain)
                     .onTapGesture {
                         selectedRecipe = recipe
-                        presentRecipeView = true
+                        //presentRecipeView = true
                     }
                 }
             }
+            
+        }*/
+        List(recipesFiltered(), id: \.recipe_id) { recipe in
+            RecipeCardView(recipe: recipe)
+                .shadow(radius: 2)
+                .background(
+                    NavigationLink(value: recipe) {
+                        EmptyView()
+                    }
+                    .buttonStyle(.plain)
+                    .opacity(0)
+                )
+                .frame(height: 85)
+                .listRowInsets(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
+                .listRowSeparatorTint(.clear)
         }
+        .listStyle(.plain)
+        .searchable(text: $searchText, prompt: "Search recipes/keywords")
+        .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
+        
         .navigationDestination(for: Recipe.self) { recipe in
             RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
                 .environmentObject(appState)
                 .environmentObject(groceryList)
         }
-        .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -52,7 +69,6 @@ struct RecipeListView: View {
                 }
             }
         }
-        .searchable(text: $searchText, prompt: "Search recipes/keywords")
         .task {
             await appState.getCategory(
                 named: categoryName,
