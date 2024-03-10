@@ -10,7 +10,7 @@ You can download the app from the AppStore:
 
 [<img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" alt="Download on the App Store" height="80" width="160">](https://apps.apple.com/de/app/cookbook-client/id6467141985)
 
-## Features
+## Core Features
 
 - [x] Load recipes from nextcloud instance
 - [x] Offline recipes
