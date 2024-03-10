@@ -19,23 +19,6 @@ struct RecipeListView: View {
     @State var selectedRecipe: Recipe? = nil
     
     var body: some View {
-        /*ScrollView(showsIndicators: false) {
-            LazyVStack {
-                ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
-                    NavigationLink(value: recipe) {
-                        RecipeCardView(recipe: recipe)
-                            .shadow(radius: 2)
-                            
-                    }
-                    .buttonStyle(.plain)
-                    .onTapGesture {
-                        selectedRecipe = recipe
-                        //presentRecipeView = true
-                    }
-                }
-            }
-            
-        }*/
         List(recipesFiltered(), id: \.recipe_id) { recipe in
             RecipeCardView(recipe: recipe)
                 .shadow(radius: 2)
@@ -47,7 +30,7 @@ struct RecipeListView: View {
                     .opacity(0)
                 )
                 .frame(height: 85)
-                .listRowInsets(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
+                .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
                 .listRowSeparatorTint(.clear)
         }
         .listStyle(.plain)

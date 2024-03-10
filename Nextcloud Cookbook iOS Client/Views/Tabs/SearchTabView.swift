@@ -15,24 +15,21 @@ struct SearchTabView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                ScrollView(showsIndicators: false) {
-                    /*
-                    Picker("Topping", selection: $viewModel.searchMode) {
-                        ForEach(ViewModel.SearchMode.allCases, id: \.self) { mode in
-                            Text(mode.rawValue)
-                        }
-                    }.pickerStyle(.segmented)
-                     */
-                    LazyVStack {
-                        ForEach(viewModel.recipesFiltered(), id: \.recipe_id) { recipe in
+                List(viewModel.recipesFiltered(), id: \.recipe_id) { recipe in
+                    RecipeCardView(recipe: recipe)
+                        .shadow(radius: 2)
+                        .background(
                             NavigationLink(value: recipe) {
-                                RecipeCardView(recipe: recipe)
-                                    .shadow(radius: 2)
+                                EmptyView()
                             }
                             .buttonStyle(.plain)
-                        }
-                    }
+                            .opacity(0)
+                        )
+                        .frame(height: 85)
+                        .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
+                        .listRowSeparatorTint(.clear)
                 }
+                .listStyle(.plain)
                 .navigationDestination(for: Recipe.self) { recipe in
                     RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
                 }
