@@ -785,7 +785,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
 				DEVELOPMENT_TEAM = EF2ABA36D9;
@@ -829,7 +829,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
 				DEVELOPMENT_TEAM = EF2ABA36D9;

@@ -1196,7 +1196,26 @@
       }
     },
     "Deletion successful." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Rezept wurde erfolgreich gelöscht."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La receta se ha eliminado con éxito."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recette a été supprimée avec succès."
+          }
+        }
+      }
     },
     "Description" : {
       "localizations" : {
@@ -2725,7 +2744,26 @@
       }
     },
     "Recipe upload successful." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Rezept wurde erfolgreich hochgeladen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La receta se ha subido con éxito."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recette a été téléchargée avec succès."
+          }
+        }
+      }
     },
     "Recipes" : {
       "localizations" : {
@@ -3261,7 +3299,26 @@
       }
     },
     "Success!" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfolg!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Éxito!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Succès!"
+          }
+        }
+      }
     },
     "Sugar content" : {
       "comment" : "Sugar content",
