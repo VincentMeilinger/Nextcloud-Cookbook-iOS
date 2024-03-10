@@ -10,35 +10,38 @@ import SwiftUI
 
 
 
-struct CategoryDetailView: View {
+struct RecipeListView: View {
+    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var groceryList: GroceryList
     @State var categoryName: String
     @State var searchText: String = ""
-    @ObservedObject var viewModel: AppState
     @Binding var showEditView: Bool
     @State var selectedRecipe: Recipe? = nil
-    @State var presentRecipeView: Bool = false
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            LazyVStack {
-                ForEach(recipesFiltered(), id: \.recipe_id) { recipe in
+        List(recipesFiltered(), id: \.recipe_id) { recipe in
+            RecipeCardView(recipe: recipe)
+                .shadow(radius: 2)
+                .background(
                     NavigationLink(value: recipe) {
-                        RecipeCardView(viewModel: viewModel, recipe: recipe)
-                            .shadow(radius: 2)
-                            
+                        EmptyView()
                     }
                     .buttonStyle(.plain)
-                    .onTapGesture {
-                        selectedRecipe = recipe
-                        presentRecipeView = true
-                    }
-                }
-            }
+                    .opacity(0)
+                )
+                .frame(height: 85)
+                .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
+                .listRowSeparatorTint(.clear)
         }
-        .navigationDestination(for: Recipe.self) { recipe in
-            RecipeDetailView(viewModel: viewModel, recipe: recipe)
-        }
+        .listStyle(.plain)
+        .searchable(text: $searchText, prompt: "Search recipes/keywords")
         .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
+        
+        .navigationDestination(for: Recipe.self) { recipe in
+            RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
+                .environmentObject(appState)
+                .environmentObject(groceryList)
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -49,15 +52,14 @@ struct CategoryDetailView: View {
                 }
             }
         }
-        .searchable(text: $searchText, prompt: "Search recipes/keywords")
         .task {
-            await viewModel.getCategory(
+            await appState.getCategory(
                 named: categoryName,
                 fetchMode: UserSettings.shared.storeRecipes ? .preferLocal : .onlyServer
             )
         }
         .refreshable {
-            await viewModel.getCategory(
+            await appState.getCategory(
                 named: categoryName,
                 fetchMode: UserSettings.shared.storeRecipes ? .preferServer : .onlyServer
             )
@@ -65,7 +67,7 @@ struct CategoryDetailView: View {
     }
     
     func recipesFiltered() -> [Recipe] {
-        guard let recipes = viewModel.recipes[categoryName] else { return [] }
+        guard let recipes = appState.recipes[categoryName] else { return [] }
         guard searchText != "" else { return recipes }
         return recipes.filter { recipe in
             recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term

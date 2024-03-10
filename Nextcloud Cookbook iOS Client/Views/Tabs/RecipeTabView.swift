@@ -10,14 +10,15 @@ import SwiftUI
 
 
 struct RecipeTabView: View {
+    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var groceryList: GroceryList
     @EnvironmentObject var viewModel: RecipeTabView.ViewModel
-    @EnvironmentObject var mainViewModel: AppState
     
     var body: some View {
         NavigationSplitView {
             List(selection: $viewModel.selectedCategory) {
                 // Categories
-                ForEach(mainViewModel.categories) { category in
+                ForEach(appState.categories) { category in
                     if category.recipe_count != 0 {
                         NavigationLink(value: category) {
                             HStack(alignment: .center) {
@@ -49,36 +50,38 @@ struct RecipeTabView: View {
             }
             .navigationDestination(isPresented: $viewModel.presentSettingsView) {
                 SettingsView()
+                    .environmentObject(appState)
+            }
+            .navigationDestination(isPresented: $viewModel.presentEditView) {
+                RecipeView(viewModel: RecipeView.ViewModel())
+                    .environmentObject(appState)
+                    .environmentObject(groceryList)
             }
         } detail: {
             NavigationStack {
                 if let category = viewModel.selectedCategory {
-                    CategoryDetailView(
+                    RecipeListView(
                         categoryName: category.name,
-                        viewModel: mainViewModel,
                         showEditView: $viewModel.presentEditView
                     )
                     .id(category.id) // Workaround: This is needed to update the detail view when the selection changes
                 }
+                
             }
         }
         .tint(.nextcloudBlue)
-        .sheet(isPresented: $viewModel.presentEditView) {
-            RecipeEditView(
-                viewModel:
-                    RecipeEditViewModel(
-                        mainViewModel: mainViewModel,
-                        uploadNew: true
-                    ),
-                isPresented: $viewModel.presentEditView
-            )
-        }
         .task {
-            viewModel.serverConnection = await mainViewModel.checkServerConnection()
+            let connection = await appState.checkServerConnection()
+            DispatchQueue.main.async {
+                viewModel.serverConnection = connection
+            }
         }
         .refreshable {
-            viewModel.serverConnection = await mainViewModel.checkServerConnection()
-            await mainViewModel.getCategories()
+            let connection = await appState.checkServerConnection()
+            DispatchQueue.main.async {
+                viewModel.serverConnection = connection
+            }
+            await appState.getCategories()
         }
     }
     

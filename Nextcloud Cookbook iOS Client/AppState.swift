@@ -18,6 +18,7 @@ import UIKit
     var recipeImages: [Int: [String: UIImage]] = [:]
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
     var lastUpdates: [String: Date] = [:]
+    var allKeywords: [RecipeKeyword] = []
     
     private let dataStore: DataStore
     
@@ -188,7 +189,7 @@ import UIKit
      ```swift
      let recipeDetail = await mainViewModel.getRecipe(id: 123)
     */
-    func getRecipe(id: Int, fetchMode: FetchMode) async -> RecipeDetail? {
+    func getRecipe(id: Int, fetchMode: FetchMode, save: Bool = false) async -> RecipeDetail? {
         func getLocal() async -> RecipeDetail? {
             if let recipe: RecipeDetail = await loadLocal(path: "recipe\(id).data") { return recipe }
             return nil
@@ -200,6 +201,10 @@ import UIKit
                 id: id
             )
             if let recipe = recipe {
+                if save {
+                    self.recipeDetails[id] = recipe
+                    await self.saveLocal(recipe, path: "recipe\(id).data")
+                }
                 return recipe
             } else if let error = error {
                 print(error)
@@ -429,7 +434,7 @@ import UIKit
         dataStore.delete(path: path)
         if recipes[categoryName] != nil {
             recipes[categoryName]!.removeAll(where: { recipe in
-                recipe.recipe_id == id ? true : false
+                recipe.recipe_id == id
             })
             recipeDetails.removeValue(forKey: id)
         }

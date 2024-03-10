@@ -227,10 +227,12 @@ extension SettingsView {
         
         func getUserData() async {
             let (data, _) = await NextcloudApi.getAvatar()
-            avatarImage = data
-            
             let (userData, _) = await NextcloudApi.getHoverCard()
-            self.userData = userData
+            
+            DispatchQueue.main.async {
+                self.avatarImage = data
+                self.userData = userData
+            }
         }
     }
 }

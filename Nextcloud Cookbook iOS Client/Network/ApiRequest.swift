@@ -14,9 +14,7 @@ struct ApiRequest {
     let authString: String?
     let headerFields: [HeaderField]
     let body: Data?
-    
-    /// The path to the Cookbook application on the nextcloud server.
-        
+            
     init(
         path: String,
         method: RequestMethod,

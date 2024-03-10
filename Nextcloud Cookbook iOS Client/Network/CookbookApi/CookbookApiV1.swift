@@ -49,6 +49,7 @@ class CookbookApiV1: CookbookApi {
         
         let (data, error) = await request.send()
         guard let data = data else { return (nil, error) }
+        print("\n\nRECIPE: ", String(data: data, encoding: .utf8))
         return (JSONDecoder.safeDecode(data), nil)
     }
     

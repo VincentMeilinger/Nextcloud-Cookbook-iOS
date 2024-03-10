@@ -11,7 +11,6 @@ import SwiftUI
 
 @main
 struct Nextcloud_Cookbook_iOS_ClientApp: App {
-    @StateObject var mainViewModel = AppState()
     @AppStorage("onboarding") var onboarding = true
     @AppStorage("language") var language = Locale.current.language.languageCode?.identifier ?? "en"
     
@@ -21,7 +20,7 @@ struct Nextcloud_Cookbook_iOS_ClientApp: App {
                 if onboarding {
                     OnboardingView()
                 } else {
-                    MainView(viewModel: mainViewModel)
+                    MainView()
                 }
             }
             .transition(.slide)

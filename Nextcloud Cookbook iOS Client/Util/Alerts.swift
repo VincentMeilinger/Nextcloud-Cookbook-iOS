@@ -30,7 +30,9 @@ enum RecipeAlert: UserAlert {
     case NO_TITLE,
          DUPLICATE,
          UPLOAD_ERROR,
+         UPLOAD_SUCCESS,
          CONFIRM_DELETE,
+         DELETE_SUCCESS,
          LOGIN_FAILED,
          GENERIC,
          CUSTOM(title: LocalizedStringKey, description: LocalizedStringKey)
@@ -43,8 +45,12 @@ enum RecipeAlert: UserAlert {
             return "A recipe with that name already exists."
         case .UPLOAD_ERROR:
             return "Unable to upload your recipe. Please check your internet connection."
+        case .UPLOAD_SUCCESS:
+            return "Recipe upload successful."
         case .CONFIRM_DELETE:
             return "This action is not reversible!"
+        case .DELETE_SUCCESS:
+            return "Deletion successful."
         case .LOGIN_FAILED:
             return "Please check your credentials and internet connection."
         case .CUSTOM(title: _, description: let description):
@@ -62,8 +68,12 @@ enum RecipeAlert: UserAlert {
             return "Duplicate recipe."
         case .UPLOAD_ERROR:
             return "Network error."
+        case .UPLOAD_SUCCESS:
+            return "Success!"
         case .CONFIRM_DELETE:
             return "Delete recipe?"
+        case .DELETE_SUCCESS:
+            return "Success!"
         case .LOGIN_FAILED:
             return "Login failed."
         case .CUSTOM(title: let title, description: _):
@@ -113,12 +123,14 @@ enum RecipeImportAlert: UserAlert {
 
 enum RequestAlert: UserAlert {
     case REQUEST_DELAYED,
-         REQUEST_DROPPED
+         REQUEST_DROPPED,
+         REQUEST_SUCCESS
     
     var localizedDescription: LocalizedStringKey {
         switch self {
         case .REQUEST_DELAYED: return "Could not establish a connection to the server. The action will be retried upon reconnection."
         case .REQUEST_DROPPED: return "Unable to complete action."
+        case .REQUEST_SUCCESS: return ""
         }
     }
     
@@ -126,6 +138,7 @@ enum RequestAlert: UserAlert {
         switch self {
         case .REQUEST_DELAYED: return "Action delayed"
         case .REQUEST_DROPPED: return "Error"
+        case .REQUEST_SUCCESS: return "Success!"
         }
     }
     
