@@ -44,6 +44,7 @@
 		A7FB0D7A2B25C66600A3469E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D792B25C66600A3469E /* OnboardingView.swift */; };
 		A7FB0D7C2B25C68500A3469E /* TokenLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D7B2B25C68500A3469E /* TokenLoginView.swift */; };
 		A7FB0D7E2B25C6A200A3469E /* V2LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D7D2B25C6A200A3469E /* V2LoginView.swift */; };
+		A90C45F42B9F4DB6005D62B6 /* Units.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90C45F32B9F4DB6005D62B6 /* Units.swift */; };
 		A97506132B920D9F00E86029 /* RecipeDurationSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97506122B920D9F00E86029 /* RecipeDurationSection.swift */; };
 		A97506152B920DF200E86029 /* RecipeGenericViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97506142B920DF200E86029 /* RecipeGenericViews.swift */; };
 		A97506192B920EC200E86029 /* RecipeIngredientSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97506182B920EC200E86029 /* RecipeIngredientSection.swift */; };
@@ -125,6 +126,7 @@
 		A7FB0D792B25C66600A3469E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		A7FB0D7B2B25C68500A3469E /* TokenLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenLoginView.swift; sourceTree = "<group>"; };
 		A7FB0D7D2B25C6A200A3469E /* V2LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V2LoginView.swift; sourceTree = "<group>"; };
+		A90C45F32B9F4DB6005D62B6 /* Units.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Units.swift; sourceTree = "<group>"; };
 		A97506122B920D9F00E86029 /* RecipeDurationSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDurationSection.swift; sourceTree = "<group>"; };
 		A97506142B920DF200E86029 /* RecipeGenericViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeGenericViews.swift; sourceTree = "<group>"; };
 		A97506182B920EC200E86029 /* RecipeIngredientSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredientSection.swift; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				A70171C52AB4C43A00064C43 /* DataModels.swift */,
 				A97B4D312B80B3E900EC1A88 /* RecipeModels.swift */,
 				A9BBB38F2B91BE31002DA7FF /* ObservableRecipeDetail.swift */,
+				A90C45F32B9F4DB6005D62B6 /* Units.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -593,6 +596,7 @@
 				A7F3F8E82ACBFC760076C227 /* RecipeKeywordSection.swift in Sources */,
 				A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */,
 				A70171C02AB498A900064C43 /* RecipeView.swift in Sources */,
+				A90C45F42B9F4DB6005D62B6 /* Units.swift in Sources */,
 				A79AA8E42B02A962007D25F2 /* CookbookApi.swift in Sources */,
 				A975061B2B920F9F00E86029 /* RecipeNutritionSection.swift in Sources */,
 				A70171CD2AB501B100064C43 /* SettingsView.swift in Sources */,
@@ -769,7 +773,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
 				DEVELOPMENT_TEAM = EF2ABA36D9;
@@ -793,7 +797,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9.1;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -813,7 +817,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
 				DEVELOPMENT_TEAM = EF2ABA36D9;
@@ -837,7 +841,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9.1;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

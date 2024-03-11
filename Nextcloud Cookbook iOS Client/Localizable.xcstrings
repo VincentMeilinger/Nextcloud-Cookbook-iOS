@@ -90,6 +90,9 @@
         }
       }
     },
+    "%.2f" : {
+
+    },
     "%@" : {
       "localizations" : {
         "de" : {
@@ -662,6 +665,9 @@
         }
       }
     },
+    "c" : {
+
+    },
     "Calories" : {
       "comment" : "Calories",
       "localizations" : {
@@ -775,6 +781,18 @@
         }
       }
     },
+    "cc" : {
+
+    },
+    "celsius" : {
+
+    },
+    "centiliter" : {
+
+    },
+    "centilitre" : {
+
+    },
     "Cholesterol content" : {
       "comment" : "Cholesterol content",
       "localizations" : {
@@ -819,6 +837,9 @@
           }
         }
       }
+    },
+    "cl" : {
+
     },
     "Configure what is stored on your device." : {
       "localizations" : {
@@ -1062,6 +1083,18 @@
         }
       }
     },
+    "cup" : {
+
+    },
+    "dash" : {
+
+    },
+    "deciliter" : {
+
+    },
+    "decilitre" : {
+
+    },
     "Delete" : {
       "localizations" : {
         "de" : {
@@ -1238,6 +1271,9 @@
           }
         }
       }
+    },
+    "dl" : {
+
     },
     "Done" : {
       "localizations" : {
@@ -1482,6 +1518,12 @@
         }
       }
     },
+    "f" : {
+
+    },
+    "fahrenheit" : {
+
+    },
     "Fat content" : {
       "comment" : "Fat content",
       "localizations" : {
@@ -1528,6 +1570,21 @@
         }
       }
     },
+    "fl oz" : {
+
+    },
+    "fluid ounce" : {
+
+    },
+    "g" : {
+
+    },
+    "gal" : {
+
+    },
+    "gallon" : {
+
+    },
     "General" : {
       "localizations" : {
         "de" : {
@@ -1571,6 +1628,15 @@
           }
         }
       }
+    },
+    "gi" : {
+
+    },
+    "gill" : {
+
+    },
+    "gram" : {
+
     },
     "Grocery List" : {
       "localizations" : {
@@ -1924,6 +1990,15 @@
         }
       }
     },
+    "kg" : {
+
+    },
+    "kilogram" : {
+
+    },
+    "l" : {
+
+    },
     "Language" : {
       "localizations" : {
         "de" : {
@@ -1990,6 +2065,9 @@
         }
       }
     },
+    "lb" : {
+
+    },
     "List your tools here. 🍴" : {
       "localizations" : {
         "de" : {
@@ -2011,6 +2089,12 @@
           }
         }
       }
+    },
+    "liter" : {
+
+    },
+    "litre" : {
+
     },
     "Log out" : {
       "localizations" : {
@@ -2122,6 +2206,18 @@
         }
       }
     },
+    "mg" : {
+
+    },
+    "milligram" : {
+
+    },
+    "milliliter" : {
+
+    },
+    "millilitre" : {
+
+    },
     "Minutes" : {
       "localizations" : {
         "de" : {
@@ -2211,6 +2307,9 @@
           }
         }
       }
+    },
+    "ml" : {
+
     },
     "More information" : {
       "localizations" : {
@@ -2499,6 +2598,12 @@
         }
       }
     },
+    "ounce" : {
+
+    },
+    "oz" : {
+
+    },
     "Parsing error" : {
       "localizations" : {
         "de" : {
@@ -2565,6 +2670,12 @@
         }
       }
     },
+    "pinch" : {
+
+    },
+    "pint" : {
+
+    },
     "Please check the entered URL." : {
       "localizations" : {
         "de" : {
@@ -2630,6 +2741,9 @@
           }
         }
       }
+    },
+    "pound" : {
+
     },
     "Preparation" : {
       "localizations" : {
@@ -2698,6 +2812,15 @@
           }
         }
       }
+    },
+    "pt" : {
+
+    },
+    "qt" : {
+
+    },
+    "quart" : {
+
     },
     "Recipe" : {
       "localizations" : {
@@ -3009,6 +3132,9 @@
         }
       }
     },
+    "Serving Size" : {
+
+    },
     "Servings" : {
       "localizations" : {
         "de" : {
@@ -3186,6 +3312,9 @@
           }
         }
       }
+    },
+    "smidgen" : {
+
     },
     "Sodium content" : {
       "comment" : "Sodium content",
@@ -3386,6 +3515,15 @@
           }
         }
       }
+    },
+    "tablespoon" : {
+
+    },
+    "tbsp" : {
+
+    },
+    "teaspoon" : {
+
     },
     "Thank you for downloading" : {
       "localizations" : {
@@ -3721,6 +3859,12 @@
           }
         }
       }
+    },
+    "tsp" : {
+
+    },
+    "Unable to adjust the highlighted ingredient amount!" : {
+
     },
     "Unable to complete action." : {
       "localizations" : {

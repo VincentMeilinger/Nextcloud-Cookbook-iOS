@@ -13,6 +13,7 @@ import SwiftUI
 struct RecipeIngredientSection: View {
     @EnvironmentObject var groceryList: GroceryList
     @ObservedObject var viewModel: RecipeView.ViewModel
+    @State var servingsMultiplier: Double = 1
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -25,6 +26,7 @@ struct RecipeIngredientSection: View {
                     SecondaryLabel(text: LocalizedStringKey("Ingredients for \(viewModel.observableRecipeDetail.recipeYield) servings"))
                 }
                 Spacer()
+                ServingPickerView(selectedServingSize: $servingsMultiplier)
                 Button {
                     withAnimation {
                         if groceryList.containsRecipe(viewModel.observableRecipeDetail.id) {
@@ -45,9 +47,19 @@ struct RecipeIngredientSection: View {
                     }
                 }.disabled(viewModel.editMode)
             }
-            
+            if servingsMultiplier != 1 {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                    Text("Unable to adjust the highlighted ingredient amount!")
+                }
+            }
             ForEach(0..<viewModel.observableRecipeDetail.recipeIngredient.count, id: \.self) { ix in
-                IngredientListItem(ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix], recipeId: viewModel.observableRecipeDetail.id) {
+                IngredientListItem(
+                    ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix],
+                    servings: $servingsMultiplier,
+                    recipeId: viewModel.observableRecipeDetail.id
+                ) {
                     groceryList.addItem(
                         viewModel.observableRecipeDetail.recipeIngredient[ix],
                         toRecipe: viewModel.observableRecipeDetail.id,
@@ -73,6 +85,7 @@ struct RecipeIngredientSection: View {
 fileprivate struct IngredientListItem: View {
     @EnvironmentObject var groceryList: GroceryList
     @Binding var ingredient: String
+    @Binding var servings: Double
     @State var recipeId: String
     let addToGroceryListAction: () -> Void
     @State var isSelected: Bool = false
@@ -98,10 +111,17 @@ fileprivate struct IngredientListItem: View {
             } else {
                 Image(systemName: "circle")
             }
-            
-            Text("\(ingredient)")
-                .multilineTextAlignment(.leading)
-                .lineLimit(5)
+            if servings == 1 {
+                Text(ingredient)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(5)
+            } else {
+                let modifiedIngredient = ObservableRecipeDetail.modifyIngredientAmounts(in: ingredient, withFactor: servings)
+                Text(modifiedIngredient)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(5)
+                    .foregroundStyle(modifiedIngredient == ingredient ? .red : .primary)
+            }
             Spacer()
         }
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)
@@ -137,5 +157,34 @@ fileprivate struct IngredientListItem: View {
                     }
                 }
         )
+    }
+}
+
+
+
+struct ServingPickerView: View {
+    @Binding var selectedServingSize: Double
+    var servingSizes: [Double] {
+        var servingSizes: [Double] = [0.125, 0.25, 0.33, 0.5, 0.66, 0.75, 1]
+        for i in 2...100 {
+            servingSizes.append(Double(i))
+        }
+        return servingSizes
+    }
+    
+    var body: some View {
+        Picker("Serving Size", selection: Binding(
+            get: {
+                self.selectedServingSize
+            },
+            set: { newValue in
+                self.selectedServingSize = newValue
+            }
+        )) {
+            ForEach(servingSizes, id: \.self) { size in
+                Text(ObservableRecipeDetail.formatNumber(size)).tag(size)
+            }
+        }
+        .pickerStyle(MenuPickerStyle())
     }
 }
