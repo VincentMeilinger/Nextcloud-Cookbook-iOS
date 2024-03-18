@@ -1859,6 +1859,7 @@
       }
     },
     "Ingredients for %lld servings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1881,6 +1882,7 @@
       }
     },
     "Ingredients per serving" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2576,6 +2578,9 @@
         }
       }
     },
+    "Only highlighted ingredient were adjusted!" : {
+
+    },
     "Other" : {
       "localizations" : {
         "de" : {
@@ -3131,9 +3136,6 @@
           }
         }
       }
-    },
-    "Serving Size" : {
-
     },
     "Servings" : {
       "localizations" : {
@@ -3861,9 +3863,6 @@
       }
     },
     "tsp" : {
-
-    },
-    "Unable to adjust the highlighted ingredient amount!" : {
 
     },
     "Unable to complete action." : {

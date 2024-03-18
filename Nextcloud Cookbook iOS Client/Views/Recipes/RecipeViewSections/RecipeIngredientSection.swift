@@ -13,20 +13,10 @@ import SwiftUI
 struct RecipeIngredientSection: View {
     @EnvironmentObject var groceryList: GroceryList
     @ObservedObject var viewModel: RecipeView.ViewModel
-    @State var servingsMultiplier: Double = 1
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                if viewModel.observableRecipeDetail.recipeYield == 0 {
-                    SecondaryLabel(text: LocalizedStringKey("Ingredients"))
-                } else if viewModel.observableRecipeDetail.recipeYield == 1 {
-                    SecondaryLabel(text: LocalizedStringKey("Ingredients per serving"))
-                } else {
-                    SecondaryLabel(text: LocalizedStringKey("Ingredients for \(viewModel.observableRecipeDetail.recipeYield) servings"))
-                }
-                Spacer()
-                ServingPickerView(selectedServingSize: $servingsMultiplier)
                 Button {
                     withAnimation {
                         if groceryList.containsRecipe(viewModel.observableRecipeDetail.id) {
@@ -46,18 +36,30 @@ struct RecipeIngredientSection: View {
                         Image(systemName: "heart.text.square")
                     }
                 }.disabled(viewModel.editMode)
+                
+                SecondaryLabel(text: LocalizedStringKey("Ingredients"))
+                
+                Spacer()
+                
+                Image(systemName: "person.2")
+                    .foregroundStyle(.secondary)
+                    .bold()
+                
+                ServingPickerView(selectedServingSize: $viewModel.observableRecipeDetail.ingredientMultiplier)
             }
-            if servingsMultiplier != 1 {
-                HStack {
+            if viewModel.observableRecipeDetail.ingredientMultiplier != Double(viewModel.observableRecipeDetail.recipeYield) {
+                HStack() {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.red)
-                    Text("Unable to adjust the highlighted ingredient amount!")
+                    Text("Only highlighted ingredient were adjusted!")
+                        .foregroundStyle(.secondary)
                 }
             }
             ForEach(0..<viewModel.observableRecipeDetail.recipeIngredient.count, id: \.self) { ix in
                 IngredientListItem(
                     ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix],
-                    servings: $servingsMultiplier,
+                    servings: $viewModel.observableRecipeDetail.ingredientMultiplier,
+                    recipeYield: Double(viewModel.observableRecipeDetail.recipeYield),
                     recipeId: viewModel.observableRecipeDetail.id
                 ) {
                     groceryList.addItem(
@@ -86,8 +88,11 @@ fileprivate struct IngredientListItem: View {
     @EnvironmentObject var groceryList: GroceryList
     @Binding var ingredient: String
     @Binding var servings: Double
+    @State var recipeYield: Double
     @State var recipeId: String
     let addToGroceryListAction: () -> Void
+    
+    @State var modifiedIngredient: AttributedString = ""
     @State var isSelected: Bool = false
     
     // Drag animation
@@ -111,18 +116,24 @@ fileprivate struct IngredientListItem: View {
             } else {
                 Image(systemName: "circle")
             }
-            if servings == 1 {
+            if servings == Double(recipeYield) {
                 Text(ingredient)
                     .multilineTextAlignment(.leading)
                     .lineLimit(5)
             } else {
-                let modifiedIngredient = ObservableRecipeDetail.modifyIngredientAmounts(in: ingredient, withFactor: servings)
                 Text(modifiedIngredient)
                     .multilineTextAlignment(.leading)
                     .lineLimit(5)
-                    .foregroundStyle(modifiedIngredient == ingredient ? .red : .primary)
+                    //.foregroundStyle(String(modifiedIngredient.characters) == ingredient ? .red : .primary)
             }
             Spacer()
+        }
+        .onChange(of: servings) { newServings in
+            if recipeYield == 0 {
+                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ingredient, by: newServings)
+            } else {
+                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ingredient, by: newServings/recipeYield)
+            }
         }
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)
         .onTapGesture {
@@ -164,27 +175,40 @@ fileprivate struct IngredientListItem: View {
 
 struct ServingPickerView: View {
     @Binding var selectedServingSize: Double
-    var servingSizes: [Double] {
-        var servingSizes: [Double] = [0.125, 0.25, 0.33, 0.5, 0.66, 0.75, 1]
-        for i in 2...100 {
-            servingSizes.append(Double(i))
-        }
-        return servingSizes
-    }
+    @State var numberFormatter: NumberFormatter
     
+    init(selectedServingSize: Binding<Double>) {
+        _selectedServingSize = selectedServingSize
+        numberFormatter = NumberFormatter()
+        numberFormatter.usesSignificantDigits = true
+        numberFormatter.maximumFractionDigits = 2
+        numberFormatter.decimalSeparator = "."
+    }
+
+    // Computed property to handle the text field input and update the selectedServingSize
     var body: some View {
-        Picker("Serving Size", selection: Binding(
-            get: {
-                self.selectedServingSize
-            },
-            set: { newValue in
-                self.selectedServingSize = newValue
+        HStack {
+            Button {
+                selectedServingSize -= 1
+            } label: {
+                Image(systemName: "minus.square.fill")
+                    .bold()
             }
-        )) {
-            ForEach(servingSizes, id: \.self) { size in
-                Text(ObservableRecipeDetail.formatNumber(size)).tag(size)
+            TextField("", value: $selectedServingSize, formatter: numberFormatter)
+                .keyboardType(.numbersAndPunctuation)
+                .lineLimit(1)
+                .multilineTextAlignment(.center)
+                .frame(width: 40)
+            Button {
+                selectedServingSize += 1
+            } label: {
+                Image(systemName: "plus.square.fill")
+                    .bold()
             }
         }
-        .pickerStyle(MenuPickerStyle())
+        .onChange(of: selectedServingSize) { newValue in
+            if newValue <= 0 { selectedServingSize = 1 }
+            else if newValue > 100 { selectedServingSize = 100 }
+        }
     }
 }

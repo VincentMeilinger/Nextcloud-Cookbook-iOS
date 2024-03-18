@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 class ObservableRecipeDetail: ObservableObject {
+    // Cookbook recipe detail fields
     var id: String
     @Published var name: String
     @Published var keywords: [String]
@@ -25,6 +26,9 @@ class ObservableRecipeDetail: ObservableObject {
     @Published var recipeInstructions: [String]
     @Published var nutrition: [String:String]
     
+    // Additional functionality
+    @Published var ingredientMultiplier: Double
+    
     init() {
         id = ""
         name = String(localized: "New Recipe")
@@ -35,12 +39,14 @@ class ObservableRecipeDetail: ObservableObject {
         totalTime = DurationComponents()
         description = ""
         url = ""
-        recipeYield = 0
+        recipeYield = 1
         recipeCategory = ""
         tool = []
         recipeIngredient = []
         recipeInstructions = []
         nutrition = [:]
+        
+        ingredientMultiplier = 1
     }
     
     init(_ recipeDetail: RecipeDetail) {
@@ -53,12 +59,14 @@ class ObservableRecipeDetail: ObservableObject {
         totalTime = DurationComponents.fromPTString(recipeDetail.totalTime ?? "")
         description = recipeDetail.description
         url = recipeDetail.url
-        recipeYield = recipeDetail.recipeYield
+        recipeYield = recipeDetail.recipeYield == 0 ? 1 : recipeDetail.recipeYield // Recipe yield should not be zero
         recipeCategory = recipeDetail.recipeCategory
         tool = recipeDetail.tool
         recipeIngredient = recipeDetail.recipeIngredient
         recipeInstructions = recipeDetail.recipeInstructions
         nutrition = recipeDetail.nutrition
+        
+        ingredientMultiplier = Double(recipeDetail.recipeYield)
     }
     
     func toRecipeDetail() -> RecipeDetail {
@@ -83,69 +91,73 @@ class ObservableRecipeDetail: ObservableObject {
         )
     }
     
-    /*static func modifyIngredientAmounts(in ingredient: String, withFactor factor: Double) -> String {
-        // Regular expression to match numbers, including integers and decimals
-        // Patterns:
-        // "\\b\\d+(\\.\\d+)?\\b" works only if there is a space following
-        let regex = try! NSRegularExpression(pattern: "\\b\\d+(\\.\\d+)?\\b", options: [])
-        let matches = regex.matches(in: ingredient, options: [], range: NSRange(ingredient.startIndex..., in: ingredient))
-        
-        // Reverse the matches to replace from the end to avoid affecting indices of unprocessed matches
-        let reversedMatches = matches.reversed()
-        
-        var modifiedIngredient = ingredient
-        
-        for match in reversedMatches {
-            guard let range = Range(match.range, in: modifiedIngredient) else { continue }
-            let originalNumberString = String(modifiedIngredient[range])
-            if let originalNumber = Double(originalNumberString) {
-                let modifiedNumber = originalNumber * factor
-                // Format the number to remove trailing zeros if it's an integer after multiplication
-                let formattedNumber = formatNumber(modifiedNumber)
-                modifiedIngredient.replaceSubrange(range, with: formattedNumber)
-            }
+    static func adjustIngredient(_ ingredient: String, by factor: Double) -> AttributedString {
+        var matches = ObservableRecipeDetail.matchPatternAndMultiply(.mixedFraction, in: ingredient, multFactor: factor)
+        matches.append(contentsOf: ObservableRecipeDetail.matchPatternAndMultiply(.fraction, in: ingredient, multFactor: factor, excludedRanges: matches.map({ tuple in tuple.1 })))
+        matches.append(contentsOf: ObservableRecipeDetail.matchPatternAndMultiply(.number, in: ingredient, multFactor: factor, excludedRanges: matches.map({ tuple in tuple.1 })))
+        matches.sort(by: { a, b in a.1.lowerBound > b.1.lowerBound})
+
+        var attributedString = AttributedString(ingredient)
+        for (newSubstring, matchRange) in matches {
+            print(newSubstring, matchRange)
+            guard let range = Range(matchRange, in: attributedString) else { continue }
+            var attributedSubString = AttributedString(newSubstring)
+            attributedSubString.foregroundColor = .blue
+            attributedString.replaceSubrange(range, with: attributedSubString)
+            print("\n", attributedString)
         }
         
-        return modifiedIngredient
-    }*/
-    static func modifyIngredientAmounts(in ingredient: String, withFactor factor: Double) -> String {
-            // Regular expression to match numbers (including integers and decimals) and fractions
-            let regexPattern = "\\b(\\d+(\\.\\d+)?)\\b|\\b(\\d+/\\d+)\\b"
-            let regex = try! NSRegularExpression(pattern: regexPattern, options: [])
-            let matches = regex.matches(in: ingredient, options: [], range: NSRange(ingredient.startIndex..., in: ingredient))
+        return attributedString
+    }
+    
+    static func matchPatternAndMultiply(_ expr: RegexPattern, in str: String, multFactor: Double, excludedRanges: [Range<String.Index>]? = nil) -> [(String, Range<String.Index>)] {
+        var foundMatches: [(String, Range<String.Index>)] = []
+        do {
+            let regex = try NSRegularExpression(pattern: expr.pattern)
+            let matches = regex.matches(in: str, range: NSRange(str.startIndex..., in: str))
             
-            var modifiedIngredient = ingredient
-            
-            // Reverse the matches to replace from the end to avoid affecting indices of unprocessed matches
-            let reversedMatches = matches.reversed()
-            
-            for match in reversedMatches {
-                let fullMatchRange = match.range(at: 0)
+            for match in matches {
+                guard let matchRange = Range(match.range, in: str) else { continue }
+                if let excludedRanges = excludedRanges,
+                   excludedRanges.contains(where: { $0.overlaps(matchRange) }) {
+                    // If there's an overlap, skip this match.
+                    continue
+                }
                 
-                // Check for a fractional match
-                if match.range(at: 3).location != NSNotFound, let fractionRange = Range(match.range(at: 3), in: modifiedIngredient) {
-                    let fractionString = String(modifiedIngredient[fractionRange])
-                    let fractionParts = fractionString.split(separator: "/").compactMap { Double($0) }
-                    if fractionParts.count == 2, let numerator = fractionParts.first, let denominator = fractionParts.last, denominator != 0 {
-                        let fractionValue = numerator / denominator
-                        let modifiedNumber = fractionValue * factor
-                        let formattedNumber = formatNumber(modifiedNumber)
-                        modifiedIngredient.replaceSubrange(fractionRange, with: formattedNumber)
-                    }
+                let matchedString = String(str[matchRange])
+                
+                // Process each match based on its type
+                var adjustedValue: Double = 0
+                switch expr {
+                case .number:
+                    guard let number = Double(matchedString) else { continue }
+                    adjustedValue = number
+                case .fraction:
+                    let fracComponents = matchedString.split(separator: "/")
+                    guard fracComponents.count == 2 else { continue }
+                    guard let nominator = Double(fracComponents[0]) else { continue }
+                    guard let denominator = Double(fracComponents[1]), denominator > 0 else { continue }
+                    adjustedValue = nominator/denominator
+                case .mixedFraction:
+                    guard match.numberOfRanges == 4 else { continue }
+                    guard let intRange = Range(match.range(at: 1), in: str) else { continue }
+                    guard let nomRange = Range(match.range(at: 2), in: str) else { continue }
+                    guard let denomRange = Range(match.range(at: 3), in: str) else { continue }
+                    guard let number = Double(str[intRange]),
+                            let nominator = Double(str[nomRange]),
+                            let denominator = Double(str[denomRange]), denominator > 0
+                    else { continue }
+                    adjustedValue = number + nominator/denominator
                 }
-                // Check for an integer or decimal match
-                else if let numberRange = Range(fullMatchRange, in: modifiedIngredient) {
-                    let numberString = String(modifiedIngredient[numberRange])
-                    if let number = Double(numberString) {
-                        let modifiedNumber = number * factor
-                        let formattedNumber = formatNumber(modifiedNumber)
-                        modifiedIngredient.replaceSubrange(numberRange, with: formattedNumber)
-                    }
-                }
+                let formattedAdjustedValue = formatNumber(adjustedValue * multFactor)
+                foundMatches.append((formattedAdjustedValue, matchRange))
             }
-            
-            return modifiedIngredient
+            return foundMatches
+        } catch {
+            print("Regex error: \(error.localizedDescription)")
         }
+        return []
+    }
     
     static func formatNumber(_ value: Double) -> String {
         let integerPart = value >= 1 ? Int(value) : 0
@@ -180,5 +192,18 @@ class ObservableRecipeDetail: ObservableObject {
     }
 }
 
-
+enum RegexPattern {
+    case mixedFraction, fraction, number
+    
+    var pattern: String {
+        switch self {
+        case .mixedFraction:
+            #"(\d+)\s+(\d+)/(\d+)"#
+        case .fraction:
+            #"(?:[1-9][0-9]*|0)\/[1-9][0-9]*"#
+        case .number:
+            #"(\d+(\.\d+)?)"#
+        }
+    }
+}
 
