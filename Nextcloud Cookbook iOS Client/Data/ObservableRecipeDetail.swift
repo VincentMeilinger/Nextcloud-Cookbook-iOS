@@ -29,6 +29,8 @@ class ObservableRecipeDetail: ObservableObject {
     // Additional functionality
     @Published var ingredientMultiplier: Double
     
+    
+    
     init() {
         id = ""
         name = String(localized: "New Recipe")
@@ -92,9 +94,34 @@ class ObservableRecipeDetail: ObservableObject {
     }
     
     static func adjustIngredient(_ ingredient: String, by factor: Double) -> AttributedString {
-        var matches = ObservableRecipeDetail.matchPatternAndMultiply(.mixedFraction, in: ingredient, multFactor: factor)
-        matches.append(contentsOf: ObservableRecipeDetail.matchPatternAndMultiply(.fraction, in: ingredient, multFactor: factor, excludedRanges: matches.map({ tuple in tuple.1 })))
-        matches.append(contentsOf: ObservableRecipeDetail.matchPatternAndMultiply(.number, in: ingredient, multFactor: factor, excludedRanges: matches.map({ tuple in tuple.1 })))
+        if factor == 0 {
+            return AttributedString(ingredient)
+        }
+        // Match mixed fractions first
+        var matches = ObservableRecipeDetail.matchPatternAndMultiply(
+            .mixedFraction,
+            in: ingredient,
+            multFactor: factor
+        )
+        // Then match fractions, exclude mixed fraction ranges
+        matches.append(contentsOf:
+            ObservableRecipeDetail.matchPatternAndMultiply(
+                .fraction,
+                in: ingredient,
+                multFactor: factor,
+                excludedRanges: matches.map({ tuple in tuple.1 })
+            )
+        )
+        // Match numbers at last, exclude all prior matches
+        matches.append(contentsOf:
+            ObservableRecipeDetail.matchPatternAndMultiply(
+                .number,
+                in: ingredient,
+                multFactor: factor,
+                excludedRanges: matches.map({ tuple in tuple.1 })
+            )
+        )
+        // Sort matches by match range lower bound, descending.
         matches.sort(by: { a, b in a.1.lowerBound > b.1.lowerBound})
 
         var attributedString = AttributedString(ingredient)
@@ -102,7 +129,8 @@ class ObservableRecipeDetail: ObservableObject {
             print(newSubstring, matchRange)
             guard let range = Range(matchRange, in: attributedString) else { continue }
             var attributedSubString = AttributedString(newSubstring)
-            attributedSubString.foregroundColor = .blue
+            //attributedSubString.foregroundColor = .ncTextHighlight
+            attributedSubString.font = .system(.body, weight: .bold)
             attributedString.replaceSubrange(range, with: attributedSubString)
             print("\n", attributedString)
         }
@@ -130,8 +158,8 @@ class ObservableRecipeDetail: ObservableObject {
                 var adjustedValue: Double = 0
                 switch expr {
                 case .number:
-                    guard let number = Double(matchedString) else { continue }
-                    adjustedValue = number
+                    guard let number = numberFormatter.number(from: matchedString) else { continue }
+                    adjustedValue = number.doubleValue
                 case .fraction:
                     let fracComponents = matchedString.split(separator: "/")
                     guard fracComponents.count == 2 else { continue }
@@ -160,6 +188,9 @@ class ObservableRecipeDetail: ObservableObject {
     }
     
     static func formatNumber(_ value: Double) -> String {
+        if value <= 0.0001 {
+            return "0"
+        }
         let integerPart = value >= 1 ? Int(value) : 0
         let decimalPart = value - Double(integerPart)
         
@@ -183,7 +214,7 @@ class ObservableRecipeDetail: ObservableObject {
             return "\(String(integerPart)) \(closest.fraction)"
         } else {
             // If no close match is found, return the original value as a string
-            return String(format: "%.2f", value)
+            return numberFormatter.string(from: NSNumber(value: value)) ?? "0"//String(format: "%.2f", value)
         }
     }
     
@@ -192,17 +223,30 @@ class ObservableRecipeDetail: ObservableObject {
     }
 }
 
-enum RegexPattern {
+enum RegexPattern: String, CaseIterable, Identifiable {
     case mixedFraction, fraction, number
+    
+    var id: String { self.rawValue }
     
     var pattern: String {
         switch self {
         case .mixedFraction:
             #"(\d+)\s+(\d+)/(\d+)"#
         case .fraction:
-            #"(?:[1-9][0-9]*|0)\/[1-9][0-9]*"#
+            #"(?:[1-9][0-9]*|0)\/([1-9][0-9]*)"#
         case .number:
-            #"(\d+(\.\d+)?)"#
+            #"(\d+([.,]\d+)?)"#
+        }
+    }
+    
+    var localizedDescription: LocalizedStringKey {
+        switch self {
+        case .mixedFraction:
+            "Mixed fraction"
+        case .fraction:
+            "Fraction"
+        case .number:
+            "Number"
         }
     }
 }

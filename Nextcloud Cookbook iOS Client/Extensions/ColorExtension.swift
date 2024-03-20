@@ -27,4 +27,7 @@ extension Color {
     public static var ncGradientLight: Color {
         return Color("ncgradientlightblue")
     }
+    public static var ncTextHighlight: Color {
+        return Color("textHighlight")
+    }
 }

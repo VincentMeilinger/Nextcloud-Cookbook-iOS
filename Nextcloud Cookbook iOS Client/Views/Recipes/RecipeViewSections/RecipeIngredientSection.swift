@@ -47,14 +47,7 @@ struct RecipeIngredientSection: View {
                 
                 ServingPickerView(selectedServingSize: $viewModel.observableRecipeDetail.ingredientMultiplier)
             }
-            if viewModel.observableRecipeDetail.ingredientMultiplier != Double(viewModel.observableRecipeDetail.recipeYield) {
-                HStack() {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
-                    Text("Only highlighted ingredient were adjusted!")
-                        .foregroundStyle(.secondary)
-                }
-            }
+            
             ForEach(0..<viewModel.observableRecipeDetail.recipeIngredient.count, id: \.self) { ix in
                 IngredientListItem(
                     ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix],
@@ -70,6 +63,16 @@ struct RecipeIngredientSection: View {
                 }
                 .padding(4)
             }
+            
+            if viewModel.observableRecipeDetail.ingredientMultiplier != Double(viewModel.observableRecipeDetail.recipeYield) {
+                HStack() {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                    Text("Unable to adjust some ingredients!")
+                        .foregroundStyle(.secondary)
+                }
+            }
+            
             if viewModel.editMode {
                 Button {
                     viewModel.presentIngredientEditView.toggle()
@@ -78,7 +81,9 @@ struct RecipeIngredientSection: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
-        }.padding()
+        }
+        .padding()
+        .animation(.easeInOut, value: viewModel.observableRecipeDetail.ingredientMultiplier)
     }
 }
 
@@ -94,6 +99,9 @@ fileprivate struct IngredientListItem: View {
     
     @State var modifiedIngredient: AttributedString = ""
     @State var isSelected: Bool = false
+    var unmodified: Bool {
+        servings == Double(recipeYield) || servings == 0
+    }
     
     // Drag animation
     @State private var dragOffset: CGFloat = 0
@@ -116,7 +124,11 @@ fileprivate struct IngredientListItem: View {
             } else {
                 Image(systemName: "circle")
             }
-            if servings == Double(recipeYield) {
+            if !unmodified && String(modifiedIngredient.characters) == ingredient {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.red)
+            }
+            if unmodified {
                 Text(ingredient)
                     .multilineTextAlignment(.leading)
                     .lineLimit(5)
@@ -175,15 +187,6 @@ fileprivate struct IngredientListItem: View {
 
 struct ServingPickerView: View {
     @Binding var selectedServingSize: Double
-    @State var numberFormatter: NumberFormatter
-    
-    init(selectedServingSize: Binding<Double>) {
-        _selectedServingSize = selectedServingSize
-        numberFormatter = NumberFormatter()
-        numberFormatter.usesSignificantDigits = true
-        numberFormatter.maximumFractionDigits = 2
-        numberFormatter.decimalSeparator = "."
-    }
 
     // Computed property to handle the text field input and update the selectedServingSize
     var body: some View {
@@ -207,7 +210,7 @@ struct ServingPickerView: View {
             }
         }
         .onChange(of: selectedServingSize) { newValue in
-            if newValue <= 0 { selectedServingSize = 1 }
+            if newValue < 0 { selectedServingSize = 0 }
             else if newValue > 100 { selectedServingSize = 100 }
         }
     }

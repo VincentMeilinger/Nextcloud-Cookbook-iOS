@@ -355,6 +355,12 @@
         }
       }
     },
+    "1,42 (Comma)" : {
+
+    },
+    "1.42 (Point)" : {
+
+    },
     "A recipe with that name already exists." : {
       "localizations" : {
         "de" : {
@@ -1095,6 +1101,12 @@
     "decilitre" : {
 
     },
+    "Decimal number format" : {
+
+    },
+    "Decimal Separator" : {
+
+    },
     "Delete" : {
       "localizations" : {
         "de" : {
@@ -1574,6 +1586,9 @@
 
     },
     "fluid ounce" : {
+
+    },
+    "Fraction" : {
 
     },
     "g" : {
@@ -2310,6 +2325,9 @@
         }
       }
     },
+    "Mixed fraction" : {
+
+    },
     "ml" : {
 
     },
@@ -2490,6 +2508,9 @@
         }
       }
     },
+    "Number" : {
+
+    },
     "Nutrition" : {
       "localizations" : {
         "de" : {
@@ -2577,9 +2598,6 @@
           }
         }
       }
-    },
-    "Only highlighted ingredient were adjusted!" : {
-
     },
     "Other" : {
       "localizations" : {
@@ -3683,6 +3701,9 @@
         }
       }
     },
+    "This setting will take effect after the app is restarted. It affects the adjustment of ingredient quantities." : {
+
+    },
     "This website might not be currently supported. If this appears incorrect, you can use the support options in the app settings to raise awareness about this issue." : {
       "localizations" : {
         "de" : {
@@ -3863,6 +3884,9 @@
       }
     },
     "tsp" : {
+
+    },
+    "Unable to adjust some ingredients!" : {
 
     },
     "Unable to complete action." : {
