@@ -67,10 +67,10 @@ struct RecipeIngredientSection: View {
             if viewModel.observableRecipeDetail.ingredientMultiplier != Double(viewModel.observableRecipeDetail.recipeYield) {
                 HStack() {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
-                    Text("Unable to adjust some ingredients!")
                         .foregroundStyle(.secondary)
-                }
+                    Text("Marked ingredients could not be adjusted!")
+                        .foregroundStyle(.secondary)
+                }.padding(.top)
             }
             
             if viewModel.editMode {

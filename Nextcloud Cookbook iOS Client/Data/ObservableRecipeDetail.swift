@@ -68,7 +68,7 @@ class ObservableRecipeDetail: ObservableObject {
         recipeInstructions = recipeDetail.recipeInstructions
         nutrition = recipeDetail.nutrition
         
-        ingredientMultiplier = Double(recipeDetail.recipeYield)
+        ingredientMultiplier = Double(recipeDetail.recipeYield == 0 ? 1 : recipeDetail.recipeYield)
     }
     
     func toRecipeDetail() -> RecipeDetail {

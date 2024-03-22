@@ -355,12 +355,6 @@
         }
       }
     },
-    "1,42 (Comma)" : {
-
-    },
-    "1.42 (Point)" : {
-
-    },
     "A recipe with that name already exists." : {
       "localizations" : {
         "de" : {
@@ -847,6 +841,9 @@
     "cl" : {
 
     },
+    "Comma (e.g. 1,42)" : {
+
+    },
     "Configure what is stored on your device." : {
       "localizations" : {
         "de" : {
@@ -1102,9 +1099,6 @@
 
     },
     "Decimal number format" : {
-
-    },
-    "Decimal Separator" : {
 
     },
     "Delete" : {
@@ -2223,6 +2217,9 @@
         }
       }
     },
+    "Marked ingredients could not be adjusted!" : {
+
+    },
     "mg" : {
 
     },
@@ -2764,6 +2761,9 @@
           }
         }
       }
+    },
+    "Point (e.g. 1.42)" : {
+
     },
     "pound" : {
 
@@ -3884,9 +3884,6 @@
       }
     },
     "tsp" : {
-
-    },
-    "Unable to adjust some ingredients!" : {
 
     },
     "Unable to complete action." : {

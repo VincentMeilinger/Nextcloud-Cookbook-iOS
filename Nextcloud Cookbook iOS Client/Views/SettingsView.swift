@@ -80,9 +80,9 @@ struct SettingsView: View {
                 HStack {
                     Text("Decimal number format")
                     Spacer()
-                    Picker("Decimal Separator", selection: $userSettings.decimalNumberSeparator) {
-                        Text("1.42 (Point)").tag(".")
-                        Text("1,42 (Comma)").tag(",")
+                    Picker("", selection: $userSettings.decimalNumberSeparator) {
+                        Text("Point (e.g. 1.42)").tag(".")
+                        Text("Comma (e.g. 1,42)").tag(",")
                     }
                     .pickerStyle(.menu)
                 }
