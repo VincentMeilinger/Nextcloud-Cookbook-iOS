@@ -126,13 +126,11 @@ class ObservableRecipeDetail: ObservableObject {
 
         var attributedString = AttributedString(ingredient)
         for (newSubstring, matchRange) in matches {
-            print(newSubstring, matchRange)
             guard let range = Range(matchRange, in: attributedString) else { continue }
             var attributedSubString = AttributedString(newSubstring)
             //attributedSubString.foregroundColor = .ncTextHighlight
             attributedSubString.font = .system(.body, weight: .bold)
             attributedString.replaceSubrange(range, with: attributedSubString)
-            print("\n", attributedString)
         }
         
         return attributedString

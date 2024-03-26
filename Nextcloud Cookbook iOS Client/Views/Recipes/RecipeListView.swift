@@ -19,21 +19,40 @@ struct RecipeListView: View {
     @State var selectedRecipe: Recipe? = nil
     
     var body: some View {
-        List(recipesFiltered(), id: \.recipe_id) { recipe in
-            RecipeCardView(recipe: recipe)
-                .shadow(radius: 2)
-                .background(
-                    NavigationLink(value: recipe) {
-                        EmptyView()
+        Group {
+            let recipes = recipesFiltered()
+            if !recipes.isEmpty {
+                List(recipesFiltered(), id: \.recipe_id) { recipe in
+                    RecipeCardView(recipe: recipe)
+                        .shadow(radius: 2)
+                        .background(
+                            NavigationLink(value: recipe) {
+                                EmptyView()
+                            }
+                                .buttonStyle(.plain)
+                                .opacity(0)
+                        )
+                        .frame(height: 85)
+                        .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
+                        .listRowSeparatorTint(.clear)
+                }
+                .listStyle(.plain)
+            } else {
+                VStack {
+                    Text("There are no recipes in this cookbook!")
+                    Button {
+                        Task {
+                            await appState.getCategories()
+                            await appState.getCategory(named: categoryName, fetchMode: .preferServer)
+                        }
+                    } label: {
+                        Text("Refresh")
+                            .bold()
                     }
-                    .buttonStyle(.plain)
-                    .opacity(0)
-                )
-                .frame(height: 85)
-                .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
-                .listRowSeparatorTint(.clear)
+                    .buttonStyle(.bordered)
+                }.padding()
+            }
         }
-        .listStyle(.plain)
         .searchable(text: $searchText, prompt: "Search recipes/keywords")
         .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
         

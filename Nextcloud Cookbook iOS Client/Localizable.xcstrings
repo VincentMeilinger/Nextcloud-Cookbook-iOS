@@ -91,7 +91,26 @@
       }
     },
     "%.2f" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.2f"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.2f"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
     },
     "%@" : {
       "localizations" : {
@@ -665,9 +684,6 @@
         }
       }
     },
-    "c" : {
-
-    },
     "Calories" : {
       "comment" : "Calories",
       "localizations" : {
@@ -781,18 +797,6 @@
         }
       }
     },
-    "cc" : {
-
-    },
-    "celsius" : {
-
-    },
-    "centiliter" : {
-
-    },
-    "centilitre" : {
-
-    },
     "Cholesterol content" : {
       "comment" : "Cholesterol content",
       "localizations" : {
@@ -838,11 +842,27 @@
         }
       }
     },
-    "cl" : {
-
-    },
     "Comma (e.g. 1,42)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komma (z.B. 1,42)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coma (por ejemplo, 1,42)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule (par exemple, 1,42)"
+          }
+        }
+      }
     },
     "Configure what is stored on your device." : {
       "localizations" : {
@@ -1086,20 +1106,27 @@
         }
       }
     },
-    "cup" : {
-
-    },
-    "dash" : {
-
-    },
-    "deciliter" : {
-
-    },
-    "decilitre" : {
-
-    },
     "Decimal number format" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dezimalzahlenformat"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formato de número decimal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Format de nombre décimal"
+          }
+        }
+      }
     },
     "Delete" : {
       "localizations" : {
@@ -1277,9 +1304,6 @@
           }
         }
       }
-    },
-    "dl" : {
-
     },
     "Done" : {
       "localizations" : {
@@ -1524,12 +1548,6 @@
         }
       }
     },
-    "f" : {
-
-    },
-    "fahrenheit" : {
-
-    },
     "Fat content" : {
       "comment" : "Fat content",
       "localizations" : {
@@ -1576,23 +1594,27 @@
         }
       }
     },
-    "fl oz" : {
-
-    },
-    "fluid ounce" : {
-
-    },
     "Fraction" : {
-
-    },
-    "g" : {
-
-    },
-    "gal" : {
-
-    },
-    "gallon" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bruch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fracción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fraction"
+          }
+        }
+      }
     },
     "General" : {
       "localizations" : {
@@ -1637,15 +1659,6 @@
           }
         }
       }
-    },
-    "gi" : {
-
-    },
-    "gill" : {
-
-    },
-    "gram" : {
-
     },
     "Grocery List" : {
       "localizations" : {
@@ -2001,15 +2014,6 @@
         }
       }
     },
-    "kg" : {
-
-    },
-    "kilogram" : {
-
-    },
-    "l" : {
-
-    },
     "Language" : {
       "localizations" : {
         "de" : {
@@ -2076,9 +2080,6 @@
         }
       }
     },
-    "lb" : {
-
-    },
     "List your tools here. 🍴" : {
       "localizations" : {
         "de" : {
@@ -2100,12 +2101,6 @@
           }
         }
       }
-    },
-    "liter" : {
-
-    },
-    "litre" : {
-
     },
     "Log out" : {
       "localizations" : {
@@ -2218,19 +2213,26 @@
       }
     },
     "Marked ingredients could not be adjusted!" : {
-
-    },
-    "mg" : {
-
-    },
-    "milligram" : {
-
-    },
-    "milliliter" : {
-
-    },
-    "millilitre" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markierte Zutaten können nicht angepasst werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Los ingredientes marcados no pudieron ser ajustados!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les ingrédients marqués n'ont pas pu être ajustés!"
+          }
+        }
+      }
     },
     "Minutes" : {
       "localizations" : {
@@ -2323,10 +2325,26 @@
       }
     },
     "Mixed fraction" : {
-
-    },
-    "ml" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemischter Bruch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fracción mixta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fraction mixte"
+          }
+        }
+      }
     },
     "More information" : {
       "localizations" : {
@@ -2506,7 +2524,26 @@
       }
     },
     "Number" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dezimalzahl"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Número"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
+          }
+        }
+      }
     },
     "Nutrition" : {
       "localizations" : {
@@ -2618,12 +2655,6 @@
         }
       }
     },
-    "ounce" : {
-
-    },
-    "oz" : {
-
-    },
     "Parsing error" : {
       "localizations" : {
         "de" : {
@@ -2689,12 +2720,6 @@
           }
         }
       }
-    },
-    "pinch" : {
-
-    },
-    "pint" : {
-
     },
     "Please check the entered URL." : {
       "localizations" : {
@@ -2763,10 +2788,26 @@
       }
     },
     "Point (e.g. 1.42)" : {
-
-    },
-    "pound" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt (z.B. 1.42)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punto (por ejemplo, 1.42)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point (par exemple, 1.42)"
+          }
+        }
+      }
     },
     "Preparation" : {
       "localizations" : {
@@ -2835,15 +2876,6 @@
           }
         }
       }
-    },
-    "pt" : {
-
-    },
-    "qt" : {
-
-    },
-    "quart" : {
-
     },
     "Recipe" : {
       "localizations" : {
@@ -2929,6 +2961,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recettes"
+          }
+        }
+      }
+    },
+    "Refresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refrescar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiser"
           }
         }
       }
@@ -3333,9 +3387,6 @@
         }
       }
     },
-    "smidgen" : {
-
-    },
     "Sodium content" : {
       "comment" : "Sodium content",
       "localizations" : {
@@ -3364,7 +3415,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hier fehlen Zutaten! 🥬"
+            "value" : "Hier ist Platz für Zutaten! 🥬"
           }
         },
         "es" : {
@@ -3536,15 +3587,6 @@
         }
       }
     },
-    "tablespoon" : {
-
-    },
-    "tbsp" : {
-
-    },
-    "teaspoon" : {
-
-    },
     "Thank you for downloading" : {
       "localizations" : {
         "de" : {
@@ -3634,6 +3676,28 @@
         }
       }
     },
+    "There are no recipes in this cookbook!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier gibt es momentan noch keine Rezepte zu sehen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay recetas en esta categoría."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n'y a pas de recettes dans cette catégorie."
+          }
+        }
+      }
+    },
     "There was no name in the request given for the recipe. Cannot save the recipe." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3702,7 +3766,26 @@
       }
     },
     "This setting will take effect after the app is restarted. It affects the adjustment of ingredient quantities." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Einstellung wird erst nach einem Neustart der App wirksam. Die Einstellung betrifft die Mengenberechnung der Rezeptzutaten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta configuración surtirá efecto después de reiniciar la aplicación. Afecta el ajuste de las cantidades de ingredientes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce paramètre prendra effet après le redémarrage de l'application. Il affecte l'ajustement des quantités d'ingrédients."
+          }
+        }
+      }
     },
     "This website might not be currently supported. If this appears incorrect, you can use the support options in the app settings to raise awareness about this issue." : {
       "localizations" : {
@@ -3882,9 +3965,6 @@
           }
         }
       }
-    },
-    "tsp" : {
-
     },
     "Unable to complete action." : {
       "localizations" : {
