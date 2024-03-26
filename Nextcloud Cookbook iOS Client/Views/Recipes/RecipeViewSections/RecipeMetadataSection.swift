@@ -74,7 +74,7 @@ struct RecipeMetadataSection: View {
                         .lineLimit(1)
                 }
                 .popover(isPresented: $presentServingsPopover) {
-                    PickerPopoverView(isPresented: $presentServingsPopover, value: $viewModel.observableRecipeDetail.recipeYield, items: 0..<99, title: "Servings", titleKey: "Servings")
+                    PickerPopoverView(isPresented: $presentServingsPopover, value: $viewModel.observableRecipeDetail.recipeYield, items: 1..<99, title: "Servings", titleKey: "Servings")
                 }
             }
         }

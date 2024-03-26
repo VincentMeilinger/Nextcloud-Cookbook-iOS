@@ -17,14 +17,6 @@ struct RecipeIngredientSection: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                if viewModel.observableRecipeDetail.recipeYield == 0 {
-                    SecondaryLabel(text: LocalizedStringKey("Ingredients"))
-                } else if viewModel.observableRecipeDetail.recipeYield == 1 {
-                    SecondaryLabel(text: LocalizedStringKey("Ingredients per serving"))
-                } else {
-                    SecondaryLabel(text: LocalizedStringKey("Ingredients for \(viewModel.observableRecipeDetail.recipeYield) servings"))
-                }
-                Spacer()
                 Button {
                     withAnimation {
                         if groceryList.containsRecipe(viewModel.observableRecipeDetail.id) {
@@ -44,10 +36,25 @@ struct RecipeIngredientSection: View {
                         Image(systemName: "heart.text.square")
                     }
                 }.disabled(viewModel.editMode)
+                
+                SecondaryLabel(text: LocalizedStringKey("Ingredients"))
+                
+                Spacer()
+                
+                Image(systemName: "person.2")
+                    .foregroundStyle(.secondary)
+                    .bold()
+                
+                ServingPickerView(selectedServingSize: $viewModel.observableRecipeDetail.ingredientMultiplier)
             }
             
             ForEach(0..<viewModel.observableRecipeDetail.recipeIngredient.count, id: \.self) { ix in
-                IngredientListItem(ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix], recipeId: viewModel.observableRecipeDetail.id) {
+                IngredientListItem(
+                    ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix],
+                    servings: $viewModel.observableRecipeDetail.ingredientMultiplier,
+                    recipeYield: Double(viewModel.observableRecipeDetail.recipeYield),
+                    recipeId: viewModel.observableRecipeDetail.id
+                ) {
                     groceryList.addItem(
                         viewModel.observableRecipeDetail.recipeIngredient[ix],
                         toRecipe: viewModel.observableRecipeDetail.id,
@@ -56,6 +63,16 @@ struct RecipeIngredientSection: View {
                 }
                 .padding(4)
             }
+            
+            if viewModel.observableRecipeDetail.ingredientMultiplier != Double(viewModel.observableRecipeDetail.recipeYield) {
+                HStack() {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.secondary)
+                    Text("Marked ingredients could not be adjusted!")
+                        .foregroundStyle(.secondary)
+                }.padding(.top)
+            }
+            
             if viewModel.editMode {
                 Button {
                     viewModel.presentIngredientEditView.toggle()
@@ -64,7 +81,9 @@ struct RecipeIngredientSection: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
-        }.padding()
+        }
+        .padding()
+        .animation(.easeInOut, value: viewModel.observableRecipeDetail.ingredientMultiplier)
     }
 }
 
@@ -73,9 +92,16 @@ struct RecipeIngredientSection: View {
 fileprivate struct IngredientListItem: View {
     @EnvironmentObject var groceryList: GroceryList
     @Binding var ingredient: String
+    @Binding var servings: Double
+    @State var recipeYield: Double
     @State var recipeId: String
     let addToGroceryListAction: () -> Void
+    
+    @State var modifiedIngredient: AttributedString = ""
     @State var isSelected: Bool = false
+    var unmodified: Bool {
+        servings == Double(recipeYield) || servings == 0
+    }
     
     // Drag animation
     @State private var dragOffset: CGFloat = 0
@@ -98,11 +124,28 @@ fileprivate struct IngredientListItem: View {
             } else {
                 Image(systemName: "circle")
             }
-            
-            Text("\(ingredient)")
-                .multilineTextAlignment(.leading)
-                .lineLimit(5)
+            if !unmodified && String(modifiedIngredient.characters) == ingredient {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.red)
+            }
+            if unmodified {
+                Text(ingredient)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(5)
+            } else {
+                Text(modifiedIngredient)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(5)
+                    //.foregroundStyle(String(modifiedIngredient.characters) == ingredient ? .red : .primary)
+            }
             Spacer()
+        }
+        .onChange(of: servings) { newServings in
+            if recipeYield == 0 {
+                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ingredient, by: newServings)
+            } else {
+                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ingredient, by: newServings/recipeYield)
+            }
         }
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)
         .onTapGesture {
@@ -137,5 +180,38 @@ fileprivate struct IngredientListItem: View {
                     }
                 }
         )
+    }
+}
+
+
+
+struct ServingPickerView: View {
+    @Binding var selectedServingSize: Double
+
+    // Computed property to handle the text field input and update the selectedServingSize
+    var body: some View {
+        HStack {
+            Button {
+                selectedServingSize -= 1
+            } label: {
+                Image(systemName: "minus.square.fill")
+                    .bold()
+            }
+            TextField("", value: $selectedServingSize, formatter: numberFormatter)
+                .keyboardType(.numbersAndPunctuation)
+                .lineLimit(1)
+                .multilineTextAlignment(.center)
+                .frame(width: 40)
+            Button {
+                selectedServingSize += 1
+            } label: {
+                Image(systemName: "plus.square.fill")
+                    .bold()
+            }
+        }
+        .onChange(of: selectedServingSize) { newValue in
+            if newValue < 0 { selectedServingSize = 0 }
+            else if newValue > 100 { selectedServingSize = 100 }
+        }
     }
 }

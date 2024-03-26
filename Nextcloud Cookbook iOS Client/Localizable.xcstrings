@@ -90,6 +90,28 @@
         }
       }
     },
+    "%.2f" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.2f"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.2f"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
     "%@" : {
       "localizations" : {
         "de" : {
@@ -820,6 +842,28 @@
         }
       }
     },
+    "Comma (e.g. 1,42)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komma (z.B. 1,42)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coma (por ejemplo, 1,42)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule (par exemple, 1,42)"
+          }
+        }
+      }
+    },
     "Configure what is stored on your device." : {
       "localizations" : {
         "de" : {
@@ -1058,6 +1102,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Créé : %@"
+          }
+        }
+      }
+    },
+    "Decimal number format" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dezimalzahlenformat"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formato de número decimal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Format de nombre décimal"
           }
         }
       }
@@ -1528,6 +1594,28 @@
         }
       }
     },
+    "Fraction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bruch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fracción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fraction"
+          }
+        }
+      }
+    },
     "General" : {
       "localizations" : {
         "de" : {
@@ -1793,6 +1881,7 @@
       }
     },
     "Ingredients for %lld servings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1815,6 +1904,7 @@
       }
     },
     "Ingredients per serving" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2122,6 +2212,28 @@
         }
       }
     },
+    "Marked ingredients could not be adjusted!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markierte Zutaten können nicht angepasst werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Los ingredientes marcados no pudieron ser ajustados!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les ingrédients marqués n'ont pas pu être ajustés!"
+          }
+        }
+      }
+    },
     "Minutes" : {
       "localizations" : {
         "de" : {
@@ -2208,6 +2320,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Missing Request Body"
+          }
+        }
+      }
+    },
+    "Mixed fraction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemischter Bruch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fracción mixta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fraction mixte"
           }
         }
       }
@@ -2385,6 +2519,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun"
+          }
+        }
+      }
+    },
+    "Number" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dezimalzahl"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Número"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
           }
         }
       }
@@ -2631,6 +2787,28 @@
         }
       }
     },
+    "Point (e.g. 1.42)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt (z.B. 1.42)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punto (por ejemplo, 1.42)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point (par exemple, 1.42)"
+          }
+        }
+      }
+    },
     "Preparation" : {
       "localizations" : {
         "de" : {
@@ -2783,6 +2961,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recettes"
+          }
+        }
+      }
+    },
+    "Refresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refrescar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiser"
           }
         }
       }
@@ -3215,7 +3415,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hier fehlen Zutaten! 🥬"
+            "value" : "Hier ist Platz für Zutaten! 🥬"
           }
         },
         "es" : {
@@ -3476,6 +3676,28 @@
         }
       }
     },
+    "There are no recipes in this cookbook!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier gibt es momentan noch keine Rezepte zu sehen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay recetas en esta categoría."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n'y a pas de recettes dans cette catégorie."
+          }
+        }
+      }
+    },
     "There was no name in the request given for the recipe. Cannot save the recipe." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3539,6 +3761,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette application est un effort open source. Si vous souhaitez suggérer ou contribuer à de nouvelles fonctionnalités, ou si vous rencontrez des problèmes, veuillez utiliser le lien d'assistance ou visiter GitHub dans les paramètres de l'application."
+          }
+        }
+      }
+    },
+    "This setting will take effect after the app is restarted. It affects the adjustment of ingredient quantities." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Einstellung wird erst nach einem Neustart der App wirksam. Die Einstellung betrifft die Mengenberechnung der Rezeptzutaten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta configuración surtirá efecto después de reiniciar la aplicación. Afecta el ajuste de las cantidades de ingredientes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce paramètre prendra effet après le redémarrage de l'application. Il affecte l'ajustement des quantités d'ingrédients."
           }
         }
       }

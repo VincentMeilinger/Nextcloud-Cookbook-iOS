@@ -115,6 +115,12 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var decimalNumberSeparator: String {
+        didSet {
+            UserDefaults.standard.set(decimalNumberSeparator, forKey: "decimalNumberSeparator")
+        }
+    }
+    
     init() {
         self.username = UserDefaults.standard.object(forKey: "username") as? String ?? ""
         self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
@@ -133,6 +139,7 @@ class UserSettings: ObservableObject {
         self.expandKeywordSection = UserDefaults.standard.object(forKey: "expandKeywordSection") as? Bool ?? false
         self.expandInfoSection = UserDefaults.standard.object(forKey: "expandInfoSection") as? Bool ?? false
         self.keepScreenAwake = UserDefaults.standard.object(forKey: "keepScreenAwake") as? Bool ?? true
+        self.decimalNumberSeparator = UserDefaults.standard.object(forKey: "decimalNumberSeparator") as? String ?? "."
         
         if authString == "" {
             if token != "" && username != "" {

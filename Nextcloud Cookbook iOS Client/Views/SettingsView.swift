@@ -77,6 +77,20 @@ struct SettingsView: View {
             }
             
             Section {
+                HStack {
+                    Text("Decimal number format")
+                    Spacer()
+                    Picker("", selection: $userSettings.decimalNumberSeparator) {
+                        Text("Point (e.g. 1.42)").tag(".")
+                        Text("Comma (e.g. 1,42)").tag(",")
+                    }
+                    .pickerStyle(.menu)
+                }
+            } footer: {
+                Text("This setting will take effect after the app is restarted. It affects the adjustment of ingredient quantities.")
+            }
+            
+            Section {
                 Toggle(isOn: $userSettings.storeRecipes) {
                     Text("Offline recipes")
                 }
@@ -170,12 +184,6 @@ struct SettingsView: View {
         } message: {
             Text(viewModel.alertType.getMessage())
         }
-        .onDisappear {
-            Task {
-                userSettings.lastUpdate = .distantPast
-                await appState.updateAllRecipeDetails()
-            }
-        }
         .task {
             await viewModel.getUserData()
         }
@@ -236,6 +244,7 @@ extension SettingsView {
         }
     }
 }
+
 
 
 

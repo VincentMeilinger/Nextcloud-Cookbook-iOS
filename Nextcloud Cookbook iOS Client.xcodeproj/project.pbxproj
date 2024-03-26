@@ -56,7 +56,7 @@
 		A977D0E22B60034E009783A9 /* GroceryListTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0E12B60034E009783A9 /* GroceryListTabView.swift */; };
 		A97B4D322B80B3E900EC1A88 /* RecipeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97B4D312B80B3E900EC1A88 /* RecipeModels.swift */; };
 		A97B4D352B80B82A00EC1A88 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97B4D342B80B82A00EC1A88 /* ShareView.swift */; };
-		A9A43AE12B963150003D95CA /* SwipeActions in Frameworks */ = {isa = PBXBuildFile; productRef = A9A43AE02B963150003D95CA /* SwipeActions */; };
+		A9805BED2BAAC70E003B7231 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9805BEC2BAAC70E003B7231 /* NumberFormatter.swift */; };
 		A9BBB38C2B8D3B0C002DA7FF /* ParallaxHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BBB38B2B8D3B0C002DA7FF /* ParallaxHeaderView.swift */; };
 		A9BBB38E2B8E44B3002DA7FF /* BottomClipper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BBB38D2B8E44B3002DA7FF /* BottomClipper.swift */; };
 		A9BBB3902B91BE31002DA7FF /* ObservableRecipeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BBB38F2B91BE31002DA7FF /* ObservableRecipeDetail.swift */; };
@@ -137,6 +137,7 @@
 		A977D0E12B60034E009783A9 /* GroceryListTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroceryListTabView.swift; sourceTree = "<group>"; };
 		A97B4D312B80B3E900EC1A88 /* RecipeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeModels.swift; sourceTree = "<group>"; };
 		A97B4D342B80B82A00EC1A88 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		A9805BEC2BAAC70E003B7231 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
 		A9BBB38B2B8D3B0C002DA7FF /* ParallaxHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParallaxHeaderView.swift; sourceTree = "<group>"; };
 		A9BBB38D2B8E44B3002DA7FF /* BottomClipper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomClipper.swift; sourceTree = "<group>"; };
 		A9BBB38F2B91BE31002DA7FF /* ObservableRecipeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableRecipeDetail.swift; sourceTree = "<group>"; };
@@ -153,7 +154,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A74D33BE2AF82AAE00D06555 /* SwiftSoup in Frameworks */,
-				A9A43AE12B963150003D95CA /* SwipeActions in Frameworks */,
 				A9CA6CF62B4C63F200F78AB5 /* TPPDF in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,6 +372,7 @@
 			isa = PBXGroup;
 			children = (
 				A76B8A702AE002AE00096CEC /* Alerts.swift */,
+				A9805BEC2BAAC70E003B7231 /* NumberFormatter.swift */,
 				A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */,
 				A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */,
 			);
@@ -436,7 +437,6 @@
 			packageProductDependencies = (
 				A74D33BD2AF82AAE00D06555 /* SwiftSoup */,
 				A9CA6CF52B4C63F200F78AB5 /* TPPDF */,
-				A9A43AE02B963150003D95CA /* SwipeActions */,
 			);
 			productName = "Nextcloud Cookbook iOS Client";
 			productReference = A701717E2AA8E71900064C43 /* Nextcloud Cookbook iOS Client.app */;
@@ -516,7 +516,6 @@
 			packageReferences = (
 				A74D33BC2AF82AAE00D06555 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				A9CA6CF42B4C63F200F78AB5 /* XCRemoteSwiftPackageReference "TPPDF" */,
-				A9A43ADF2B963150003D95CA /* XCRemoteSwiftPackageReference "SwipeActions" */,
 			);
 			productRefGroup = A701717F2AA8E71900064C43 /* Products */;
 			projectDirPath = "";
@@ -567,6 +566,7 @@
 				A97506192B920EC200E86029 /* RecipeIngredientSection.swift in Sources */,
 				A97B4D352B80B82A00EC1A88 /* ShareView.swift in Sources */,
 				A975061F2B920FFC00E86029 /* RecipeToolSection.swift in Sources */,
+				A9805BED2BAAC70E003B7231 /* NumberFormatter.swift in Sources */,
 				A9D89AB02B4FE97800F49D92 /* TimerView.swift in Sources */,
 				A9BBB38C2B8D3B0C002DA7FF /* ParallaxHeaderView.swift in Sources */,
 				A79AA8E22AFF8C14007D25F2 /* RecipeEditViewModel.swift in Sources */,
@@ -769,7 +769,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
 				DEVELOPMENT_TEAM = EF2ABA36D9;
@@ -793,7 +793,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9.1;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -813,7 +813,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Nextcloud Cookbook iOS Client/Nextcloud_Cookbook_iOS_Client.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
 				DEVELOPMENT_TEAM = EF2ABA36D9;
@@ -837,7 +837,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9.1;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -993,14 +993,6 @@
 				minimumVersion = 2.6.1;
 			};
 		};
-		A9A43ADF2B963150003D95CA /* XCRemoteSwiftPackageReference "SwipeActions" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/aheze/SwipeActions";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.0;
-			};
-		};
 		A9CA6CF42B4C63F200F78AB5 /* XCRemoteSwiftPackageReference "TPPDF" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/techprimate/TPPDF.git";
@@ -1016,11 +1008,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A74D33BC2AF82AAE00D06555 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
-		};
-		A9A43AE02B963150003D95CA /* SwipeActions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9A43ADF2B963150003D95CA /* XCRemoteSwiftPackageReference "SwipeActions" */;
-			productName = SwipeActions;
 		};
 		A9CA6CF52B4C63F200F78AB5 /* TPPDF */ = {
 			isa = XCSwiftPackageProductDependency;

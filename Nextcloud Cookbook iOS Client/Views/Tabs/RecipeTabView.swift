@@ -19,28 +19,34 @@ struct RecipeTabView: View {
             List(selection: $viewModel.selectedCategory) {
                 // Categories
                 ForEach(appState.categories) { category in
-                    if category.recipe_count != 0 {
-                        NavigationLink(value: category) {
-                            HStack(alignment: .center) {
-                                if viewModel.selectedCategory != nil && category.name == viewModel.selectedCategory!.name {
-                                    Image(systemName: "book")
-                                } else {
-                                    Image(systemName: "book.closed.fill")
-                                }
-                                Text(category.name == "*" ? String(localized: "Other") : category.name)
+                    NavigationLink(value: category) {
+                        HStack(alignment: .center) {
+                            if viewModel.selectedCategory != nil &&
+                                category.name == viewModel.selectedCategory!.name {
+                                Image(systemName: "book")
+                            } else {
+                                Image(systemName: "book.closed.fill")
+                            }
+                            
+                            if category.name == "*" {
+                                Text("Other")
                                     .font(.system(size: 20, weight: .medium, design: .default))
-                                Spacer()
-                                Text("\(category.recipe_count)")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
-                                    .foregroundStyle(Color.background)
-                                    .frame(width: 25, height: 25, alignment: .center)
-                                    .minimumScaleFactor(0.5)
-                                    .background {
-                                        Circle()
-                                            .foregroundStyle(Color.secondary)
-                                    }
-                            }.padding(7)
-                        }
+                            } else {
+                                Text(category.name)
+                                    .font(.system(size: 20, weight: .medium, design: .default))
+                            }
+                                
+                            Spacer()
+                            Text("\(category.recipe_count)")
+                                .font(.system(size: 15, weight: .bold, design: .default))
+                                .foregroundStyle(Color.background)
+                                .frame(width: 25, height: 25, alignment: .center)
+                                .minimumScaleFactor(0.5)
+                                .background {
+                                    Circle()
+                                        .foregroundStyle(Color.secondary)
+                                }
+                        }.padding(7)
                     }
                 }
             }
@@ -100,7 +106,7 @@ struct RecipeTabView: View {
 
 
 fileprivate struct RecipeTabViewToolBar: ToolbarContent {
-    @EnvironmentObject var mainViewModel: AppState
+    @EnvironmentObject var appState: AppState
     @EnvironmentObject var viewModel: RecipeTabView.ViewModel
     
     var body: some ToolbarContent {
@@ -111,11 +117,11 @@ fileprivate struct RecipeTabViewToolBar: ToolbarContent {
                     Task {
                         viewModel.presentLoadingIndicator = true
                         UserSettings.shared.lastUpdate = Date.distantPast
-                        await mainViewModel.getCategories()
-                        for category in mainViewModel.categories {
-                            await mainViewModel.getCategory(named: category.name, fetchMode: .preferServer)
+                        await appState.getCategories()
+                        for category in appState.categories {
+                            await appState.getCategory(named: category.name, fetchMode: .preferServer)
                         }
-                        await mainViewModel.updateAllRecipeDetails()
+                        await appState.updateAllRecipeDetails()
                         viewModel.presentLoadingIndicator = false
                     }
                 } label: {
