@@ -36,11 +36,13 @@ You can download the app from the AppStore:
 
 - [ ] **Version 1.11**: Decoupling of internal recipe representation from the Nextcloud Cookbook recipe representation. This change provides increased flexibility for API updates and enables the introduction of features not currently supported by the Cookbook API, such as uploading images. This update will take some time, but will therefore result in simpler, better maintainable code. 
 
-- [ ] **Version 1.12 and beyond** (Ideas for the future; integration not guaranteed!): 
+- [ ] **Version 1.12 and beyond** (Ideas for the future; integration not guaranteed!):
+
+  - Allow adding custom items to the grocery list.
   
   - Fuzzy search for recipe names and keywords.
   
-  - In-app timer for the cook time specified in a recipe.
+  - An in-app timer for the cook time specified in a recipe.
   
   - Search for recipes based on left-over ingredients.
   
