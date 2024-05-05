@@ -135,11 +135,15 @@ import UIKit
         guard UserSettings.shared.storeRecipes else { return }
         guard let recipes = self.recipes[category] else { return }
         for recipe in recipes {
-            if needsUpdate(category: category, lastModified: recipe.dateModified) {
-                print("\(recipe.name) needs an update. (last modified: \(recipe.dateModified)")
-                await updateRecipeDetail(id: recipe.recipe_id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
+            if let dateModified = recipe.dateModified {
+                if needsUpdate(category: category, lastModified: dateModified) {
+                    print("\(recipe.name) needs an update. (last modified: \(recipe.dateModified)")
+                    await updateRecipeDetail(id: recipe.recipe_id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
+                } else {
+                    print("\(recipe.name) is up to date.")
+                }
             } else {
-                print("\(recipe.name) is up to date.")
+                await updateRecipeDetail(id: recipe.recipe_id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
             }
         }
     }
