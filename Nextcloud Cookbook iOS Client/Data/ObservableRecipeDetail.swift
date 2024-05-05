@@ -55,12 +55,12 @@ class ObservableRecipeDetail: ObservableObject {
         id = recipeDetail.id
         name = recipeDetail.name
         keywords = recipeDetail.keywords.isEmpty ? [] : recipeDetail.keywords.components(separatedBy: ",")
-        imageUrl = recipeDetail.imageUrl
+        imageUrl = recipeDetail.imageUrl ?? ""
         prepTime = DurationComponents.fromPTString(recipeDetail.prepTime ?? "")
         cookTime = DurationComponents.fromPTString(recipeDetail.cookTime ?? "")
         totalTime = DurationComponents.fromPTString(recipeDetail.totalTime ?? "")
         description = recipeDetail.description
-        url = recipeDetail.url
+        url = recipeDetail.url ?? ""
         recipeYield = recipeDetail.recipeYield == 0 ? 1 : recipeDetail.recipeYield // Recipe yield should not be zero
         recipeCategory = recipeDetail.recipeCategory
         tool = recipeDetail.tool

@@ -64,6 +64,7 @@
 		A9CA6CF62B4C63F200F78AB5 /* TPPDF in Frameworks */ = {isa = PBXBuildFile; productRef = A9CA6CF52B4C63F200F78AB5 /* TPPDF */; };
 		A9D89AB02B4FE97800F49D92 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D89AAF2B4FE97800F49D92 /* TimerView.swift */; };
 		A9D8F9052B99F3E5009BACAE /* RecipeImportSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D8F9042B99F3E4009BACAE /* RecipeImportSection.swift */; };
+		A9E78A2B2BE7799F00206866 /* JsonAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E78A2A2BE7799F00206866 /* JsonAny.swift */; };
 		A9FA2AB62B5079B200A43702 /* alarm_sound_0.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */; };
 /* End PBXBuildFile section */
 
@@ -145,6 +146,7 @@
 		A9D89AAF2B4FE97800F49D92 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		A9D8F9042B99F3E4009BACAE /* RecipeImportSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeImportSection.swift; sourceTree = "<group>"; };
 		A9DA25D42B82096B0061FC2B /* Nextcloud-Cookbook-iOS-Client-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Nextcloud-Cookbook-iOS-Client-Info.plist"; sourceTree = SOURCE_ROOT; };
+		A9E78A2A2BE7799F00206866 /* JsonAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonAny.swift; sourceTree = "<group>"; };
 		A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = alarm_sound_0.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -375,6 +377,7 @@
 				A9805BEC2BAAC70E003B7231 /* NumberFormatter.swift */,
 				A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */,
 				A76B8A6E2ADFFA8800096CEC /* SupportedLanguage.swift */,
+				A9E78A2A2BE7799F00206866 /* JsonAny.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -583,6 +586,7 @@
 				A787B0782B2B1E6400C2DF1B /* DateExtension.swift in Sources */,
 				A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */,
 				A7CD3FD22B2C546A00D764AD /* CollapsibleView.swift in Sources */,
+				A9E78A2B2BE7799F00206866 /* JsonAny.swift in Sources */,
 				A9BBB3902B91BE31002DA7FF /* ObservableRecipeDetail.swift in Sources */,
 				A97506212B92104700E86029 /* RecipeMetadataSection.swift in Sources */,
 				A70171B42AB2122900064C43 /* NetworkUtils.swift in Sources */,
@@ -793,7 +797,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.10;
+				MARKETING_VERSION = 1.10.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -837,7 +841,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.10;
+				MARKETING_VERSION = 1.10.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-Client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

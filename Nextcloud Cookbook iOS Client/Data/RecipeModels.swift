@@ -12,10 +12,10 @@ import SwiftUI
 struct Recipe: Codable {
     let name: String
     let keywords: String?
-    let dateCreated: String
-    let dateModified: String
-    let imageUrl: String
-    let imagePlaceholderUrl: String
+    let dateCreated: String?
+    let dateModified: String?
+    let imageUrl: String?
+    let imagePlaceholderUrl: String?
     let recipe_id: Int
     
     // Properties excluded from Codable
@@ -35,15 +35,15 @@ extension Recipe: Identifiable, Hashable {
 struct RecipeDetail: Codable {
     var name: String
     var keywords: String
-    var dateCreated: String
-    var dateModified: String
-    var imageUrl: String
+    var dateCreated: String?
+    var dateModified: String?
+    var imageUrl: String?
     var id: String
     var prepTime: String?
     var cookTime: String?
     var totalTime: String?
     var description: String
-    var url: String
+    var url: String?
     var recipeYield: Int
     var recipeCategory: String
     var tool: [String]
@@ -89,6 +89,33 @@ struct RecipeDetail: Codable {
         recipeIngredient = []
         recipeInstructions = []
         nutrition = [:]
+    }
+    
+    // Custom decoder to handle value type ambiguity
+    private enum CodingKeys: String, CodingKey {
+        case name, keywords, dateCreated, dateModified, imageUrl, id, prepTime, cookTime, totalTime, description, url, recipeYield, recipeCategory, tool, recipeIngredient, recipeInstructions, nutrition
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        keywords = try container.decode(String.self, forKey: .keywords)
+        dateCreated = try container.decodeIfPresent(String.self, forKey: .dateCreated)
+        dateModified = try container.decodeIfPresent(String.self, forKey: .dateModified)
+        imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
+        id = try container.decode(String.self, forKey: .id)
+        prepTime = try container.decodeIfPresent(String.self, forKey: .prepTime)
+        cookTime = try container.decodeIfPresent(String.self, forKey: .cookTime)
+        totalTime = try container.decodeIfPresent(String.self, forKey: .totalTime)
+        description = try container.decode(String.self, forKey: .description)
+        url = try container.decode(String.self, forKey: .url)
+        recipeYield = try container.decode(Int.self, forKey: .recipeYield)
+        recipeCategory = try container.decode(String.self, forKey: .recipeCategory)
+        tool = try container.decode([String].self, forKey: .tool)
+        recipeIngredient = try container.decode([String].self, forKey: .recipeIngredient)
+        recipeInstructions = try container.decode([String].self, forKey: .recipeInstructions)
+
+        nutrition = try container.decode(Dictionary<String, JSONAny>.self, forKey: .nutrition).mapValues { String(describing: $0.value) }
     }
 }
 
