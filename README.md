@@ -34,7 +34,7 @@ You can download the app from the AppStore:
 
 - [x] **Version 1.10**: Recipe ingredient calculator: Enables calculation of ingredient quantities based on a specifiable yield number.
 
-- [ ] **Version 1.11**: Decoupling of internal recipe representation from the Nextcloud Cookbook recipe representation. This change provides increased flexibility for API updates and enables the introduction of features not currently supported by the Cookbook API, such as uploading images. This update will take some time, but will therefore result in simpler, better maintainable code. 
+- [ ] **Version 1.11**: Decoupling of internal recipe representation from the Nextcloud Cookbook recipe representation. This change provides increased flexibility for API updates and enables the introduction of features not currently supported by the Cookbook API, such as uploading images. This update will take some time, but will therefore result in simpler, better maintainable code. Update: I will continue to work on this update in January 2024.
 
 - [ ] **Version 1.12 and beyond** (Ideas for the future; integration not guaranteed!):
 
