@@ -93,21 +93,59 @@ class ObservableRecipeDetail: ObservableObject {
         )
     }
     
-    static func adjustIngredient(_ ingredient: String, by factor: Double) -> AttributedString {
+    static func applyMarkdownStyling(_ text: String) -> AttributedString {
+        if var markdownString = try? AttributedString(
+            markdown: text,
+            options: .init(
+                        allowsExtendedAttributes: true,
+                        interpretedSyntax: .full,
+                        failurePolicy: .returnPartiallyParsedIfPossible
+                     )
+        ) {
+            for (intentBlock, intentRange) in markdownString.runs[AttributeScopes.FoundationAttributes.PresentationIntentAttribute.self].reversed() {
+                    guard let intentBlock = intentBlock else { continue }
+                    for intent in intentBlock.components {
+                        switch intent.kind {
+                        case .header(level: let level):
+                            switch level {
+                            case 1:
+                                markdownString[intentRange].font = .system(.title).bold()
+                            case 2:
+                                markdownString[intentRange].font = .system(.title2).bold()
+                            case 3:
+                                markdownString[intentRange].font = .system(.title3).bold()
+                            default:
+                                break
+                            }
+                        default:
+                            break
+                        }
+                    }
+                    
+                    if intentRange.lowerBound != markdownString.startIndex {
+                        markdownString.characters.insert(contentsOf: "\n", at: intentRange.lowerBound)
+                    }
+                }
+            return markdownString
+        }
+        return AttributedString(text)
+    }
+    
+    static func adjustIngredient(_ ingredient: AttributedString, by factor: Double) -> AttributedString {
         if factor == 0 {
-            return AttributedString(ingredient)
+            return ingredient
         }
         // Match mixed fractions first
         var matches = ObservableRecipeDetail.matchPatternAndMultiply(
             .mixedFraction,
-            in: ingredient,
+            in: String(ingredient.characters),
             multFactor: factor
         )
         // Then match fractions, exclude mixed fraction ranges
         matches.append(contentsOf:
             ObservableRecipeDetail.matchPatternAndMultiply(
                 .fraction,
-                in: ingredient,
+                in: String(ingredient.characters),
                 multFactor: factor,
                 excludedRanges: matches.map({ tuple in tuple.1 })
             )
@@ -116,7 +154,7 @@ class ObservableRecipeDetail: ObservableObject {
         matches.append(contentsOf:
             ObservableRecipeDetail.matchPatternAndMultiply(
                 .number,
-                in: ingredient,
+                in: String(ingredient.characters),
                 multFactor: factor,
                 excludedRanges: matches.map({ tuple in tuple.1 })
             )
@@ -124,7 +162,8 @@ class ObservableRecipeDetail: ObservableObject {
         // Sort matches by match range lower bound, descending.
         matches.sort(by: { a, b in a.1.lowerBound > b.1.lowerBound})
 
-        var attributedString = AttributedString(ingredient)
+        var attributedString = ingredient
+        
         for (newSubstring, matchRange) in matches {
             guard let range = Range(matchRange, in: attributedString) else { continue }
             var attributedSubString = AttributedString(newSubstring)

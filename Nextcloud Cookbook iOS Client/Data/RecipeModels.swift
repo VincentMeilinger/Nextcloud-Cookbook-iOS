@@ -109,7 +109,7 @@ struct RecipeDetail: Codable {
         totalTime = try container.decodeIfPresent(String.self, forKey: .totalTime)
         description = try container.decode(String.self, forKey: .description)
         url = try container.decode(String.self, forKey: .url)
-        recipeYield = try container.decode(Int.self, forKey: .recipeYield)
+        recipeYield = try container.decode(Int?.self, forKey: .recipeYield) ?? 1
         recipeCategory = try container.decode(String.self, forKey: .recipeCategory)
         tool = try container.decode([String].self, forKey: .tool)
         recipeIngredient = try container.decode([String].self, forKey: .recipeIngredient)

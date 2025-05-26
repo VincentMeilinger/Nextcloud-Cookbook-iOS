@@ -19,7 +19,7 @@ struct RecipeListSection: View {
             ForEach(list, id: \.self) { item in
                 HStack(alignment: .top) {
                     Text("\u{2022}")
-                    Text("\(item)")
+                    Text(ObservableRecipeDetail.applyMarkdownStyling(item))
                         .multilineTextAlignment(.leading)
                 }
                 .padding(4)

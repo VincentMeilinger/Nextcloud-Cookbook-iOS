@@ -129,7 +129,7 @@ fileprivate struct IngredientListItem: View {
                     .foregroundStyle(.red)
             }
             if unmodified {
-                Text(ingredient)
+                Text(ObservableRecipeDetail.applyMarkdownStyling(ingredient))
                     .multilineTextAlignment(.leading)
                     .lineLimit(5)
             } else {
@@ -142,9 +142,9 @@ fileprivate struct IngredientListItem: View {
         }
         .onChange(of: servings) { newServings in
             if recipeYield == 0 {
-                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ingredient, by: newServings)
+                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ObservableRecipeDetail.applyMarkdownStyling(ingredient), by: newServings)
             } else {
-                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ingredient, by: newServings/recipeYield)
+                modifiedIngredient = ObservableRecipeDetail.adjustIngredient(ObservableRecipeDetail.applyMarkdownStyling(ingredient), by: newServings/recipeYield)
             }
         }
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)

@@ -47,7 +47,7 @@ fileprivate struct RecipeInstructionListItem: View {
         HStack(alignment: .top) {
             Text("\(index)")
                 .monospaced()
-            Text(instruction)
+            Text(ObservableRecipeDetail.applyMarkdownStyling(instruction))
         }.padding(4)
         .foregroundStyle(isSelected ? Color.secondary : Color.primary)
         .onTapGesture {
