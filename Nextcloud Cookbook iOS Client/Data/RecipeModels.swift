@@ -38,6 +38,7 @@ struct RecipeDetail: Codable {
     var dateCreated: String?
     var dateModified: String?
     var imageUrl: String?
+    var image: String?
     var id: String
     var prepTime: String?
     var cookTime: String?
@@ -51,11 +52,12 @@ struct RecipeDetail: Codable {
     var recipeInstructions: [String]
     var nutrition: [String:String]
     
-    init(name: String, keywords: String, dateCreated: String, dateModified: String, imageUrl: String, id: String, prepTime: String? = nil, cookTime: String? = nil, totalTime: String? = nil, description: String, url: String, recipeYield: Int, recipeCategory: String, tool: [String], recipeIngredient: [String], recipeInstructions: [String], nutrition: [String:String]) {
+    init(name: String, keywords: String, dateCreated: String, dateModified: String, image: String, imageUrl: String, id: String, prepTime: String? = nil, cookTime: String? = nil, totalTime: String? = nil, description: String, url: String, recipeYield: Int, recipeCategory: String, tool: [String], recipeIngredient: [String], recipeInstructions: [String], nutrition: [String:String]) {
         self.name = name
         self.keywords = keywords
         self.dateCreated = dateCreated
         self.dateModified = dateModified
+        self.image = image
         self.imageUrl = imageUrl
         self.id = id
         self.prepTime = prepTime
@@ -76,6 +78,7 @@ struct RecipeDetail: Codable {
         keywords = ""
         dateCreated = ""
         dateModified = ""
+        image = ""
         imageUrl = ""
         id = ""
         prepTime = ""
@@ -93,7 +96,7 @@ struct RecipeDetail: Codable {
     
     // Custom decoder to handle value type ambiguity
     private enum CodingKeys: String, CodingKey {
-        case name, keywords, dateCreated, dateModified, imageUrl, id, prepTime, cookTime, totalTime, description, url, recipeYield, recipeCategory, tool, recipeIngredient, recipeInstructions, nutrition
+        case name, keywords, dateCreated, dateModified, image, imageUrl, id, prepTime, cookTime, totalTime, description, url, recipeYield, recipeCategory, tool, recipeIngredient, recipeInstructions, nutrition
     }
 
     init(from decoder: Decoder) throws {
@@ -102,6 +105,7 @@ struct RecipeDetail: Codable {
         keywords = try container.decode(String.self, forKey: .keywords)
         dateCreated = try container.decodeIfPresent(String.self, forKey: .dateCreated)
         dateModified = try container.decodeIfPresent(String.self, forKey: .dateModified)
+        image = try container.decodeIfPresent(String.self, forKey: .image)
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         id = try container.decode(String.self, forKey: .id)
         prepTime = try container.decodeIfPresent(String.self, forKey: .prepTime)
@@ -116,6 +120,7 @@ struct RecipeDetail: Codable {
         recipeInstructions = try container.decode([String].self, forKey: .recipeInstructions)
 
         nutrition = try container.decode(Dictionary<String, JSONAny>.self, forKey: .nutrition).mapValues { String(describing: $0.value) }
+        
     }
 }
 
@@ -127,6 +132,7 @@ extension RecipeDetail {
              keywords: "",
              dateCreated: "",
              dateModified: "",
+             image: "",
              imageUrl: "",
              id: "",
              prepTime: "",

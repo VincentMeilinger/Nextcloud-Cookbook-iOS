@@ -13,6 +13,7 @@ class ObservableRecipeDetail: ObservableObject {
     var id: String
     @Published var name: String
     @Published var keywords: [String]
+    @Published var image: String
     @Published var imageUrl: String
     @Published var prepTime: DurationComponents
     @Published var cookTime: DurationComponents
@@ -35,6 +36,7 @@ class ObservableRecipeDetail: ObservableObject {
         id = ""
         name = String(localized: "New Recipe")
         keywords = []
+        image = ""
         imageUrl = ""
         prepTime = DurationComponents()
         cookTime = DurationComponents()
@@ -55,6 +57,7 @@ class ObservableRecipeDetail: ObservableObject {
         id = recipeDetail.id
         name = recipeDetail.name
         keywords = recipeDetail.keywords.isEmpty ? [] : recipeDetail.keywords.components(separatedBy: ",")
+        image = recipeDetail.image ?? ""
         imageUrl = recipeDetail.imageUrl ?? ""
         prepTime = DurationComponents.fromPTString(recipeDetail.prepTime ?? "")
         cookTime = DurationComponents.fromPTString(recipeDetail.cookTime ?? "")
@@ -77,6 +80,7 @@ class ObservableRecipeDetail: ObservableObject {
             keywords: self.keywords.joined(separator: ","),
             dateCreated: "",
             dateModified: "",
+            image: self.image,
             imageUrl: self.imageUrl,
             id: self.id,
             prepTime: self.prepTime.toPTString(),
