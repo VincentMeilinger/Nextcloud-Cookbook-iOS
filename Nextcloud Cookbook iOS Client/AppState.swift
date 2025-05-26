@@ -170,6 +170,9 @@ import UIKit
         }
         var allRecipes: [Recipe] = []
         for category in categories {
+            if self.recipes[category.name] == nil {
+                await getCategory(named: category.name, fetchMode: .preferLocal)
+            }
             if let recipeArray = self.recipes[category.name] {
                 allRecipes.append(contentsOf: recipeArray)
             }

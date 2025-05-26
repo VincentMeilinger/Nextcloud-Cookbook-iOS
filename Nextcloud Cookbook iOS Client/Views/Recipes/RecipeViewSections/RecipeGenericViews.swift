@@ -53,7 +53,7 @@ struct EditableText: View {
                 .textFieldStyle(.roundedBorder)
                 .lineLimit(lineLimit)
         } else {
-            Text(text)
+            Text(ObservableRecipeDetail.applyMarkdownStyling(text))
         }
     }
 }

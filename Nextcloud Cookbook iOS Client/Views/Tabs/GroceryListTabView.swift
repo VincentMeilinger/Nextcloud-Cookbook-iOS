@@ -11,13 +11,34 @@ import SwiftUI
 
 struct GroceryListTabView: View {
     @EnvironmentObject var groceryList: GroceryList
+    @State var newGroceries: String = ""
 
     var body: some View {
         NavigationStack {
             if groceryList.groceryDict.isEmpty {
-                EmptyGroceryListView()
+                EmptyGroceryListView(newGroceries: $newGroceries)
             } else {
                 List {
+                    HStack(alignment: .top) {
+                        TextEditor(text: $newGroceries)
+                            .padding(4)
+                            .overlay(RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.secondary).opacity(0.5))
+                        Button {
+                            if !newGroceries.isEmpty {
+                                let items = newGroceries
+                                    .split(separator: "\n")
+                                    .compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                                    .filter { !$0.isEmpty }
+                                groceryList.addItems(items, toRecipe: "Other", recipeName: String(localized: "Other"))
+                            }
+                            newGroceries = ""
+                        } label: {
+                            Text("Add")
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    
                     ForEach(groceryList.groceryDict.keys.sorted(), id: \.self) { key in
                         Section {
                             ForEach(groceryList.groceryDict[key]!.items) { item in
@@ -97,6 +118,9 @@ fileprivate struct GroceryListItemView: View {
 
 
 fileprivate struct EmptyGroceryListView: View {
+    @EnvironmentObject var groceryList: GroceryList
+    @Binding var newGroceries: String
+    
     var body: some View {
         List {
             Text("You're all set for cooking 🍓")
@@ -105,6 +129,28 @@ fileprivate struct EmptyGroceryListView: View {
                 .foregroundStyle(.secondary)
             Text("Your grocery list is stored locally and therefore not synchronized across your devices.")
                 .foregroundStyle(.secondary)
+            Text("To add grocieries manually, type them in the box below and press the button. To add multiple items at once, separate them by a new line.")
+                .foregroundStyle(.secondary)
+            HStack(alignment: .top) {
+                TextEditor(text: $newGroceries)
+                    .padding(4)
+                    .overlay(RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.secondary).opacity(0.5))
+                Button {
+                    if !newGroceries.isEmpty {
+                        let items = newGroceries
+                            .split(separator: "\n")
+                            .compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                            .filter { !$0.isEmpty }
+                        groceryList.addItems(items, toRecipe: "Other", recipeName: String(localized: "Other"))
+                    }
+                    newGroceries = ""
+                } label: {
+                    Text("Add")
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding(.bottom, 4)
         }
         .navigationTitle("Grocery List")
     }
@@ -169,7 +215,7 @@ class GroceryRecipeItem: Identifiable, Codable {
         for item in items {
             addItem(item, toRecipe: recipeId, recipeName: recipeName, saveGroceryDict: false)
         }
-        save()
+        self.save()
         objectWillChange.send()
     }
     

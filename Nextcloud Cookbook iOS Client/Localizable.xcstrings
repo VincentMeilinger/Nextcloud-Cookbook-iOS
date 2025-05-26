@@ -485,7 +485,6 @@
       }
     },
     "Add" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3828,6 +3827,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Titre"
+          }
+        }
+      }
+    },
+    "To add grocieries manually, type them in the box below and press the button. To add multiple items at once, separate them by a new line." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durch das Feld unten können Einkäufe manuell hinzugefügt werden. Durch Zeilenumbrüche können mehrere Artikel auf einmal hinzugefügt werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para añadir comestibles manualmente, escríbelos en el cuadro de abajo y pulsa el botón.\nPara añadir varios artículos a la vez, sepáralos con una nueva línea."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour ajouter des courses manuellement, tape-les dans la case ci-dessous et appuie sur le bouton.\nPour ajouter plusieurs articles à la fois, sépare-les par un saut de ligne."
           }
         }
       }
