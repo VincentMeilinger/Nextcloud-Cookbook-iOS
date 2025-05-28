@@ -12,6 +12,7 @@ import SwiftUI
 struct GroceryListTabView: View {
     @EnvironmentObject var groceryList: GroceryList
     @State var newGroceries: String = ""
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -24,6 +25,7 @@ struct GroceryListTabView: View {
                             .padding(4)
                             .overlay(RoundedRectangle(cornerRadius: 8)
                             .stroke(Color.secondary).opacity(0.5))
+                            .focused($isFocused)
                         Button {
                             if !newGroceries.isEmpty {
                                 let items = newGroceries
@@ -33,9 +35,11 @@ struct GroceryListTabView: View {
                                 groceryList.addItems(items, toRecipe: "Other", recipeName: String(localized: "Other"))
                             }
                             newGroceries = ""
+                            
                         } label: {
                             Text("Add")
                         }
+                        .disabled(newGroceries.isEmpty)
                         .buttonStyle(.borderedProminent)
                     }
                     
@@ -44,11 +48,9 @@ struct GroceryListTabView: View {
                             ForEach(groceryList.groceryDict[key]!.items) { item in
                                 GroceryListItemView(item: item, toggleAction: {
                                     groceryList.toggleItemChecked(item)
-                                    groceryList.objectWillChange.send()
                                 }, deleteAction: {
-                                    groceryList.deleteItem(item.name, fromRecipe: key)
                                     withAnimation {
-                                        groceryList.objectWillChange.send()
+                                        groceryList.deleteItem(item.name, fromRecipe: key)
                                     }
                                 })
                             }
@@ -77,6 +79,9 @@ struct GroceryListTabView: View {
                         Text("Delete")
                             .foregroundStyle(Color.nextcloudBlue)
                     }
+                }
+                .onTapGesture {
+                    isFocused = false
                 }
             }
         }
@@ -120,6 +125,7 @@ fileprivate struct GroceryListItemView: View {
 fileprivate struct EmptyGroceryListView: View {
     @EnvironmentObject var groceryList: GroceryList
     @Binding var newGroceries: String
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         List {
@@ -136,6 +142,7 @@ fileprivate struct EmptyGroceryListView: View {
                     .padding(4)
                     .overlay(RoundedRectangle(cornerRadius: 8)
                     .stroke(Color.secondary).opacity(0.5))
+                    .focused($isFocused)
                 Button {
                     if !newGroceries.isEmpty {
                         let items = newGroceries
@@ -148,11 +155,15 @@ fileprivate struct EmptyGroceryListView: View {
                 } label: {
                     Text("Add")
                 }
+                .disabled(newGroceries.isEmpty)
                 .buttonStyle(.borderedProminent)
             }
             .padding(.bottom, 4)
         }
         .navigationTitle("Grocery List")
+        .onTapGesture {
+            isFocused = false
+        }
     }
 }
 
@@ -198,6 +209,8 @@ class GroceryRecipeItem: Identifiable, Codable {
     func addItem(_ itemName: String, toRecipe recipeId: String, recipeName: String? = nil, saveGroceryDict: Bool = true) {
         print("Adding item of recipe \(String(describing: recipeName))")
         DispatchQueue.main.async {
+            
+            
             if self.groceryDict[recipeId] != nil {
                 self.groceryDict[recipeId]?.items.append(GroceryRecipeItem(itemName))
             } else {
@@ -206,8 +219,9 @@ class GroceryRecipeItem: Identifiable, Codable {
             }
             if saveGroceryDict {
                 self.save()
-                self.objectWillChange.send()
+                
             }
+            self.objectWillChange.send()
         }
     }
     
@@ -216,7 +230,7 @@ class GroceryRecipeItem: Identifiable, Codable {
             addItem(item, toRecipe: recipeId, recipeName: recipeName, saveGroceryDict: false)
         }
         self.save()
-        objectWillChange.send()
+        self.objectWillChange.send()
     }
     
     func deleteItem(_ itemName: String, fromRecipe recipeId: String) {
@@ -228,26 +242,28 @@ class GroceryRecipeItem: Identifiable, Codable {
             groceryDict.removeValue(forKey: recipeId)
         }
         save()
-        objectWillChange.send()
+        self.objectWillChange.send()
     }
     
     func deleteGroceryRecipe(_ recipeId: String) {
         print("Deleting grocery recipe with id \(recipeId)")
         groceryDict.removeValue(forKey: recipeId)
         save()
-        objectWillChange.send()
+        self.objectWillChange.send()
     }
     
     func deleteAll() {
         print("Deleting all grocery items")
         groceryDict = [:]
         save()
+        self.objectWillChange.send()
     }
     
     func toggleItemChecked(_ groceryItem: GroceryRecipeItem) {
         print("Item checked: \(groceryItem.name)")
         groceryItem.isChecked.toggle()
         save()
+        self.objectWillChange.send()
     }
     
     func containsItem(at recipeId: String, item: String) -> Bool {
