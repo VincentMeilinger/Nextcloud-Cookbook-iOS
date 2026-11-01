@@ -1,12 +1,13 @@
 {
+  "originHash" : "fb14f54f5cb5192d8d16e46224fbd5e4bafe6c20a831b135e6ece8129e6bfca6",
   "pins" : [
     {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
-        "revision" : "8b6cf29eead8841a1fa7822481cb3af4ddaadba6",
-        "version" : "2.6.1"
+        "revision" : "e7f85f4d3dd91ca9a1e94d3328aa1ed5120a8c0f",
+        "version" : "2.14.3"
       }
     },
     {
@@ -14,10 +15,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/techprimate/TPPDF.git",
       "state" : {
-        "revision" : "1955ebbc090a3fb2149fb53e703595c3146689af",
-        "version" : "2.4.1"
+        "revision" : "975049c0e1022922580b7927e030901604024925",
+        "version" : "2.6.1"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

@@ -10,17 +10,31 @@ import OSLog
 import UIKit
 
 
-/// The Cookbook API class used for requests to the Nextcloud Cookbook service.
-let cookbookApi: CookbookApi.Type = {
-    switch UserSettings.shared.cookbookApiVersion {
-    case .v1:
-        return CookbookApiV1.self
+/// The Cookbook API class used for requests to the Nextcloud Cookbook service or a plain WebDAV server.
+/// Computed on every access, since the server type can change after logging out and back in.
+var cookbookApi: CookbookApi.Type {
+    switch UserSettings.shared.serverType {
+    case .webdav:
+        return CookbookApiWebDAV.self
+    case .nextcloud:
+        switch UserSettings.shared.cookbookApiVersion {
+        case .v1:
+            return CookbookApiV1.self
+        }
     }
-}()
+}
 
 /// The Cookbook API version.
 enum CookbookApiVersion: String {
     case v1 = "v1"
+}
+
+/// The kind of server the recipes are stored on.
+enum ServerType: String {
+    /// A Nextcloud server with the Cookbook app installed.
+    case nextcloud = "nextcloud"
+    /// A plain WebDAV folder containing recipes in the Nextcloud Cookbook folder layout.
+    case webdav = "webdav"
 }
 
 

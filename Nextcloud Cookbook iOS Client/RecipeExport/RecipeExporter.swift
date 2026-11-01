@@ -60,6 +60,8 @@ class RecipeExporter {
         }
                 
         let section = PDFSection(columnWidths: [0.5, 0.5])
+        section.columns[0].add(textObject: PDFSimpleText(text: String(localized: "Ingredients"), style: headerStyle))
+        section.columns[0].add(space: 5)
         section.columns[0].add(textObject: PDFSimpleText(text: ingr, style: textStyle))
         document.add(space: 20)
         document.add(section: section)
@@ -70,6 +72,8 @@ class RecipeExporter {
             instr += instruction + "\n\n"
         }
         document.add(space: 10)
+        document.add(textObject: PDFSimpleText(text: String(localized: "Instructions"), style: headerStyle))
+        document.add(space: 5)
         document.add(textObject: PDFSimpleText(text: instr, style: textStyle))
         
         // Generate PDF

@@ -11,13 +11,16 @@ enum RequestMethod: String {
     case GET = "GET", 
          POST = "POST",
          PUT = "PUT",
-         DELETE = "DELETE"
+         DELETE = "DELETE",
+         PROPFIND = "PROPFIND",
+         MKCOL = "MKCOL"
 }
 
 enum ContentType: String {
     case JSON = "application/json", 
          IMAGE = "image/jpeg",
-         FORM = "application/x-www-form-urlencoded"
+         FORM = "application/x-www-form-urlencoded",
+         XML = "application/xml; charset=utf-8"
 }
 
 struct HeaderField {

@@ -63,7 +63,7 @@ struct RecipeNutritionSection: View {
     
     func nutritionEmpty() -> Bool {
         for nutrition in Nutrition.allCases {
-            if let value = viewModel.observableRecipeDetail.nutrition[nutrition.dictKey] {
+            if viewModel.observableRecipeDetail.nutrition[nutrition.dictKey] != nil {
                 return false
             }
         }

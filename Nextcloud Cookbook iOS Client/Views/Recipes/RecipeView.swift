@@ -288,7 +288,7 @@ struct RecipeView: View {
 
 extension RecipeView {
     func importRecipe(from url: String) async -> UserAlert? {
-        let (scrapedRecipe, error) = await appState.importRecipe(url: url)
+        let (scrapedRecipe, _) = await appState.importRecipe(url: url)
         if let scrapedRecipe = scrapedRecipe {
             viewModel.setupView(recipeDetail: scrapedRecipe)
             return nil

@@ -137,7 +137,7 @@ import UIKit
         for recipe in recipes {
             if let dateModified = recipe.dateModified {
                 if needsUpdate(category: category, lastModified: dateModified) {
-                    print("\(recipe.name) needs an update. (last modified: \(recipe.dateModified)")
+                    print("\(recipe.name) needs an update. (last modified: \(dateModified))")
                     await updateRecipeDetail(id: recipe.recipe_id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
                 } else {
                     print("\(recipe.name) is up to date.")
@@ -431,7 +431,7 @@ import UIKit
             id: id
         )
         
-        if let error = error {
+        if error != nil {
             return .REQUEST_DROPPED
         }
         let path = "recipe\(id).data"
@@ -520,7 +520,7 @@ import UIKit
 
 
 extension AppState {
-    func loadLocal<T: Codable>(path: String) async -> T? {
+    func loadLocal<T: Codable & Sendable>(path: String) async -> T? {
         do {
             return try await dataStore.load(fromPath: path)
         } catch (let error) {
@@ -529,7 +529,7 @@ extension AppState {
         }
     }
     
-    func saveLocal<T: Codable>(_ object: T, path: String) async {
+    func saveLocal<T: Codable & Sendable>(_ object: T, path: String) async {
         await dataStore.save(data: object, toPath: path)
     }
     

@@ -49,6 +49,12 @@ class UserSettings: ObservableObject {
         }
     }
     
+    @Published var serverType: ServerType {
+        didSet {
+            UserDefaults.standard.set(serverType.rawValue, forKey: "serverType")
+        }
+    }
+    
     @Published var onboarding: Bool {
         didSet {
             UserDefaults.standard.set(onboarding, forKey: "onboarding")
@@ -128,6 +134,7 @@ class UserSettings: ObservableObject {
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
         self.serverProtocol = UserDefaults.standard.object(forKey: "serverProtocol") as? String ?? "https://"
         self.cookbookApiVersion = UserDefaults.standard.object(forKey: "cookbookApiVersion") as? CookbookApiVersion ?? .v1
+        self.serverType = ServerType(rawValue: UserDefaults.standard.object(forKey: "serverType") as? String ?? "") ?? .nextcloud
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue

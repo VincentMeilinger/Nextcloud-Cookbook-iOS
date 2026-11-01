@@ -20,6 +20,7 @@ You can download the app from the AppStore:
 - [x] Delete recipes
 - [x] Login with Nextcloud account using two factor authentication
 - [x] Login with Nextcloud account using app-tokens
+- [x] Use any plain WebDAV server holding recipes in the Nextcloud Cookbook folder format (one folder per recipe containing a `recipe.json`)
 - [x] Support for multiple languages
 - [x] MacOS support (through Mac Catalyst)
 - [x] Light and dark mode support

@@ -66,6 +66,10 @@
 		A9D8F9052B99F3E5009BACAE /* RecipeImportSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D8F9042B99F3E4009BACAE /* RecipeImportSection.swift */; };
 		A9E78A2B2BE7799F00206866 /* JsonAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E78A2A2BE7799F00206866 /* JsonAny.swift */; };
 		A9FA2AB62B5079B200A43702 /* alarm_sound_0.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */; };
+		C0DE0A010000000000000002 /* WebDAVClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0A010000000000000001 /* WebDAVClient.swift */; };
+		C0DE0A010000000000000004 /* CookbookApiWebDAV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0A010000000000000003 /* CookbookApiWebDAV.swift */; };
+		C0DE0A010000000000000006 /* WebDAVLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0A010000000000000005 /* WebDAVLoginView.swift */; };
+		C0DE0A010000000000000008 /* WebDAVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0A010000000000000007 /* WebDAVTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +152,10 @@
 		A9DA25D42B82096B0061FC2B /* Nextcloud-Cookbook-iOS-Client-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Nextcloud-Cookbook-iOS-Client-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A9E78A2A2BE7799F00206866 /* JsonAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonAny.swift; sourceTree = "<group>"; };
 		A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = alarm_sound_0.mp3; sourceTree = "<group>"; };
+		C0DE0A010000000000000001 /* WebDAVClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVClient.swift; sourceTree = "<group>"; };
+		C0DE0A010000000000000003 /* CookbookApiWebDAV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbookApiWebDAV.swift; sourceTree = "<group>"; };
+		C0DE0A010000000000000005 /* WebDAVLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVLoginView.swift; sourceTree = "<group>"; };
+		C0DE0A010000000000000007 /* WebDAVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +241,7 @@
 			isa = PBXGroup;
 			children = (
 				A70171932AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientTests.swift */,
+				C0DE0A010000000000000007 /* WebDAVTests.swift */,
 			);
 			path = "Nextcloud Cookbook iOS ClientTests";
 			sourceTree = "<group>";
@@ -250,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */,
+				C0DE0A010000000000000001 /* WebDAVClient.swift */,
 				A79AA8E72B062DB6007D25F2 /* CookbookApi */,
 				A79AA8EE2B063B33007D25F2 /* NextcloudApi */,
 				A70171B32AB2122900064C43 /* NetworkUtils.swift */,
@@ -322,6 +332,7 @@
 			children = (
 				A79AA8E32B02A961007D25F2 /* CookbookApi.swift */,
 				A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */,
+				C0DE0A010000000000000003 /* CookbookApiWebDAV.swift */,
 			);
 			path = CookbookApi;
 			sourceTree = "<group>";
@@ -339,6 +350,7 @@
 			children = (
 				A7FB0D792B25C66600A3469E /* OnboardingView.swift */,
 				A7FB0D7B2B25C68500A3469E /* TokenLoginView.swift */,
+				C0DE0A010000000000000005 /* WebDAVLoginView.swift */,
 				A7FB0D7D2B25C6A200A3469E /* V2LoginView.swift */,
 			);
 			path = Onboarding;
@@ -575,6 +587,7 @@
 				A79AA8E22AFF8C14007D25F2 /* RecipeEditViewModel.swift in Sources */,
 				A97506152B920DF200E86029 /* RecipeGenericViews.swift in Sources */,
 				A7FB0D7C2B25C68500A3469E /* TokenLoginView.swift in Sources */,
+				C0DE0A010000000000000006 /* WebDAVLoginView.swift in Sources */,
 				A977D0E22B60034E009783A9 /* GroceryListTabView.swift in Sources */,
 				A70171B12AB211DF00064C43 /* NetworkError.swift in Sources */,
 				A7FB0D7A2B25C66600A3469E /* OnboardingView.swift in Sources */,
@@ -585,6 +598,7 @@
 				A975061D2B920FCC00E86029 /* RecipeInstructionSection.swift in Sources */,
 				A787B0782B2B1E6400C2DF1B /* DateExtension.swift in Sources */,
 				A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */,
+				C0DE0A010000000000000004 /* CookbookApiWebDAV.swift in Sources */,
 				A7CD3FD22B2C546A00D764AD /* CollapsibleView.swift in Sources */,
 				A9E78A2B2BE7799F00206866 /* JsonAny.swift in Sources */,
 				A9BBB3902B91BE31002DA7FF /* ObservableRecipeDetail.swift in Sources */,
@@ -594,6 +608,7 @@
 				A70171BE2AB4987900064C43 /* RecipeListView.swift in Sources */,
 				A70171C62AB4C43A00064C43 /* DataModels.swift in Sources */,
 				A79AA8EB2B062E15007D25F2 /* ApiRequest.swift in Sources */,
+				C0DE0A010000000000000002 /* WebDAVClient.swift in Sources */,
 				A7F3F8E82ACBFC760076C227 /* RecipeKeywordSection.swift in Sources */,
 				A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */,
 				A70171C02AB498A900064C43 /* RecipeView.swift in Sources */,
@@ -622,6 +637,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A70171942AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientTests.swift in Sources */,
+				C0DE0A010000000000000008 /* WebDAVTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

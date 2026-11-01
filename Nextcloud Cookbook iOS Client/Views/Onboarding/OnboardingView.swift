@@ -53,7 +53,7 @@ protocol LoginStage {
 }
 
 enum LoginMethod {
-    case v2, token
+    case v2, token, webdav
 }
 
 enum TokenLoginStage: LoginStage {
@@ -96,6 +96,7 @@ struct LoginTab: View {
                 Picker("Login Method", selection: $loginMethod) {
                     Text("Nextcloud Login").tag(LoginMethod.v2)
                     Text("App Token Login").tag(LoginMethod.token)
+                    Text("WebDAV").tag(LoginMethod.webdav)
                 }
                 .pickerStyle(.segmented)
                 .foregroundColor(.white)
@@ -108,6 +109,12 @@ struct LoginTab: View {
                 }
                 else if loginMethod == .v2 {
                     V2LoginView(
+                        showAlert: $showAlert,
+                        alertMessage: $alertMessage
+                    )
+                }
+                else if loginMethod == .webdav {
+                    WebDAVLoginView(
                         showAlert: $showAlert,
                         alertMessage: $alertMessage
                     )
@@ -140,10 +147,17 @@ struct LoginLabel: View {
 struct BorderedLoginTextField: View {
     var example: String
     @Binding var text: String
+    var secure: Bool = false
     @State var color: Color = .white
     
     var body: some View {
-        TextField(example, text: $text)
+        Group {
+            if secure {
+                SecureField(example, text: $text)
+            } else {
+                TextField(example, text: $text)
+            }
+        }
             .textFieldStyle(.plain)
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
@@ -181,6 +195,7 @@ struct LoginTextField: View {
 
 
 struct ServerAddressField: View {
+    var example: LocalizedStringKey = "e.g.: example.com"
     @ObservedObject var userSettings = UserSettings.shared
     @State var serverProtocol: ServerProtocol = UserSettings.shared.serverProtocol == ServerProtocol.http.rawValue ? ServerProtocol.http : ServerProtocol.https
     
@@ -207,7 +222,7 @@ struct ServerAddressField: View {
                         userSettings.serverProtocol = value.rawValue
                     }
                     
-                    TextField("e.g.: example.com", text: $userSettings.serverAddress)
+                    TextField(example, text: $userSettings.serverAddress)
                         .textFieldStyle(.plain)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)

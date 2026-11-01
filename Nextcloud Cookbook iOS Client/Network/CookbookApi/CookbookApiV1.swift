@@ -49,7 +49,7 @@ class CookbookApiV1: CookbookApi {
         
         let (data, error) = await request.send()
         guard let data = data else { return (nil, error) }
-        print("\n\nRECIPE: ", String(data: data, encoding: .utf8))
+        print("\n\nRECIPE: ", String(data: data, encoding: .utf8) ?? "")
         return (JSONDecoder.safeDecode(data), nil)
     }
     
@@ -70,9 +70,9 @@ class CookbookApiV1: CookbookApi {
         guard let data = data else { return (error) }
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
-            if let id = json as? Int {
+            if json is Int {
                 return nil
-            } else if let dict = json as? [String: Any] {
+            } else if json is [String: Any] {
                 return .serverError
             }
         } catch {
@@ -110,9 +110,9 @@ class CookbookApiV1: CookbookApi {
         guard let data = data else { return (error) }
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
-            if let id = json as? Int {
+            if json is Int {
                 return nil
-            } else if let dict = json as? [String: Any] {
+            } else if json is [String: Any] {
                 return .serverError
             }
         } catch {
@@ -130,7 +130,7 @@ class CookbookApiV1: CookbookApi {
         )
         
         let (data, error) = await request.send()
-        guard let data = data else { return (error) }
+        guard data != nil else { return (error) }
         return nil
     }
     
@@ -169,7 +169,7 @@ class CookbookApiV1: CookbookApi {
         )
         
         let (data, error) = await request.send()
-        guard let data = data else { return (error) }
+        guard data != nil else { return (error) }
         return nil
     }
     

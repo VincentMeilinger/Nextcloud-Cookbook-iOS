@@ -58,8 +58,12 @@ class DataStore {
     
     func delete(path: String) {
         Task {
-            let fileURL = try Self.fileURL(appending: path)
-            try fileManager.removeItem(at: fileURL)
+            do {
+                let fileURL = try Self.fileURL(appending: path)
+                try fileManager.removeItem(at: fileURL)
+            } catch {
+                print("Could not delete data (path: \(path))")
+            }
         }
     }
     

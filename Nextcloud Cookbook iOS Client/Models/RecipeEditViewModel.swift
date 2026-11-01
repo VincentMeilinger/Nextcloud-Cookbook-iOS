@@ -85,7 +85,7 @@ import SwiftUI
     func uploadEditedRecipe() async -> UserAlert? {
         waitingForUpload = true
         print("Uploading changed recipe.")
-        guard let recipeId = Int(recipe.id) else { return RequestAlert.REQUEST_DROPPED }
+        guard Int(recipe.id) != nil else { return RequestAlert.REQUEST_DROPPED }
         createRecipe()
         
         return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: false)
@@ -112,7 +112,7 @@ import SwiftUI
     }
     
     func importRecipe() async -> UserAlert? {
-        let (scrapedRecipe, error) = await mainViewModel.importRecipe(url: importURL)
+        let (scrapedRecipe, _) = await mainViewModel.importRecipe(url: importURL)
         if let scrapedRecipe = scrapedRecipe {
             self.recipe = scrapedRecipe
             prepareView()

@@ -175,7 +175,6 @@ class GroceryRecipeItem: Identifiable, Codable {
     
     func deleteItem(_ itemName: String, fromRecipe recipeId: String) {
         print("Deleting item \(itemName)")
-        guard let recipe = groceryDict[recipeId] else { return }
         guard let itemIndex = groceryDict[recipeId]?.items.firstIndex(where: { $0.name == itemName }) else { return }
         groceryDict[recipeId]?.items.remove(at: itemIndex)
         if groceryDict[recipeId]!.items.isEmpty {

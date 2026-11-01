@@ -85,7 +85,7 @@ struct V2LoginView: View {
                                 alertMessage = "A network error occured (\(error.rawValue))."
                                 showAlert = true
                             }
-                            if let loginRequest = loginRequest {
+                            if loginRequest != nil {
                                 presentBrowser = true
                                 //await UIApplication.shared.open(URL(string: loginRequest.login)!)
                             } else {
@@ -167,6 +167,7 @@ struct V2LoginView: View {
             return
         }
         print("Login successful for user \(response.loginName)!")
+        UserSettings.shared.serverType = .nextcloud
         UserSettings.shared.username = response.loginName
         UserSettings.shared.token = response.appPassword
         let loginString = "\(UserSettings.shared.username):\(UserSettings.shared.token)"

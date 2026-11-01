@@ -329,6 +329,182 @@
         }
       }
     },
+    "Could not find a WebDAV folder at this address." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unter dieser Adresse wurde kein WebDAV-Ordner gefunden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ninguna carpeta WebDAV en esta dirección."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun dossier WebDAV n'a été trouvé à cette adresse."
+          }
+        }
+      }
+    },
+    "e.g.: example.com/remote.php/dav/files/user/Recipes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "z.B. beispiel.com/remote.php/dav/files/benutzer/Rezepte"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "por ejemplo, example.com/remote.php/dav/files/usuario/Recetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "par exemple example.com/remote.php/dav/files/utilisateur/Recettes"
+          }
+        }
+      }
+    },
+    "Enter the full address of the WebDAV folder containing your recipes. Each recipe is stored in its own folder, in the same format as the Nextcloud Cookbook app uses." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib die vollständige Adresse des WebDAV-Ordners an, der deine Rezepte enthält. Jedes Rezept liegt in einem eigenen Ordner, im selben Format, das auch die Nextcloud Cookbook App verwendet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduce la dirección completa de la carpeta WebDAV que contiene tus recetas. Cada receta se guarda en su propia carpeta, con el mismo formato que usa la aplicación Nextcloud Cookbook."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez l'adresse complète du dossier WebDAV contenant vos recettes. Chaque recette est enregistrée dans son propre dossier, au même format que celui utilisé par l'application Nextcloud Cookbook."
+          }
+        }
+      }
+    },
+    "For a Nextcloud server, the address has the form '<server address>/remote.php/dav/files/<user name>/Recipes'." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei einem Nextcloud-Server hat die Adresse die Form '<Serveradresse>/remote.php/dav/files/<Benutzername>/Recipes'."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para un servidor Nextcloud, la dirección tiene la forma '<dirección del servidor>/remote.php/dav/files/<nombre de usuario>/Recipes'."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour un serveur Nextcloud, l'adresse a la forme '<adresse du serveur>/remote.php/dav/files/<nom d'utilisateur>/Recipes'."
+          }
+        }
+      }
+    },
+    "Login failed. Please check your inputs and internet connection." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anmeldung fehlgeschlagen. Bitte überprüfe deine Eingaben und die Internetverbindung."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al iniciar sesión. Comprueba tus datos y la conexión a Internet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la connexion. Veuillez vérifier vos saisies et votre connexion Internet."
+          }
+        }
+      }
+    },
+    "Please enter a server address!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte gib eine Serveradresse ein!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Introduce una dirección de servidor!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez saisir une adresse de serveur !"
+          }
+        }
+      }
+    },
+    "Please enter a user name and password!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte gib einen Benutzernamen und ein Passwort ein!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Introduce un nombre de usuario y una contraseña!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez saisir un nom d'utilisateur et un mot de passe !"
+          }
+        }
+      }
+    },
+    "WebDAV" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WebDAV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WebDAV"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WebDAV"
+          }
+        }
+      }
+    },
     "•" : {
       "localizations" : {
         "de" : {

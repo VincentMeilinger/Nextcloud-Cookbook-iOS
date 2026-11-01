@@ -18,6 +18,8 @@ public enum NetworkError: String, Error {
     case invalidRequest = "Invalid request"
     case unknownError = "Unknown error"
     case dataError = "Invalid data error."
+    case notFound = "Not found."
+    case alreadyExists = "Already exists."
 }
 
 

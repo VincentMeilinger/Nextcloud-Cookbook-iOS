@@ -89,15 +89,16 @@ struct TokenLoginView: View {
         }
         
         UserSettings.shared.setAuthString()
+        UserSettings.shared.serverType = .nextcloud
         let (data, error) = await cookbookApi.getCategories(auth: UserSettings.shared.authString)
         
-        if let error = error {
+        if error != nil {
             alertMessage = "Login failed. Please check your inputs and internet connection."
             showAlert = true
             return false
         }
         
-        guard let data = data else {
+        guard data != nil else {
             alertMessage = "Login failed. Please check your inputs."
             showAlert = true
             return false
