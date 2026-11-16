@@ -21,15 +21,6 @@ struct RecipeToolSection: View {
             }
             
             RecipeListSection(list: $viewModel.observableRecipeDetail.tool)
-            
-            if viewModel.editMode {
-                Button {
-                    viewModel.presentToolEditView.toggle()
-                } label: {
-                    Text("Edit")
-                }
-                .buttonStyle(.borderedProminent)
-            }
         }.padding()
     }
     

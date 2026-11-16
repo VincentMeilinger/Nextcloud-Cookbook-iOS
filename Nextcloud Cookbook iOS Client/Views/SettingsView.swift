@@ -7,45 +7,62 @@
 
 import Foundation
 import SwiftUI
+import NextcloudCookbookKit
 
 
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
     @ObservedObject var userSettings = UserSettings.shared
-    @ObservedObject var viewModel = ViewModel()
-    
+    @StateObject var viewModel = ViewModel()
+    @State private var showLoginSheet = false
+
     var body: some View {
         Form {
-            HStack(alignment: .center) {
-                if let avatarImage = viewModel.avatarImage {
-                    Image(uiImage: avatarImage)
-                        .resizable()
-                        .clipShape(Circle())
-                        .frame(width: 100, height: 100)
-                        
-                }
-                if let userData = viewModel.userData {
-                    VStack(alignment: .leading) {
-                        Text(userData.userDisplayName)
-                            .font(.title)
-                            .padding(.leading)
-                        Text("Username: \(userData.userId)")
-                            .font(.subheadline)
-                            .padding(.leading)
-                        
-                        
-                        // TODO: Add actions
+
+            // MARK: - Account
+            Section {
+                if userSettings.isLoggedIn {
+                    HStack(alignment: .center, spacing: 12) {
+                        if let avatarImage = viewModel.avatarImage {
+                            Image(uiImage: avatarImage)
+                                .resizable()
+                                .clipShape(Circle())
+                                .frame(width: 56, height: 56)
+                        } else {
+                            Image(systemName: "person.crop.circle")
+                                .resizable()
+                                .frame(width: 56, height: 56)
+                                .foregroundStyle(.secondary)
+                        }
+                        if let userData = viewModel.userData {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(userData.displayName)
+                                    .font(.headline)
+                                Text(userData.userId)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        Spacer()
+                    }
+                    .padding(.vertical, 4)
+                } else {
+                    Button {
+                        showLoginSheet = true
+                    } label: {
+                        Label("Sign In to Nextcloud", systemImage: "person.badge.plus")
                     }
                 }
-                Spacer()
+            } header: {
+                Text("Account")
             }
-            
+
             Section {
                 Picker("Select a default cookbook", selection: $userSettings.defaultCategory) {
-                    Text("None").tag("None")
+                    Text("None").tag("")
                     ForEach(appState.categories, id: \.name) { category in
-                        Text(category.name == "*" ? "Other" : category.name).tag(category)
+                        Text(category.name == "*" ? "Other" : category.name).tag(category.name)
                     }
                 }
             } header: {
@@ -53,13 +70,10 @@ struct SettingsView: View {
             } footer: {
                 Text("The selected cookbook will open on app launch by default.")
             }
-            
+
             Section {
                 Toggle(isOn: $userSettings.expandNutritionSection) {
                     Text("Expand nutrition section")
-                }
-                Toggle(isOn: $userSettings.expandKeywordSection) {
-                    Text("Expand keyword section")
                 }
                 Toggle(isOn: $userSettings.expandInfoSection) {
                     Text("Expand information section")
@@ -69,13 +83,13 @@ struct SettingsView: View {
             } footer: {
                 Text("Configure which sections in your recipes are expanded by default.")
             }
-            
+
             Section {
                 Toggle(isOn: $userSettings.keepScreenAwake) {
                     Text("Keep screen awake when viewing recipes")
                 }
             }
-            
+
             Section {
                 HStack {
                     Text("Decimal number format")
@@ -89,7 +103,7 @@ struct SettingsView: View {
             } footer: {
                 Text("This setting will take effect after the app is restarted. It affects the adjustment of ingredient quantities.")
             }
-            
+
             Section {
                 Toggle(isOn: $userSettings.storeRecipes) {
                     Text("Offline recipes")
@@ -105,7 +119,7 @@ struct SettingsView: View {
             } footer: {
                 Text("Configure what is stored on your device.")
             }
-            
+
             Section {
                 Picker("Language", selection: $userSettings.language) {
                     ForEach(SupportedLanguage.allValues, id: \.self) { lang in
@@ -115,8 +129,8 @@ struct SettingsView: View {
             } footer: {
                 Text("If \'Same as Device\' is selected and your device language is not supported yet, this option will default to english.")
             }
-            
-            
+
+
             Section {
                 Link("Visit the GitHub page", destination: URL(string: "https://github.com/VincentMeilinger/Nextcloud-Cookbook-iOS")!)
             } header: {
@@ -124,7 +138,7 @@ struct SettingsView: View {
             } footer: {
                 Text("If you are interested in contributing to this project or simply wish to review its source code, we encourage you to visit the GitHub repository for this application.")
             }
-            
+
             Section {
                 Link("Get support", destination: URL(string: "https://vincentmeilinger.github.io/Nextcloud-Cookbook-Client-Support/")!)
             } header: {
@@ -132,29 +146,28 @@ struct SettingsView: View {
             } footer: {
                 Text("If you have any inquiries, feedback, or require assistance, please refer to the support page for contact information.")
             }
-            
+
             Section {
-                Button("Log out") {
-                    print("Log out.")
-                    viewModel.alertType = .LOG_OUT
-                    viewModel.showAlert = true
-                    
+                if userSettings.isLoggedIn {
+                    Button("Sign Out") {
+                        viewModel.alertType = .SIGN_OUT
+                        viewModel.showAlert = true
+                    }
+                    .tint(.red)
                 }
-                .tint(.red)
-                
+
                 Button("Delete local data") {
-                    print("Clear cache.")
                     viewModel.alertType = .DELETE_CACHE
                     viewModel.showAlert = true
                 }
                 .tint(.red)
-                
+
             } header: {
                 Text("Other")
             } footer: {
-                Text("Deleting local data will not affect the recipe data stored on your server.")
+                Text("Deleting local data removes cached Nextcloud recipes and locally-stored recipes from this device.")
             }
-            
+
             Section(header: Text("Acknowledgements")) {
                 VStack(alignment: .leading) {
                     if let url = URL(string: "https://github.com/scinfu/SwiftSoup") {
@@ -172,12 +185,23 @@ struct SettingsView: View {
                 }
             }
         }
-        
+
+        .sheet(isPresented: $showLoginSheet) {
+            LoginView()
+        }
+        .onChange(of: userSettings.authString) {
+            if userSettings.isLoggedIn {
+                Task { await viewModel.getUserData() }
+            } else {
+                viewModel.avatarImage = nil
+                viewModel.userData = nil
+            }
+        }
         .navigationTitle("Settings")
         .alert(viewModel.alertType.getTitle(), isPresented: $viewModel.showAlert) {
             Button("Cancel", role: .cancel) { }
-            if viewModel.alertType == .LOG_OUT {
-                Button("Log out", role: .destructive) { logOut() }
+            if viewModel.alertType == .SIGN_OUT {
+                Button("Sign Out", role: .destructive) { signOut() }
             } else if viewModel.alertType == .DELETE_CACHE {
                 Button("Delete", role: .destructive) { deleteCache() }
             }
@@ -185,66 +209,72 @@ struct SettingsView: View {
             Text(viewModel.alertType.getMessage())
         }
         .task {
-            await viewModel.getUserData()
+            if userSettings.isLoggedIn {
+                await viewModel.getUserData()
+            }
         }
     }
-    
-    func logOut() {
+
+    func signOut() {
         userSettings.serverAddress = ""
         userSettings.username = ""
         userSettings.token = ""
         userSettings.authString = ""
-        appState.deleteAllData()
-        userSettings.onboarding = true
+        // Local recipes and the grocery list are preserved; only the Nextcloud cache is cleared
+        Task { await appState.deleteNextcloudData() }
     }
-    
+
     func deleteCache() {
-        appState.deleteAllData()
+        Task { await appState.deleteAllData() }
     }
 }
 
 extension SettingsView {
     class ViewModel: ObservableObject {
         @Published var avatarImage: UIImage? = nil
-        @Published var userData: UserData? = nil
-        
+        @Published var userData: NCKUserData? = nil
+
         @Published var showAlert: Bool = false
         fileprivate var alertType: SettingsAlert = .NONE
-        
+
         enum SettingsAlert {
-            case LOG_OUT,
+            case SIGN_OUT,
                  DELETE_CACHE,
                  NONE
-            
+
             func getTitle() -> String {
                 switch self {
-                case .LOG_OUT: return "Log out"
+                case .SIGN_OUT: return "Sign Out"
                 case .DELETE_CACHE: return "Delete local data"
                 default: return "Please confirm your action."
                 }
             }
-            
+
             func getMessage() -> String {
                 switch self {
-                case .LOG_OUT: return "Are you sure that you want to log out of your account?"
-                case .DELETE_CACHE: return "Are you sure that you want to delete the downloaded recipes? This action will not affect any recipes stored on your server."
+                case .SIGN_OUT: return "Sign out of your Nextcloud account? Your locally-stored recipes will be preserved."
+                case .DELETE_CACHE: return "Are you sure that you want to delete all local data? This includes locally-stored recipes and cached Nextcloud recipes."
                 default: return ""
                 }
             }
         }
-        
+
+        @MainActor
         func getUserData() async {
-            let (data, _) = await NextcloudApi.getAvatar()
-            let (userData, _) = await NextcloudApi.getHoverCard()
-            
-            DispatchQueue.main.async {
-                self.avatarImage = data
-                self.userData = userData
-            }
+            let urlString = UserSettings.shared.serverProtocol + UserSettings.shared.serverAddress
+            guard let serverURL = URL(string: urlString) else { return }
+            let client = NextcloudAuthClient(serverURL: serverURL)
+            let username = UserSettings.shared.username
+            let credentials = UserSettings.shared.authString
+
+            async let avatarData = try? client.getAvatar(username: username, size: 100, credentials: credentials)
+            async let hoverCard = try? client.getHoverCard(username: username, credentials: credentials)
+
+            let (avatar, userData) = await (avatarData, hoverCard)
+            if let avatar { self.avatarImage = UIImage(data: avatar) }
+            self.userData = userData
         }
     }
 }
-
-
 
 

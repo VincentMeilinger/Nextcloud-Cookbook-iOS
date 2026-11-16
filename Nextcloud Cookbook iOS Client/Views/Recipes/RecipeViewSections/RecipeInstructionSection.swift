@@ -22,14 +22,6 @@ struct RecipeInstructionSection: View {
             ForEach(viewModel.observableRecipeDetail.recipeInstructions.indices, id: \.self) { ix in
                 RecipeInstructionListItem(instruction: $viewModel.observableRecipeDetail.recipeInstructions[ix], index: ix+1)
             }
-            if viewModel.editMode {
-                Button {
-                    viewModel.presentInstructionEditView.toggle()
-                } label: {
-                    Text("Edit")
-                }
-                .buttonStyle(.borderedProminent)
-            }
         }
         .padding()
         

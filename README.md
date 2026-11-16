@@ -24,7 +24,7 @@ You can download the app from the AppStore:
 - [x] MacOS support (through Mac Catalyst)
 - [x] Light and dark mode support
 - [x] Share recipes (by name and keyword)
-- [x] Import recipes
+- [x] Import recipes (see [supported sites](SUPPORTED_SITES.md))
 - [x] Keep display awake when viewing recipes
 - [x] Ingredient shopping list
 

@@ -16,16 +16,7 @@ struct RecipeNutritionSection: View {
     var body: some View {
         CollapsibleView(titleColor: .secondary, isCollapsed: !UserSettings.shared.expandNutritionSection) {
             VStack(alignment: .leading) {
-                if viewModel.editMode {
-                    ForEach(Nutrition.allCases, id: \.self) { nutrition in
-                        HStack {
-                            Text(nutrition.localizedDescription)
-                            TextField("", text: binding(for: nutrition.dictKey), axis: .horizontal)
-                                .textFieldStyle(.roundedBorder)
-                                .lineLimit(1)
-                        }
-                    }
-                } else if !nutritionEmpty() {
+                if !nutritionEmpty() {
                     VStack(alignment: .leading) {
                         ForEach(Nutrition.allCases, id: \.self) { nutrition in
                             if let value = viewModel.observableRecipeDetail.nutrition[nutrition.dictKey], nutrition.dictKey != Nutrition.servingSize.dictKey {
@@ -54,19 +45,7 @@ struct RecipeNutritionSection: View {
         .padding()
     }
     
-    func binding(for key: String) -> Binding<String> {
-        Binding(
-            get: { viewModel.observableRecipeDetail.nutrition[key, default: ""] },
-            set: { viewModel.observableRecipeDetail.nutrition[key] = $0 }
-        )
-    }
-    
     func nutritionEmpty() -> Bool {
-        for nutrition in Nutrition.allCases {
-            if let value = viewModel.observableRecipeDetail.nutrition[nutrition.dictKey] {
-                return false
-            }
-        }
-        return true
+        !Nutrition.allCases.contains { viewModel.observableRecipeDetail.nutrition[$0.dictKey] != nil }
     }
 }

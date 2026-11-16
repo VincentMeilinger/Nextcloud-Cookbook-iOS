@@ -2,127 +2,66 @@
 //  RecipeScraper.swift
 //  Nextcloud Cookbook iOS Client
 //
-//  Created by Vincent Meilinger on 09.11.23.
+//  Imports a recipe from a website on the device, using RecipeScraperKit (a site
+//  scraper chosen by the URL's domain, or the generic schema.org scraper).
 //
 
 import Foundation
-import SwiftSoup
-import SwiftUI
+import RecipeScraperKit
 
 
-class RecipeScraper {
-    func scrape(url: String) async throws -> (RecipeDetail?, RecipeImportAlert?) {
-        var contents: String? = nil
-        if let url = URL(string: url) {
-            do {
-                contents = try String(contentsOf: url)
-            } catch {
-                print("ERROR: Could not load url content.")
-                return (nil, .CHECK_CONNECTION)
-            }
-            
-        } else {
-            print("ERROR: Bad url.")
+enum WebRecipeImport {
+
+    /// Downloads the page at `urlString` and returns its recipe, or an alert
+    /// explaining why that wasn't possible.
+    static func importRecipe(from urlString: String) async -> (RecipeDetail?, RecipeImportAlert?) {
+        var text = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !text.contains("://") { text = "https://" + text }
+        guard let url = URL(string: text), url.host != nil else {
             return (nil, .BAD_URL)
         }
-
-        guard let html = contents else {
-            print("ERROR: no contents")
+        do {
+            let recipe = try await RecipeScraperKit.RecipeScraper.scrape(url: url)
+            return (recipe.toRecipeDetail(fallbackURL: url), nil)
+        } catch RecipeScraperError.invalidURL {
+            return (nil, .BAD_URL)
+        } catch RecipeScraperError.network, RecipeScraperError.httpStatus {
+            return (nil, .CHECK_CONNECTION)
+        } catch {
             return (nil, .WEBSITE_NOT_SUPPORTED)
         }
-        let doc = try SwiftSoup.parse(html)
-        
-        let elements: Elements = try doc.select("script")
-        for elem in elements.array() {
-            for attr in elem.getAttributes()!.asList() {
-                if attr.getValue() == "application/ld+json" {
-                    guard let dict = toDict(elem) else { continue }
-                    if let recipe = getRecipe(fromDict: dict) {
-                        return (recipe, nil)
-                    }
-                }
-            }
-        }
-        return (nil, .WEBSITE_NOT_SUPPORTED)
     }
-    
-    
-    private func toDict(_ elem: Element) -> [String: Any]? {
-        var recipeDict: [String: Any]? = nil
-        do {
-            let jsonString = try elem.html()
-            let json = try JSONSerialization.jsonObject(with: jsonString.data(using: .utf8)!, options: .fragmentsAllowed)
-            if let recipe = json as? [String : Any] {
-                recipeDict = recipe
-            } else if let recipe = (json as! [Any])[0] as? [String : Any] {
-                recipeDict = recipe
-            }
-        } catch {
-            print("Unable to decode json")
-            return nil
-        }
-        
-        guard let recipeDict = recipeDict else {
-            print("Json is not a dict")
-            return nil
-        }
-        
-        if recipeDict["@type"] as? String ?? "" == "Recipe" {
-            return recipeDict
-        } else if (recipeDict["@type"] as? [String] ?? []).contains("Recipe") {
-            return recipeDict
-        } else {
-            print("Json dict is not a recipe ...")
-            return nil
-        }
+}
+
+
+extension ScrapedRecipe {
+    func toRecipeDetail(fallbackURL: URL) -> RecipeDetail {
+        RecipeDetail(
+            name: name,
+            keywords: keywords.joined(separator: ","),
+            dateCreated: "",
+            dateModified: "",
+            image: imageURL?.absoluteString ?? "",
+            imageUrl: "",
+            id: nil,
+            externalSourceId: nil,
+            prepTime: Self.iso8601(minutes: prepTime),
+            cookTime: Self.iso8601(minutes: cookTime),
+            totalTime: Self.iso8601(minutes: totalTime),
+            description: description,
+            url: (sourceURL ?? fallbackURL).absoluteString,
+            recipeYield: servings ?? 1,
+            recipeCategory: category ?? "",
+            tool: tools,
+            recipeIngredient: ingredients,
+            recipeInstructions: instructions,
+            nutrition: nutrition
+        )
     }
-    
-    private func getRecipe(fromDict recipe: Dictionary<String, Any>) -> RecipeDetail? {
-        
-        var recipeDetail = RecipeDetail()
-        recipeDetail.name = recipe["name"] as? String ?? "New Recipe"
-        recipeDetail.recipeCategory = recipe["recipeCategory"] as? String ?? ""
-        recipeDetail.keywords = joinedStringForKey("keywords", dict: recipe)
-        recipeDetail.description = recipe["description"] as? String ?? ""
-        recipeDetail.dateCreated = recipe["dateCreated"] as? String ?? ""
-        recipeDetail.dateModified = recipe["dateModified"] as? String ?? ""
-        recipeDetail.imageUrl = recipe["imageUrl"] as? String ?? ""
-        recipeDetail.url = recipe["url"] as? String ?? ""
-        recipeDetail.cookTime = recipe["cookTime"] as? String ?? ""
-        recipeDetail.prepTime = recipe["prepTime"] as? String ?? ""
-        recipeDetail.totalTime = recipe["totalTime"] as? String ?? ""
-        recipeDetail.recipeInstructions = stringArrayForKey("recipeInstructions", dict: recipe)
-        recipeDetail.recipeYield = recipe["recipeYield"] as? Int ?? 0
-        recipeDetail.recipeIngredient = recipe["recipeIngredient"] as? [String] ?? []
-        recipeDetail.tool = stringArrayForKey("tool", dict: recipe)
-        recipeDetail.nutrition = recipe["nutrition"] as? [String:String] ?? [:]
-        print(recipeDetail)
-        return recipeDetail
-    }
-    
-    private func stringArrayForKey(_ key: String, dict: Dictionary<String, Any>) -> [String] {
-        if let text = dict[key] as? String {
-            return [text]
-        } else if let value = dict[key] as? [String] {
-            return value
-        } else if let orderedList = dict[key] as? [Any] {
-            var entries: [String] = []
-            for dict in orderedList {
-                guard let dict = dict as? [String: Any] else { continue }
-                guard let text = dict["text"] as? String else { continue }
-                entries.append(text)
-            }
-            return entries
-        }
-        return []
-    }
-    
-    private func joinedStringForKey(_ key: String, dict: Dictionary<String, Any>) -> String {
-        if let value = dict[key] as? [String] {
-            return value.joined(separator: ",")
-        } else if let value = dict[key] as? String {
-            return value
-        }
-        return ""
+
+    /// Recipe times are ISO 8601 durations, e.g. "PT01H30M00S".
+    private static func iso8601(minutes: Int?) -> String? {
+        guard let minutes, minutes > 0 else { return nil }
+        return String(format: "PT%02dH%02dM00S", minutes / 60, minutes % 60)
     }
 }

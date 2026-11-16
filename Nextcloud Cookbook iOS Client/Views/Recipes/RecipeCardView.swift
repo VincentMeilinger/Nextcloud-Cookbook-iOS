@@ -13,7 +13,7 @@ struct RecipeCardView: View {
     @State var recipe: Recipe
     @State var recipeThumb: UIImage?
     @State var isDownloaded: Bool? = nil
-    
+
     var body: some View {
         HStack {
             if let recipeThumb = recipeThumb {
@@ -35,37 +35,47 @@ struct RecipeCardView: View {
             Text(recipe.name)
                 .font(.headline)
                 .padding(.leading, 4)
-                
+
             Spacer()
-            if let isDownloaded = isDownloaded {
-                VStack {
-                    Image(systemName: isDownloaded ? "checkmark.circle" : "icloud.and.arrow.down")
-                        .foregroundColor(.secondary)
-                        .padding()
-                    Spacer()
-                }
+            VStack {
+                originIcon
+                    .foregroundColor(.secondary)
+                    .padding()
+                Spacer()
             }
         }
         .background(Color.backgroundHighlight)
         .clipShape(RoundedRectangle(cornerRadius: 17))
         .task {
             recipeThumb = await appState.getImage(
-                id: recipe.recipe_id,
+                id: recipe.id,
                 size: .THUMB,
                 fetchMode: UserSettings.shared.storeThumb ? .preferLocal : .onlyServer
             )
-            if recipe.storedLocally == nil {
-                recipe.storedLocally = appState.recipeDetailExists(recipeId: recipe.recipe_id)
+            if recipe.origin == .nextcloud && recipe.storedLocally == nil {
+                recipe.storedLocally = await appState.recipeDetailExists(recipeId: recipe.id)
+                isDownloaded = recipe.storedLocally
             }
-            isDownloaded = recipe.storedLocally
         }
         .refreshable {
             recipeThumb = await appState.getImage(
-                id: recipe.recipe_id,
+                id: recipe.id,
                 size: .THUMB,
                 fetchMode: UserSettings.shared.storeThumb ? .preferServer : .onlyServer
             )
         }
         .frame(height: 80)
+    }
+
+    @ViewBuilder
+    private var originIcon: some View {
+        switch recipe.origin {
+        case .local:
+            Image(systemName: "internaldrive")
+        case .nextcloud:
+            if let cached = isDownloaded {
+                Image(systemName: cached ? "checkmark.icloud" : "icloud.and.arrow.down")
+            }
+        }
     }
 }

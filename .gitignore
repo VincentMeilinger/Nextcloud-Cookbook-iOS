@@ -1,0 +1,20 @@
+# Claude Code
+CLAUDE.md
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# Xcode: per-user state and build output
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+
+# Swift Package Manager (local packages)
+.build/
+.swiftpm/
+# Library packages don't pin dependency versions; the app's Package.resolved
+# (project.xcworkspace/xcshareddata/swiftpm) does.
+/NextcloudCookbookKit/Package.resolved
+/RecipeScraperKit/Package.resolved

@@ -63,7 +63,7 @@ struct TimerView: View {
 
 
 
-class RecipeTimer: ObservableObject {
+@MainActor class RecipeTimer: ObservableObject {
     var timeTotal: Double
     @Published var duration: DurationComponents
     private var startDate: Date?
@@ -97,21 +97,17 @@ class RecipeTimer: ObservableObject {
         
         self.timer = Timer.publish(every: 1, on: .main, in: .common)
         self.timerCancellable = self.timer?.autoconnect().sink { [weak self] _ in
-            DispatchQueue.main.async {
-                if let self = self, let startTime = self.startDate {
-                    let elapsed = Date().timeIntervalSince(startTime)
-                    if elapsed < self.timeTotal {
-                        self.timeElapsed = elapsed
-                        self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
-                    } else {
-                        self.timerExpired = true
-                        self.timeElapsed = self.timeTotal
-                        self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
-                        self.pause()
-                        
-                        self.startAlarm()
-                    }
-                }
+            guard let self, let startTime = self.startDate else { return }
+            let elapsed = Date().timeIntervalSince(startTime)
+            if elapsed < self.timeTotal {
+                self.timeElapsed = elapsed
+                self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
+            } else {
+                self.timerExpired = true
+                self.timeElapsed = self.timeTotal
+                self.duration.fromSeconds(Int(self.timeTotal - self.timeElapsed))
+                self.pause()
+                self.startAlarm()
             }
         }
     }

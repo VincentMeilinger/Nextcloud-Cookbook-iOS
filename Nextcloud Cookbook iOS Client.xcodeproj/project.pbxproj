@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,9 +15,8 @@
 		A701719E2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A701719D2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITests.swift */; };
 		A70171A02AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A701719F2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift */; };
 		A70171AD2AA8EF4700064C43 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171AC2AA8EF4700064C43 /* AppState.swift */; };
-		A70171B12AB211DF00064C43 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171B02AB211DF00064C43 /* NetworkError.swift */; };
-		A70171B42AB2122900064C43 /* NetworkUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171B32AB2122900064C43 /* NetworkUtils.swift */; };
 		A70171BE2AB4987900064C43 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171BD2AB4987900064C43 /* RecipeListView.swift */; };
+		EE0000022F90000100000001 /* RecipeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000012F90000100000001 /* RecipeEditorView.swift */; };
 		A70171C02AB498A900064C43 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171BF2AB498A900064C43 /* RecipeView.swift */; };
 		A70171C22AB498C600064C43 /* RecipeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171C12AB498C600064C43 /* RecipeCardView.swift */; };
 		A70171C42AB4A31200064C43 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70171C32AB4A31200064C43 /* DataStore.swift */; };
@@ -33,17 +32,11 @@
 		A787B0782B2B1E6400C2DF1B /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A787B0772B2B1E6400C2DF1B /* DateExtension.swift */; };
 		A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */; };
 		A79AA8E22AFF8C14007D25F2 /* RecipeEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */; };
-		A79AA8E42B02A962007D25F2 /* CookbookApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E32B02A961007D25F2 /* CookbookApi.swift */; };
 		A79AA8E62B02C3CB007D25F2 /* LoggerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E52B02C3CB007D25F2 /* LoggerExtension.swift */; };
-		A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */; };
-		A79AA8EB2B062E15007D25F2 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */; };
-		A79AA8ED2B063AD5007D25F2 /* NextcloudApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */; };
 		A7AEAE642AD5521400135378 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A7AEAE632AD5521400135378 /* Localizable.xcstrings */; };
 		A7CD3FD22B2C546A00D764AD /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CD3FD12B2C546A00D764AD /* CollapsibleView.swift */; };
 		A7F3F8E82ACBFC760076C227 /* RecipeKeywordSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F3F8E72ACBFC760076C227 /* RecipeKeywordSection.swift */; };
-		A7FB0D7A2B25C66600A3469E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D792B25C66600A3469E /* OnboardingView.swift */; };
-		A7FB0D7C2B25C68500A3469E /* TokenLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D7B2B25C68500A3469E /* TokenLoginView.swift */; };
-		A7FB0D7E2B25C6A200A3469E /* V2LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D7D2B25C6A200A3469E /* V2LoginView.swift */; };
+		A7FB0D7A2B25C66600A3469E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FB0D792B25C66600A3469E /* LoginView.swift */; };
 		A97506132B920D9F00E86029 /* RecipeDurationSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97506122B920D9F00E86029 /* RecipeDurationSection.swift */; };
 		A97506152B920DF200E86029 /* RecipeGenericViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97506142B920DF200E86029 /* RecipeGenericViews.swift */; };
 		A97506192B920EC200E86029 /* RecipeIngredientSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97506182B920EC200E86029 /* RecipeIngredientSection.swift */; };
@@ -51,21 +44,22 @@
 		A975061D2B920FCC00E86029 /* RecipeInstructionSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A975061C2B920FCC00E86029 /* RecipeInstructionSection.swift */; };
 		A975061F2B920FFC00E86029 /* RecipeToolSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A975061E2B920FFC00E86029 /* RecipeToolSection.swift */; };
 		A97506212B92104700E86029 /* RecipeMetadataSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97506202B92104700E86029 /* RecipeMetadataSection.swift */; };
-		A977D0DE2B600300009783A9 /* SearchTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0DD2B600300009783A9 /* SearchTabView.swift */; };
-		A977D0E02B600318009783A9 /* RecipeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0DF2B600318009783A9 /* RecipeTabView.swift */; };
+		A977D0E02B600318009783A9 /* CookbooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0DF2B600318009783A9 /* CookbooksView.swift */; };
 		A977D0E22B60034E009783A9 /* GroceryListTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A977D0E12B60034E009783A9 /* GroceryListTabView.swift */; };
 		A97B4D322B80B3E900EC1A88 /* RecipeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97B4D312B80B3E900EC1A88 /* RecipeModels.swift */; };
-		A97B4D352B80B82A00EC1A88 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97B4D342B80B82A00EC1A88 /* ShareView.swift */; };
 		A9805BED2BAAC70E003B7231 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9805BEC2BAAC70E003B7231 /* NumberFormatter.swift */; };
 		A9BBB38C2B8D3B0C002DA7FF /* ParallaxHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BBB38B2B8D3B0C002DA7FF /* ParallaxHeaderView.swift */; };
 		A9BBB38E2B8E44B3002DA7FF /* BottomClipper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BBB38D2B8E44B3002DA7FF /* BottomClipper.swift */; };
 		A9BBB3902B91BE31002DA7FF /* ObservableRecipeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BBB38F2B91BE31002DA7FF /* ObservableRecipeDetail.swift */; };
+		A9C5BB642F86FDB200C8F5C8 /* NextcloudCookbookKit in Frameworks */ = {isa = PBXBuildFile; productRef = A9C5BB632F86FDB200C8F5C8 /* NextcloudCookbookKit */; };
+		EE0000032F90000100000001 /* RecipeScraperKit in Frameworks */ = {isa = PBXBuildFile; productRef = EE0000052F90000100000001 /* RecipeScraperKit */; };
 		A9CA6CEF2B4C086100F78AB5 /* RecipeExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CA6CEE2B4C086100F78AB5 /* RecipeExporter.swift */; };
 		A9CA6CF62B4C63F200F78AB5 /* TPPDF in Frameworks */ = {isa = PBXBuildFile; productRef = A9CA6CF52B4C63F200F78AB5 /* TPPDF */; };
 		A9D89AB02B4FE97800F49D92 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D89AAF2B4FE97800F49D92 /* TimerView.swift */; };
-		A9D8F9052B99F3E5009BACAE /* RecipeImportSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D8F9042B99F3E4009BACAE /* RecipeImportSection.swift */; };
+		A9DD78892F883CC2006B59FA /* NCKBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DD78882F883CC2006B59FA /* NCKBridge.swift */; };
 		A9E78A2B2BE7799F00206866 /* JsonAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E78A2A2BE7799F00206866 /* JsonAny.swift */; };
 		A9FA2AB62B5079B200A43702 /* alarm_sound_0.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */; };
+		CC0000122BE8000100000001 /* CookbookModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000112BE8000100000001 /* CookbookModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,9 +92,8 @@
 		A701719D2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nextcloud_Cookbook_iOS_ClientUITests.swift; sourceTree = "<group>"; };
 		A701719F2AA8E72000064C43 /* Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nextcloud_Cookbook_iOS_ClientUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A70171AC2AA8EF4700064C43 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		A70171B02AB211DF00064C43 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
-		A70171B32AB2122900064C43 /* NetworkUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtils.swift; sourceTree = "<group>"; };
 		A70171BD2AB4987900064C43 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
+		EE0000012F90000100000001 /* RecipeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditorView.swift; sourceTree = "<group>"; };
 		A70171BF2AB498A900064C43 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
 		A70171C12AB498C600064C43 /* RecipeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardView.swift; sourceTree = "<group>"; };
 		A70171C32AB4A31200064C43 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
@@ -115,17 +108,11 @@
 		A787B0772B2B1E6400C2DF1B /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A79AA8DF2AFF80E3007D25F2 /* DurationComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationComponents.swift; sourceTree = "<group>"; };
 		A79AA8E12AFF8C14007D25F2 /* RecipeEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditViewModel.swift; sourceTree = "<group>"; };
-		A79AA8E32B02A961007D25F2 /* CookbookApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbookApi.swift; sourceTree = "<group>"; };
 		A79AA8E52B02C3CB007D25F2 /* LoggerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerExtension.swift; sourceTree = "<group>"; };
-		A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbookApiV1.swift; sourceTree = "<group>"; };
-		A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
-		A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextcloudApi.swift; sourceTree = "<group>"; };
 		A7AEAE632AD5521400135378 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A7CD3FD12B2C546A00D764AD /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		A7F3F8E72ACBFC760076C227 /* RecipeKeywordSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeKeywordSection.swift; sourceTree = "<group>"; };
-		A7FB0D792B25C66600A3469E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		A7FB0D7B2B25C68500A3469E /* TokenLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenLoginView.swift; sourceTree = "<group>"; };
-		A7FB0D7D2B25C6A200A3469E /* V2LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V2LoginView.swift; sourceTree = "<group>"; };
+		A7FB0D792B25C66600A3469E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A97506122B920D9F00E86029 /* RecipeDurationSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDurationSection.swift; sourceTree = "<group>"; };
 		A97506142B920DF200E86029 /* RecipeGenericViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeGenericViews.swift; sourceTree = "<group>"; };
 		A97506182B920EC200E86029 /* RecipeIngredientSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredientSection.swift; sourceTree = "<group>"; };
@@ -133,21 +120,20 @@
 		A975061C2B920FCC00E86029 /* RecipeInstructionSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeInstructionSection.swift; sourceTree = "<group>"; };
 		A975061E2B920FFC00E86029 /* RecipeToolSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeToolSection.swift; sourceTree = "<group>"; };
 		A97506202B92104700E86029 /* RecipeMetadataSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeMetadataSection.swift; sourceTree = "<group>"; };
-		A977D0DD2B600300009783A9 /* SearchTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTabView.swift; sourceTree = "<group>"; };
-		A977D0DF2B600318009783A9 /* RecipeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTabView.swift; sourceTree = "<group>"; };
+		A977D0DF2B600318009783A9 /* CookbooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbooksView.swift; sourceTree = "<group>"; };
 		A977D0E12B60034E009783A9 /* GroceryListTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroceryListTabView.swift; sourceTree = "<group>"; };
 		A97B4D312B80B3E900EC1A88 /* RecipeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeModels.swift; sourceTree = "<group>"; };
-		A97B4D342B80B82A00EC1A88 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		A9805BEC2BAAC70E003B7231 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
 		A9BBB38B2B8D3B0C002DA7FF /* ParallaxHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParallaxHeaderView.swift; sourceTree = "<group>"; };
 		A9BBB38D2B8E44B3002DA7FF /* BottomClipper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomClipper.swift; sourceTree = "<group>"; };
 		A9BBB38F2B91BE31002DA7FF /* ObservableRecipeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableRecipeDetail.swift; sourceTree = "<group>"; };
 		A9CA6CEE2B4C086100F78AB5 /* RecipeExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeExporter.swift; sourceTree = "<group>"; };
 		A9D89AAF2B4FE97800F49D92 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
-		A9D8F9042B99F3E4009BACAE /* RecipeImportSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeImportSection.swift; sourceTree = "<group>"; };
 		A9DA25D42B82096B0061FC2B /* Nextcloud-Cookbook-iOS-Client-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Nextcloud-Cookbook-iOS-Client-Info.plist"; sourceTree = SOURCE_ROOT; };
+		A9DD78882F883CC2006B59FA /* NCKBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NCKBridge.swift; sourceTree = "<group>"; };
 		A9E78A2A2BE7799F00206866 /* JsonAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonAny.swift; sourceTree = "<group>"; };
 		A9FA2AB52B5079B200A43702 /* alarm_sound_0.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = alarm_sound_0.mp3; sourceTree = "<group>"; };
+		CC0000112BE8000100000001 /* CookbookModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookbookModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +143,8 @@
 			files = (
 				A74D33BE2AF82AAE00D06555 /* SwiftSoup in Frameworks */,
 				A9CA6CF62B4C63F200F78AB5 /* TPPDF in Frameworks */,
+				A9C5BB642F86FDB200C8F5C8 /* NextcloudCookbookKit in Frameworks */,
+				EE0000032F90000100000001 /* RecipeScraperKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,11 +237,7 @@
 		A70171B22AB211F000064C43 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				A79AA8EA2B062E15007D25F2 /* ApiRequest.swift */,
-				A79AA8E72B062DB6007D25F2 /* CookbookApi */,
-				A79AA8EE2B063B33007D25F2 /* NextcloudApi */,
-				A70171B32AB2122900064C43 /* NetworkUtils.swift */,
-				A70171B02AB211DF00064C43 /* NetworkError.swift */,
+				A9DD78882F883CC2006B59FA /* NCKBridge.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -283,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				A70171C32AB4A31200064C43 /* DataStore.swift */,
+				CC0000112BE8000100000001 /* CookbookModels.swift */,
 				A70171CA2AB4CD1700064C43 /* UserSettings.swift */,
 				A70171C52AB4C43A00064C43 /* DataModels.swift */,
 				A97B4D312B80B3E900EC1A88 /* RecipeModels.swift */,
@@ -317,29 +302,10 @@
 			path = RecipeImport;
 			sourceTree = "<group>";
 		};
-		A79AA8E72B062DB6007D25F2 /* CookbookApi */ = {
-			isa = PBXGroup;
-			children = (
-				A79AA8E32B02A961007D25F2 /* CookbookApi.swift */,
-				A79AA8E82B062DD1007D25F2 /* CookbookApiV1.swift */,
-			);
-			path = CookbookApi;
-			sourceTree = "<group>";
-		};
-		A79AA8EE2B063B33007D25F2 /* NextcloudApi */ = {
-			isa = PBXGroup;
-			children = (
-				A79AA8EC2B063AD5007D25F2 /* NextcloudApi.swift */,
-			);
-			path = NextcloudApi;
-			sourceTree = "<group>";
-		};
 		A7FB0D782B25C65200A3469E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				A7FB0D792B25C66600A3469E /* OnboardingView.swift */,
-				A7FB0D7B2B25C68500A3469E /* TokenLoginView.swift */,
-				A7FB0D7D2B25C6A200A3469E /* V2LoginView.swift */,
+				A7FB0D792B25C66600A3469E /* LoginView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -355,7 +321,6 @@
 				A7F3F8E72ACBFC760076C227 /* RecipeKeywordSection.swift */,
 				A97506142B920DF200E86029 /* RecipeGenericViews.swift */,
 				A97506202B92104700E86029 /* RecipeMetadataSection.swift */,
-				A9D8F9042B99F3E4009BACAE /* RecipeImportSection.swift */,
 			);
 			path = RecipeViewSections;
 			sourceTree = "<group>";
@@ -363,8 +328,7 @@
 		A977D0DC2B6002DA009783A9 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				A977D0DD2B600300009783A9 /* SearchTabView.swift */,
-				A977D0DF2B600318009783A9 /* RecipeTabView.swift */,
+				A977D0DF2B600318009783A9 /* CookbooksView.swift */,
 				A977D0E12B60034E009783A9 /* GroceryListTabView.swift */,
 			);
 			path = Tabs;
@@ -386,11 +350,11 @@
 			isa = PBXGroup;
 			children = (
 				A70171BD2AB4987900064C43 /* RecipeListView.swift */,
+				EE0000012F90000100000001 /* RecipeEditorView.swift */,
 				A70171C12AB498C600064C43 /* RecipeCardView.swift */,
 				A70171BF2AB498A900064C43 /* RecipeView.swift */,
 				A97506112B920D8100E86029 /* RecipeViewSections */,
 				A9D89AAF2B4FE97800F49D92 /* TimerView.swift */,
-				A97B4D342B80B82A00EC1A88 /* ShareView.swift */,
 			);
 			path = Recipes;
 			sourceTree = "<group>";
@@ -440,6 +404,8 @@
 			packageProductDependencies = (
 				A74D33BD2AF82AAE00D06555 /* SwiftSoup */,
 				A9CA6CF52B4C63F200F78AB5 /* TPPDF */,
+				A9C5BB632F86FDB200C8F5C8 /* NextcloudCookbookKit */,
+				EE0000052F90000100000001 /* RecipeScraperKit */,
 			);
 			productName = "Nextcloud Cookbook iOS Client";
 			productReference = A701717E2AA8E71900064C43 /* Nextcloud Cookbook iOS Client.app */;
@@ -489,7 +455,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					A701717D2AA8E71900064C43 = {
 						CreatedOnToolsVersion = 14.3;
@@ -519,6 +485,8 @@
 			packageReferences = (
 				A74D33BC2AF82AAE00D06555 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				A9CA6CF42B4C63F200F78AB5 /* XCRemoteSwiftPackageReference "TPPDF" */,
+				A9C5BB622F86FDB200C8F5C8 /* XCLocalSwiftPackageReference "NextcloudCookbookKit" */,
+				EE0000042F90000100000001 /* XCLocalSwiftPackageReference "RecipeScraperKit" */,
 			);
 			productRefGroup = A701717F2AA8E71900064C43 /* Products */;
 			projectDirPath = "";
@@ -564,55 +532,47 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9D8F9052B99F3E5009BACAE /* RecipeImportSection.swift in Sources */,
 				A9BBB38E2B8E44B3002DA7FF /* BottomClipper.swift in Sources */,
 				A97506192B920EC200E86029 /* RecipeIngredientSection.swift in Sources */,
-				A97B4D352B80B82A00EC1A88 /* ShareView.swift in Sources */,
 				A975061F2B920FFC00E86029 /* RecipeToolSection.swift in Sources */,
 				A9805BED2BAAC70E003B7231 /* NumberFormatter.swift in Sources */,
 				A9D89AB02B4FE97800F49D92 /* TimerView.swift in Sources */,
 				A9BBB38C2B8D3B0C002DA7FF /* ParallaxHeaderView.swift in Sources */,
 				A79AA8E22AFF8C14007D25F2 /* RecipeEditViewModel.swift in Sources */,
 				A97506152B920DF200E86029 /* RecipeGenericViews.swift in Sources */,
-				A7FB0D7C2B25C68500A3469E /* TokenLoginView.swift in Sources */,
+				A9DD78892F883CC2006B59FA /* NCKBridge.swift in Sources */,
 				A977D0E22B60034E009783A9 /* GroceryListTabView.swift in Sources */,
-				A70171B12AB211DF00064C43 /* NetworkError.swift in Sources */,
-				A7FB0D7A2B25C66600A3469E /* OnboardingView.swift in Sources */,
+				A7FB0D7A2B25C66600A3469E /* LoginView.swift in Sources */,
 				A76B8A712AE002AE00096CEC /* Alerts.swift in Sources */,
 				A79AA8E62B02C3CB007D25F2 /* LoggerExtension.swift in Sources */,
 				A70171C42AB4A31200064C43 /* DataStore.swift in Sources */,
-				A7FB0D7E2B25C6A200A3469E /* V2LoginView.swift in Sources */,
+				CC0000122BE8000100000001 /* CookbookModels.swift in Sources */,
 				A975061D2B920FCC00E86029 /* RecipeInstructionSection.swift in Sources */,
 				A787B0782B2B1E6400C2DF1B /* DateExtension.swift in Sources */,
-				A79AA8E92B062DD1007D25F2 /* CookbookApiV1.swift in Sources */,
 				A7CD3FD22B2C546A00D764AD /* CollapsibleView.swift in Sources */,
 				A9E78A2B2BE7799F00206866 /* JsonAny.swift in Sources */,
 				A9BBB3902B91BE31002DA7FF /* ObservableRecipeDetail.swift in Sources */,
 				A97506212B92104700E86029 /* RecipeMetadataSection.swift in Sources */,
-				A70171B42AB2122900064C43 /* NetworkUtils.swift in Sources */,
 				A97B4D322B80B3E900EC1A88 /* RecipeModels.swift in Sources */,
 				A70171BE2AB4987900064C43 /* RecipeListView.swift in Sources */,
+				EE0000022F90000100000001 /* RecipeEditorView.swift in Sources */,
 				A70171C62AB4C43A00064C43 /* DataModels.swift in Sources */,
-				A79AA8EB2B062E15007D25F2 /* ApiRequest.swift in Sources */,
 				A7F3F8E82ACBFC760076C227 /* RecipeKeywordSection.swift in Sources */,
 				A79AA8E02AFF80E3007D25F2 /* DurationComponents.swift in Sources */,
 				A70171C02AB498A900064C43 /* RecipeView.swift in Sources */,
-				A79AA8E42B02A962007D25F2 /* CookbookApi.swift in Sources */,
 				A975061B2B920F9F00E86029 /* RecipeNutritionSection.swift in Sources */,
 				A70171CD2AB501B100064C43 /* SettingsView.swift in Sources */,
 				A9CA6CEF2B4C086100F78AB5 /* RecipeExporter.swift in Sources */,
 				A70171C22AB498C600064C43 /* RecipeCardView.swift in Sources */,
 				A70171842AA8E71900064C43 /* MainView.swift in Sources */,
 				A70171CB2AB4CD1700064C43 /* UserSettings.swift in Sources */,
-				A977D0DE2B600300009783A9 /* SearchTabView.swift in Sources */,
 				A703226A2ABAF49800D7C4ED /* JSONCoderExtension.swift in Sources */,
-				A79AA8ED2B063AD5007D25F2 /* NextcloudApi.swift in Sources */,
 				A97506132B920D9F00E86029 /* RecipeDurationSection.swift in Sources */,
 				A70171822AA8E71900064C43 /* Nextcloud_Cookbook_iOS_ClientApp.swift in Sources */,
 				A74D33C32AFCD1C300D06555 /* RecipeScraper.swift in Sources */,
 				A70171AD2AA8EF4700064C43 /* AppState.swift in Sources */,
 				A76B8A6F2ADFFA8800096CEC /* SupportedLanguage.swift in Sources */,
-				A977D0E02B600318009783A9 /* RecipeTabView.swift in Sources */,
+				A977D0E02B600318009783A9 /* CookbooksView.swift in Sources */,
 				A703226F2ABB1DD700D7C4ED /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -686,6 +646,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = EF2ABA36D9;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -706,6 +667,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -747,6 +709,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = EF2ABA36D9;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -760,6 +723,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -776,12 +740,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
-				DEVELOPMENT_TEAM = EF2ABA36D9;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Nextcloud-Cookbook-iOS-Client-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Cookbook;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take photos of your recipes.";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -793,7 +757,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -820,12 +784,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Nextcloud Cookbook iOS Client/Preview Content\"";
-				DEVELOPMENT_TEAM = EF2ABA36D9;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Nextcloud-Cookbook-iOS-Client-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Cookbook;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take photos of your recipes.";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -837,7 +801,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -856,14 +820,12 @@
 		A70171A72AA8E72000064C43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = EF2ABA36D9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-ClientTests";
@@ -880,14 +842,12 @@
 		A70171A82AA8E72000064C43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = EF2ABA36D9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-ClientTests";
@@ -904,13 +864,11 @@
 		A70171AA2AA8E72000064C43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = EF2ABA36D9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-ClientUITests";
@@ -927,13 +885,11 @@
 		A70171AB2AA8E72000064C43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = EF2ABA36D9;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "VincentMeilinger.Nextcloud-Cookbook-iOS-ClientUITests";
@@ -988,6 +944,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		A9C5BB622F86FDB200C8F5C8 /* XCLocalSwiftPackageReference "NextcloudCookbookKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = NextcloudCookbookKit;
+		};
+		EE0000042F90000100000001 /* XCLocalSwiftPackageReference "RecipeScraperKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = RecipeScraperKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		A74D33BC2AF82AAE00D06555 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1012,6 +979,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A74D33BC2AF82AAE00D06555 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		A9C5BB632F86FDB200C8F5C8 /* NextcloudCookbookKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NextcloudCookbookKit;
+		};
+		EE0000052F90000100000001 /* RecipeScraperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RecipeScraperKit;
 		};
 		A9CA6CF52B4C63F200F78AB5 /* TPPDF */ = {
 			isa = XCSwiftPackageProductDependency;

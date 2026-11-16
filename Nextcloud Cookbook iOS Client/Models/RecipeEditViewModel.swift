@@ -79,23 +79,23 @@ import SwiftUI
             return recipeValidationError
         }
         
-        return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: true)
+        return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: true).1
     }
     
     func uploadEditedRecipe() async -> UserAlert? {
         waitingForUpload = true
         print("Uploading changed recipe.")
-        guard let recipeId = Int(recipe.id) else { return RequestAlert.REQUEST_DROPPED }
+        guard recipe.externalSourceId != nil else { return RequestAlert.REQUEST_DROPPED }
         createRecipe()
         
-        return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: false)
+        return await mainViewModel.uploadRecipe(recipeDetail: self.recipe, createNew: false).1
     }
     
     func deleteRecipe() async -> RequestAlert? {
-        guard let id = Int(recipe.id) else {
+        guard let id = recipe.id else {
             return .REQUEST_DROPPED
         }
-        return await mainViewModel.deleteRecipe(withId: id, categoryName: recipe.recipeCategory)
+        return await mainViewModel.deleteRecipe(withId: id)
     }
     
     func prepareView() {
@@ -119,19 +119,12 @@ import SwiftUI
             return nil
         }
         
-        do {
-            let (scrapedRecipe, error) = try await RecipeScraper().scrape(url: importURL)
-            if let scrapedRecipe = scrapedRecipe {
-                self.recipe = scrapedRecipe
-                prepareView()
-            }
-            if let error = error {
-                return error
-            }
-        } catch {
-            print("Error")
+        let (webRecipe, webError) = await WebRecipeImport.importRecipe(from: importURL)
+        if let webRecipe {
+            self.recipe = webRecipe
+            prepareView()
         }
-        return nil
+        return webError
          
     }
 }

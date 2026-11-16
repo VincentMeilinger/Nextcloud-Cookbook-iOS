@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import UIKit
+import NextcloudCookbookKit
 
 
 @MainActor class AppState: ObservableObject {
@@ -17,99 +18,144 @@ import UIKit
     @Published var timers: [String: RecipeTimer] = [:]
     var recipeImages: [Int: [String: UIImage]] = [:]
     var imagesNeedUpdate: [Int: [String: Bool]] = [:]
-    var lastUpdates: [String: Date] = [:]
     var allKeywords: [RecipeKeyword] = []
-    
-    private let dataStore: DataStore
-    
-    init() {
-        print("Created MainViewModel")
-        self.dataStore = DataStore()
-        
-        if UserSettings.shared.authString == "" {
-            let loginString = "\(UserSettings.shared.username):\(UserSettings.shared.token)"
-            let loginData = loginString.data(using: String.Encoding.utf8)!
-            UserSettings.shared.authString = loginData.base64EncodedString()
-        }
+
+    /// Recipe counts per category as reported by the server (excludes local recipes).
+    private var serverCategoryCounts: [String: Int] = [:]
+
+    private let dataStore = sharedDataStore
+
+    /// Category name used for recipes without a category.
+    /// The server lists them under "*"; local ones are grouped under "Local".
+    static func categoryKey(for category: String, origin: RecipeOrigin) -> String {
+        guard category.isEmpty else { return category }
+        return origin == .local ? String(localized: "Local") : "*"
     }
-    
+
     enum FetchMode {
         case preferLocal, preferServer, onlyLocal, onlyServer
     }
-    
-    
-    /**
-     Asynchronously loads and updates the list of categories.
 
-     This function attempts to fetch the list of categories from the server. If the server connection is successful, it updates the `categories` property in the `MainViewModel` instance and saves the categories locally. If the server connection fails, it attempts to load the categories from local storage.
+    // MARK: - Cookbook API client
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-    */
-    func getCategories() async {
-        let (categories, _) = await cookbookApi.getCategories(
-            auth: UserSettings.shared.authString
-        )
-        if let categories = categories {
-            print("Successfully loaded categories")
-            self.categories = categories
-            await saveLocal(self.categories, path: "categories.data")
+    /// Connection to the signed-in server, shared by all requests. Connecting asks the
+    /// server for its API version, so it happens once per server and credentials.
+    private var cookbookClientTask: (key: String, task: Task<any CookbookAPIClient, Error>)?
+
+    /// Returns a client matching the server's Cookbook API version.
+    private func cookbookClient() async throws -> any CookbookAPIClient {
+        let settings = UserSettings.shared
+        let urlString = settings.serverProtocol + settings.serverAddress
+        let credentials = settings.authString
+        let key = urlString + "\n" + credentials
+
+        let task: Task<any CookbookAPIClient, Error>
+        if let cached = cookbookClientTask, cached.key == key {
+            task = cached.task
         } else {
-            // If there's no server connection, try loading categories from local storage
-            print("Loading categories from store ...")
-            if let categories: [Category] = await loadLocal(path: "categories.data") {
-                self.categories = categories
-                print("Success!")
-            } else {
-                print("Failure!")
-            }
+            guard let serverURL = URL(string: urlString) else { throw NCKError.invalidURL }
+            task = Task { try await CookbookAPI.connect(serverURL: serverURL, credentials: credentials) }
+            cookbookClientTask = (key, task)
         }
-        
-        // Initialize the lastUpdates with distantPast dates, so that each recipeDetail is updated on launch for all categories
-        for category in self.categories {
-            lastUpdates[category.name] = Date.distantPast
+        do {
+            return try await task.value
+        } catch {
+            // Don't keep a failed connection (e.g. while offline); the next request retries.
+            if cookbookClientTask?.task == task { cookbookClientTask = nil }
+            throw error
         }
     }
-    
-    /**
-     Fetches recipes for a specified category from either the server or local storage.
 
-     - Parameters:
-       - name: The name of the category. Use "*" to fetch recipes without assigned categories.
-       - needsUpdate: If true, recipes will be loaded from the server directly; otherwise, they will be loaded from local storage first.
+    /// Converts server recipes to app recipes, registering internal ids for new ones.
+    private func appRecipes(from serverRecipes: [NCKRecipe]) async -> [Recipe] {
+        let ids = await dataStore.recipeIds(forExternalIds: serverRecipes.map(\.id))
+        return serverRecipes.compactMap { recipe in ids[recipe.id].map { recipe.toRecipe(id: $0) } }
+    }
 
-     This function asynchronously retrieves recipes for the specified category from the server or local storage based on the provided parameters. If `needsUpdate` is true, the function fetches recipes from the server and updates the local storage. If `needsUpdate` is false, it attempts to load recipes from local storage.
+    // MARK: - Categories
 
-     - Note: The category name "*" is used for all uncategorized recipes.
+    func getCategories() async {
+        do {
+            let categories = try await cookbookClient().getCategories().map { $0.toCategory() }
+            await dataStore.saveCategories(categories)
+            applyServerCategories(categories)
+        } catch {
+            print("Server fetch failed, loading categories from store: \(error)")
+            if let categories = await dataStore.loadCategories() {
+                applyServerCategories(categories)
+            }
+        }
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-    */
+        // Merge categories and recipes from locally-stored recipes
+        await mergeLocalRecipes()
+        await recomputeCategoryCounts()
+    }
+
+    private func applyServerCategories(_ serverCategories: [Category]) {
+        categories = serverCategories
+        serverCategoryCounts = Dictionary(
+            serverCategories.map { ($0.name, $0.recipe_count) },
+            uniquingKeysWith: +
+        )
+    }
+
+    /// Sets every category's recipe_count to the server count plus the number of
+    /// local recipes, and drops categories that no longer contain any recipe.
+    /// Called after any operation that may change the recipe set.
+    private func recomputeCategoryCounts() async {
+        var counts: [String: Int] = [:]
+        for name in categories.map(\.name) {
+            counts[name] = serverCategoryCounts[name, default: 0]
+                + (await dataStore.countLocalRecipes(forCategory: name))
+        }
+        for i in categories.indices {
+            if let count = counts[categories[i].name] {
+                categories[i].recipe_count = count
+            }
+        }
+        categories.removeAll { $0.recipe_count == 0 && serverCategoryCounts[$0.name] == nil }
+    }
+
+    /// Loads all local-origin recipes from DataStore and merges them into
+    /// the in-memory categories and recipes dictionaries.
+    private func mergeLocalRecipes() async {
+        let localEntries = await dataStore.loadAllLocalStoredRecipes()
+        for (recipe, category) in localEntries {
+            if !categories.contains(where: { $0.name == category }) {
+                categories.append(Category(name: category, recipe_count: 0))
+            }
+            let existingIds = Set(recipes[category]?.map(\.id) ?? [])
+            if !existingIds.contains(recipe.id) {
+                recipes[category, default: []].append(recipe)
+            }
+        }
+    }
+
+    // MARK: - Recipes per category
+
     func getCategory(named name: String, fetchMode: FetchMode) async {
         print("getCategory(\(name), fetchMode: \(fetchMode))")
+
         func getLocal() async -> Bool {
-            if let recipes: [Recipe] = await loadLocal(path: "category_\(categoryString).data") {
+            if let recipes = await dataStore.loadRecipes(forCategory: name) {
                 self.recipes[name] = recipes
                 return true
             }
             return false
         }
-        
+
         func getServer(store: Bool = false) async -> Bool {
-            let (recipes, _) = await cookbookApi.getCategory(
-                auth: UserSettings.shared.authString,
-                named: categoryString
-            )
-            if let recipes = recipes {
-                self.recipes[name] = recipes
-                if store {
-                    await saveLocal(recipes, path: "category_\(categoryString).data")
-                }
-                //userSettings.lastUpdate = Date()
+            let categoryString = name == "*" ? "_" : name
+            do {
+                let serverRecipes = try await appRecipes(from: cookbookClient().getRecipes(inCategory: categoryString))
+                if store { await dataStore.saveRecipes(serverRecipes, forCategory: name) }
+                // The server only knows its own recipes; keep local ones in the list.
+                let localRecipes = await dataStore.loadLocalRecipes(forCategory: name)
+                self.recipes[name] = serverRecipes + localRecipes
                 return true
-            }
-            return false
+            } catch { return false }
         }
-        
-        let categoryString = name == "*" ? "_" : name
+
         switch fetchMode {
         case .preferLocal:
             if await getLocal() { return }
@@ -123,50 +169,37 @@ import UIKit
             if await getServer() { return }
         }
     }
-    
+
     func updateAllRecipeDetails() async {
+        // Recipes changed on the server while this sync runs must count as
+        // changed next time, so remember when the sync started.
+        let syncStart = Date()
         for category in self.categories {
             await updateRecipeDetails(in: category.name)
         }
-        UserSettings.shared.lastUpdate = Date()
+        UserSettings.shared.lastUpdate = syncStart
     }
-    
+
     func updateRecipeDetails(in category: String) async {
         guard UserSettings.shared.storeRecipes else { return }
         guard let recipes = self.recipes[category] else { return }
         for recipe in recipes {
-            if let dateModified = recipe.dateModified {
-                if needsUpdate(category: category, lastModified: dateModified) {
-                    print("\(recipe.name) needs an update. (last modified: \(recipe.dateModified)")
-                    await updateRecipeDetail(id: recipe.recipe_id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
-                } else {
-                    print("\(recipe.name) is up to date.")
-                }
-            } else {
-                await updateRecipeDetail(id: recipe.recipe_id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
-            }
+            // Local recipes are always up to date — no server to sync with
+            guard recipe.origin == .nextcloud else { continue }
+            guard await needsUpdate(recipe) else { continue }
+            await updateRecipeDetail(id: recipe.id, withThumb: UserSettings.shared.storeThumb, withImage: UserSettings.shared.storeImages)
         }
     }
-    
-    /**
-     Asynchronously retrieves all recipes either from the server or the locally cached data.
 
-     This function attempts to fetch all recipes from the server using the provided `api`. If the server connection is successful, it returns the fetched recipes. If the server connection fails, it falls back to combining locally cached recipes from different categories.
+    // MARK: - All recipes
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance, and categories have been previously loaded.
-
-     Example usage:
-     ```swift
-     let recipes = await mainViewModel.getRecipes()
-    */
     func getRecipes() async -> [Recipe] {
-        let (recipes, error) = await cookbookApi.getRecipes(
-            auth: UserSettings.shared.authString
-        )
-        if let recipes = recipes {
-            return recipes
-        } else if let error = error {
-            print(error)
+        do {
+            let serverRecipes = try await appRecipes(from: cookbookClient().getRecipes())
+            let localRecipes = await dataStore.loadAllLocalStoredRecipes().map(\.recipe)
+            return (serverRecipes + localRecipes).sorted { $0.name < $1.name }
+        } catch {
+            print("Server fetch failed, aggregating from local store: \(error)")
         }
         var allRecipes: [Recipe] = []
         for category in categories {
@@ -177,48 +210,32 @@ import UIKit
                 allRecipes.append(contentsOf: recipeArray)
             }
         }
-        return allRecipes.sorted(by: {
-            $0.name < $1.name
-        })
+        return allRecipes.sorted { $0.name < $1.name }
     }
-    
-    /**
-     Asynchronously retrieves a recipe detail either from the server or locally cached data.
 
-     This function attempts to fetch a recipe detail with the specified `id` from the server using the provided `api`. If the server connection is successful, it returns the fetched recipe detail. If the server connection fails, it falls back to loading the recipe detail from local storage.
+    // MARK: - Recipe detail
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-
-     - Parameters:
-       - id: The identifier of the recipe to retrieve.
-
-     Example usage:
-     ```swift
-     let recipeDetail = await mainViewModel.getRecipe(id: 123)
-    */
     func getRecipe(id: Int, fetchMode: FetchMode, save: Bool = false) async -> RecipeDetail? {
+        // Local recipes live only in DataStore — never hit the server
+        guard let externalId = await dataStore.externalSourceId(forRecipe: id) else {
+            return await dataStore.loadRecipeDetail(id: id)
+        }
+
         func getLocal() async -> RecipeDetail? {
-            if let recipe: RecipeDetail = await loadLocal(path: "recipe\(id).data") { return recipe }
-            return nil
+            await dataStore.loadRecipeDetail(id: id)
         }
-        
+
         func getServer() async -> RecipeDetail? {
-            let (recipe, error) = await cookbookApi.getRecipe(
-                auth: UserSettings.shared.authString,
-                id: id
-            )
-            if let recipe = recipe {
+            do {
+                let detail = try await cookbookClient().getRecipe(id: externalId).toRecipeDetail(id: id)
                 if save {
-                    self.recipeDetails[id] = recipe
-                    await self.saveLocal(recipe, path: "recipe\(id).data")
+                    self.recipeDetails[id] = detail
+                    await dataStore.saveRecipeDetail(detail)
                 }
-                return recipe
-            } else if let error = error {
-                print(error)
-            }
-            return nil
+                return detail
+            } catch { return nil }
         }
-        
+
         switch fetchMode {
         case .preferLocal:
             if let recipe = await getLocal() { return recipe }
@@ -233,87 +250,58 @@ import UIKit
         }
         return nil
     }
-    
-    
-    /**
-     Asynchronously downloads and saves details, thumbnails, and full images for all recipes.
 
-     This function iterates through all loaded categories, fetches and updates the recipes from the server, and then downloads and saves details, thumbnails, and full images for each recipe.
-
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-
-     Example usage:
-     ```swift
-     await mainViewModel.downloadAllRecipes()
-    */
     func updateRecipeDetail(id: Int, withThumb: Bool, withImage: Bool) async {
         if let recipeDetail = await getRecipe(id: id, fetchMode: .onlyServer) {
-            await saveLocal(recipeDetail, path: "recipe\(id).data")
+            await dataStore.saveRecipeDetail(recipeDetail)
         }
-        
+
         if withThumb {
             let thumbnail = await getImage(id: id, size: .THUMB, fetchMode: .onlyServer)
-            guard let thumbnail = thumbnail else { return }
-            guard let thumbnailData = thumbnail.pngData() else { return }
-            await saveLocal(thumbnailData.base64EncodedString(), path: "image\(id)_thumb")
+            if let thumbnail, let data = await encodeToPNG(thumbnail) {
+                await dataStore.saveImage(data, forRecipe: id, size: .THUMB)
+            }
         }
-        
+
         if withImage {
             let image = await getImage(id: id, size: .FULL, fetchMode: .onlyServer)
-            guard let image = image else { return }
-            guard let imageData = image.pngData() else { return }
-            await saveLocal(imageData.base64EncodedString(), path: "image\(id)_full")
+            if let image, let data = await encodeToPNG(image) {
+                await dataStore.saveImage(data, forRecipe: id, size: .FULL)
+            }
         }
     }
-    
-    
-    /// Check if recipeDetail is stored locally, either in cache or on disk
-    /// - Parameters
-    ///     - recipeId: The id of a recipe.
-    /// - Returns: True if the recipeDetail is stored, otherwise false
-    func recipeDetailExists(recipeId: Int) -> Bool {
-        if (dataStore.recipeDetailExists(recipeId: recipeId)) {
-            return true
-        }
-        return false
+
+    func recipeDetailExists(recipeId: Int) async -> Bool {
+        await dataStore.recipeDetailExists(recipeId: recipeId)
     }
-    
-    /**
-     Asynchronously retrieves and returns an image for a recipe with the specified ID and size.
 
-     This function attempts to fetch an image for a recipe with the specified `id` and `size` from the server using the provided `api`. If the server connection is successful, it returns the fetched image. If the server connection fails or `needsUpdate` is false, it attempts to load the image from local storage.
+    /// The Nextcloud id of a recipe, or `nil` for local recipes.
+    func externalSourceId(forRecipe id: Int) async -> String? {
+        await dataStore.externalSourceId(forRecipe: id)
+    }
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
+    // MARK: - Images
 
-     - Parameters:
-       - id: The identifier of the recipe associated with the image.
-       - size: The size of the desired image (thumbnail or full).
-       - needsUpdate: If true, the image will be loaded from the server directly; otherwise, it will be loaded from local storage.
-
-     Example usage:
-     ```swift
-     let thumbnail = await mainViewModel.getImage(id: 123, size: .THUMB, needsUpdate: true)
-    */
     func getImage(id: Int, size: RecipeImage.RecipeImageSize, fetchMode: FetchMode) async -> UIImage? {
-        func getLocal() async -> UIImage? {
+        // Local recipes have no server image — only check the local store
+        guard let externalId = await dataStore.externalSourceId(forRecipe: id) else {
             return await imageFromStore(id: id, size: size)
         }
-        
-        func getServer() async -> UIImage? {
-            let (image, _) = await cookbookApi.getImage(
-                auth: UserSettings.shared.authString,
-                id: id,
-                size: size
-            )
-            if let image = image { return image }
-            return nil
+
+        func getLocal() async -> UIImage? {
+            await imageFromStore(id: id, size: size)
         }
-        
+
+        func getServer() async -> UIImage? {
+            do {
+                let data = try await cookbookClient().getImage(recipeId: externalId, size: size.nckImageSize)
+                return UIImage(data: data)
+            } catch { return nil }
+        }
+
         switch fetchMode {
         case .preferLocal:
-            if let image = imageFromCache(id: id, size: size) {
-                return image
-            }
+            if let image = imageFromCache(id: id, size: size) { return image }
             if !imageUpdateNeeded(id: id, size: size) { return nil }
             if let image = await getLocal() {
                 imageToCache(id: id, size: size, image: image)
@@ -330,68 +318,57 @@ import UIKit
                 imageToCache(id: id, size: size, image: image)
                 return image
             }
-            if let image = imageFromCache(id: id, size: size) {
-                return image
-            }
+            if let image = imageFromCache(id: id, size: size) { return image }
             if let image = await getLocal() {
                 imageToCache(id: id, size: size, image: image)
                 return image
             }
         case .onlyLocal:
-            if let image = imageFromCache(id: id, size: size) {
-                return image
-            }
+            if let image = imageFromCache(id: id, size: size) { return image }
             if !imageUpdateNeeded(id: id, size: size) { return nil }
             if let image = await getLocal() {
                 imageToCache(id: id, size: size, image: image)
                 return image
             }
         case .onlyServer:
-            if let image = imageFromCache(id: id, size: size) {
-                return image
-            }
+            if let image = imageFromCache(id: id, size: size) { return image }
             if let image = await getServer() {
                 imageToCache(id: id, size: size, image: image)
                 return image
             }
         }
-        imagesNeedUpdate[id] = [size.rawValue: false]
+        // Remember that neither the store nor the server has this image, so list
+        // cells stop retrying. Single-source modes must not set this, or a failed
+        // server-only fetch would hide an image that exists in the local store.
+        if fetchMode == .preferLocal || fetchMode == .preferServer {
+            imagesNeedUpdate[id, default: [:]][size.rawValue] = false
+        }
         return nil
     }
-    
-    /**
-     Asynchronously retrieves and returns a list of keywords (tags).
 
-     This function attempts to fetch a list of keywords from the server using the provided `api`. If the server connection is successful, it returns the fetched keywords. If the server connection fails, it attempts to load the keywords from local storage.
+    // MARK: - Keywords
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-
-     Example usage:
-     ```swift
-     let keywords = await mainViewModel.getKeywords()
-    */
     func getKeywords(fetchMode: FetchMode) async -> [RecipeKeyword] {
         func getLocal() async -> [RecipeKeyword]? {
-            return await loadLocal(path: "keywords.data")
+            await dataStore.loadKeywords()
         }
-        
+
         func getServer() async -> [RecipeKeyword]? {
-            let (tags, _) = await cookbookApi.getTags(
-                auth: UserSettings.shared.authString
-            )
-            return tags
+            do {
+                return try await cookbookClient().getKeywords().map { $0.toKeyword() }
+            } catch { return nil }
         }
 
         switch fetchMode {
         case .preferLocal:
             if let keywords = await getLocal() { return keywords }
             if let keywords = await getServer() {
-                await saveLocal(keywords, path: "keywords.data")
+                await dataStore.saveKeywords(keywords)
                 return keywords
             }
         case .preferServer:
             if let keywords = await getServer() {
-                await saveLocal(keywords, path: "keywords.data")
+                await dataStore.saveKeywords(keywords)
                 return keywords
             }
             if let keywords = await getLocal() { return keywords }
@@ -402,236 +379,286 @@ import UIKit
         }
         return []
     }
-    
-    func deleteAllData() {
-        if dataStore.clearAll() {
-            self.categories = []
-            self.recipes = [:]
-            self.recipeDetails = [:]
-            self.recipeImages = [:]
-            self.imagesNeedUpdate = [:]
-        }
+
+    // MARK: - Delete / upload
+
+    /// Deletes all stored data, including local recipes.
+    func deleteAllData() async {
+        await dataStore.clearAll()
+        self.categories = []
+        self.recipes = [:]
+        self.recipeDetails = [:]
+        self.recipeImages = [:]
+        self.imagesNeedUpdate = [:]
+        self.serverCategoryCounts = [:]
     }
-    
-    /**
-     Asynchronously deletes a recipe with the specified ID from the server and local storage.
 
-     This function attempts to delete a recipe with the specified `id` from the server using the provided `api`. If the server connection is successful, it proceeds to delete the local copy of the recipe and its details. If the server connection fails, it returns `RequestAlert.REQUEST_DROPPED`.
+    /// Deletes everything cached from Nextcloud (used when signing out).
+    /// Local recipes stay on the device and in the recipe list.
+    func deleteNextcloudData() async {
+        await dataStore.clearNextcloudData()
+        self.cookbookClientTask = nil
+        self.categories = []
+        self.recipes = [:]
+        self.recipeDetails = [:]
+        self.recipeImages = [:]
+        self.imagesNeedUpdate = [:]
+        self.serverCategoryCounts = [:]
+        self.allKeywords = []
+        await mergeLocalRecipes()
+        await recomputeCategoryCounts()
+    }
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-
-     - Parameters:
-       - id: The identifier of the recipe to delete.
-       - categoryName: The name of the category to which the recipe belongs.
-
-     Example usage:
-     ```swift
-     let requestResult = await mainViewModel.deleteRecipe(withId: 123, categoryName: "Desserts")
-    */
-    func deleteRecipe(withId id: Int, categoryName: String) async -> RequestAlert? {
-        let (error) = await cookbookApi.deleteRecipe(
-            auth: UserSettings.shared.authString,
-            id: id
-        )
-        
-        if let error = error {
-            return .REQUEST_DROPPED
+    func deleteRecipe(withId id: Int) async -> RequestAlert? {
+        let externalId = await dataStore.externalSourceId(forRecipe: id)
+        if let externalId {
+            // Nextcloud recipe — delete on the server first
+            do {
+                try await cookbookClient().deleteRecipe(id: externalId)
+            } catch {
+                return .REQUEST_DROPPED
+            }
         }
-        let path = "recipe\(id).data"
-        dataStore.delete(path: path)
-        if recipes[categoryName] != nil {
-            recipes[categoryName]!.removeAll(where: { recipe in
-                recipe.recipe_id == id
-            })
-            recipeDetails.removeValue(forKey: id)
+
+        await dataStore.deleteRecipe(id: id)
+        recipeDetails.removeValue(forKey: id)
+        recipeImages.removeValue(forKey: id)
+        imagesNeedUpdate.removeValue(forKey: id)
+        // Remove the recipe from whichever category list holds it
+        for category in recipes.keys {
+            let before = recipes[category]?.count ?? 0
+            recipes[category]?.removeAll(where: { $0.id == id })
+            if externalId != nil, (recipes[category]?.count ?? 0) < before, let count = serverCategoryCounts[category] {
+                serverCategoryCounts[category] = max(0, count - 1)
+            }
         }
+        await recomputeCategoryCounts()
         return nil
     }
-    
-    /**
-     Asynchronously checks the server connection by attempting to fetch categories.
 
-     This function attempts to fetch categories from the server using the provided `api` to check the server connection status. If the server connection is successful, it updates the `categories` property in the `MainViewModel` instance and saves the categories locally. If the server connection fails, it returns `false`.
+    /// Saves a recipe locally (no server upload). Assigns a new id if the recipe is new.
+    /// Returns the saved RecipeDetail (with ID filled in) and an optional error alert.
+    func saveLocalRecipe(recipeDetail: RecipeDetail) async -> (RecipeDetail?, RequestAlert?) {
+        var detail = recipeDetail
 
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-
-     Example usage:
-     ```swift
-     let isConnected = await mainViewModel.checkServerConnection()
-    */
-    func checkServerConnection() async -> Bool {
-        let (categories, _) = await cookbookApi.getCategories(
-            auth: UserSettings.shared.authString
-        )
-        if let categories = categories {
-            self.categories = categories
-            await saveLocal(categories, path: "categories.data")
-            return true
-        }
-        return false
-    }
-    
-    /**
-     Asynchronously uploads a recipe to the server.
-
-     This function attempts to create or update a recipe on the server using the provided `api`. If the server connection is successful, it uploads the provided `recipeDetail`. If the server connection fails, it returns `RequestAlert.REQUEST_DROPPED`.
-
-     - Important: This function assumes that the server address, authentication string, and API have been properly configured in the `MainViewModel` instance.
-
-     - Parameters:
-       - recipeDetail: The detailed information of the recipe to upload.
-       - createNew: If true, creates a new recipe on the server; otherwise, updates an existing one.
-
-     Example usage:
-     ```swift
-     let uploadResult = await mainViewModel.uploadRecipe(recipeDetail: myRecipeDetail, createNew: true)
-    */
-    func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> RequestAlert? {
-        var error: NetworkError? = nil
-        if createNew {
-            error = await cookbookApi.createRecipe(
-                auth: UserSettings.shared.authString,
-                recipe: recipeDetail
-            )
+        // A recipe without an id, or one that belongs to Nextcloud, is saved as a new local recipe
+        let localId: Int
+        if let id = detail.id, detail.externalSourceId == nil {
+            localId = id
         } else {
-            error = await cookbookApi.updateRecipe(
-                auth: UserSettings.shared.authString,
-                recipe: recipeDetail
-            )
+            localId = await dataStore.newLocalRecipeId()
+            detail.id = localId
+            detail.externalSourceId = nil
         }
-        if error != nil {
-            return .REQUEST_DROPPED
-        }
-        return nil
-    }
-    
-    func importRecipe(url: String) async -> (RecipeDetail?, RequestAlert?) {
-        guard let data = JSONEncoder.safeEncode(RecipeImportRequest(url: url)) else { return (nil, .REQUEST_DROPPED) }
-        let (recipeDetail, error) = await cookbookApi.importRecipe(
-            auth: UserSettings.shared.authString,
-            data: data
+        let category = Self.categoryKey(for: detail.recipeCategory, origin: .local)
+
+        // Persist detail
+        await dataStore.saveRecipeDetail(detail)
+
+        // Build lightweight Recipe summary
+        let recipe = Recipe(
+            id: localId,
+            externalSourceId: nil,
+            name: detail.name,
+            keywords: detail.keywords,
+            dateCreated: detail.dateCreated,
+            dateModified: detail.dateModified,
+            imageUrl: nil,
+            imagePlaceholderUrl: nil
         )
-        if error != nil {
-            return (nil, .REQUEST_DROPPED)
+
+        // Persist summary
+        await dataStore.saveLocalRecipeSummary(recipe, forCategory: category)
+
+        // Update in-memory state; drop the entry from its previous category if it moved
+        for key in recipes.keys where key != category {
+            recipes[key]?.removeAll(where: { $0.id == localId })
         }
-        return (recipeDetail, nil)
+        if let idx = recipes[category]?.firstIndex(where: { $0.id == localId }) {
+            recipes[category]![idx] = recipe
+        } else {
+            recipes[category, default: []].append(recipe)
+        }
+        if !categories.contains(where: { $0.name == category }) {
+            categories.append(Category(name: category, recipe_count: 0))
+        }
+        await recomputeCategoryCounts()
+
+        return (detail, nil)
     }
-    
+
+    enum ServerStatus {
+        case connected
+        case unreachable
+        /// The server rejected the stored credentials (e.g. the app password was revoked).
+        case signInRequired
+    }
+
+    func checkServerConnection() async -> ServerStatus {
+        guard UserSettings.shared.isLoggedIn else { return .unreachable }
+        do {
+            _ = try await cookbookClient().getCategories()
+            return .connected
+        } catch NCKError.clientError(statusCode: 401) {
+            return .signInRequired
+        } catch {
+            return .unreachable
+        }
+    }
+
+    /// Uploads a recipe. Creates it on the server when `createNew` is true, otherwise
+    /// updates the server recipe `recipeDetail.externalSourceId`. Returns the recipe's
+    /// internal id or an alert when the request failed.
+    func uploadRecipe(recipeDetail: RecipeDetail, createNew: Bool) async -> (Int?, RequestAlert?) {
+        let nckDetail = recipeDetail.toNCKRecipeDetail()
+        do {
+            let client = try await cookbookClient()
+            let externalId: String
+            if createNew {
+                externalId = try await client.createRecipe(nckDetail)
+            } else {
+                guard let id = recipeDetail.externalSourceId else { return (nil, .REQUEST_DROPPED) }
+                try await client.updateRecipe(nckDetail)
+                externalId = id
+            }
+            let ids = await dataStore.recipeIds(forExternalIds: [externalId])
+            return (ids[externalId], nil)
+        } catch { return (nil, .REQUEST_DROPPED) }
+    }
+
+    // MARK: - Recipe photos
+
+    /// Stores (or with `nil`, removes) the photo of a local recipe.
+    func setLocalRecipePhoto(_ image: UIImage?, recipeId: Int) async {
+        await dataStore.deleteImages(forRecipe: recipeId)
+        if let image,
+           let full = image.resized(maxDimension: 2048).jpegData(compressionQuality: 0.85),
+           let thumb = image.resized(maxDimension: 400).jpegData(compressionQuality: 0.8) {
+            await dataStore.saveImage(full, forRecipe: recipeId, size: .FULL)
+            await dataStore.saveImage(thumb, forRecipe: recipeId, size: .THUMB)
+        }
+        forgetCachedImages(for: recipeId)
+    }
+
+    /// Drops cached and stored images of a recipe so the next request fetches
+    /// the current ones (e.g. after its photo changed on the server).
+    func invalidateImages(for recipeId: Int) async {
+        // Only Nextcloud recipes: a local recipe's stored photo is its only copy
+        if await dataStore.externalSourceId(forRecipe: recipeId) != nil {
+            await dataStore.deleteImages(forRecipe: recipeId)
+        }
+        forgetCachedImages(for: recipeId)
+    }
+
+    private func forgetCachedImages(for recipeId: Int) {
+        recipeImages.removeValue(forKey: recipeId)
+        imagesNeedUpdate.removeValue(forKey: recipeId)
+    }
+
+    func importRecipe(url: String) async -> (RecipeDetail?, RequestAlert?) {
+        guard let urlObj = URL(string: url) else { return (nil, .REQUEST_DROPPED) }
+        do {
+            // The server already stored the imported recipe, so register its id now;
+            // saving the editor then updates that recipe instead of creating a copy.
+            let imported = try await cookbookClient().importRecipe(from: urlObj)
+            let ids = await dataStore.recipeIds(forExternalIds: imported.id.isEmpty ? [] : [imported.id])
+            return (imported.toRecipeDetail(id: ids[imported.id]), nil)
+        } catch { return (nil, .REQUEST_DROPPED) }
+    }
 }
 
 
-
+// MARK: - Image helpers
 
 extension AppState {
-    func loadLocal<T: Codable>(path: String) async -> T? {
-        do {
-            return try await dataStore.load(fromPath: path)
-        } catch (let error) {
-            print(error)
-            return nil
-        }
-    }
-    
-    func saveLocal<T: Codable>(_ object: T, path: String) async {
-        await dataStore.save(data: object, toPath: path)
-    }
-    
     private func imageFromStore(id: Int, size: RecipeImage.RecipeImageSize) async -> UIImage? {
-        do {
-            let localPath = "image\(id)_\(size == .FULL ? "full" : "thumb")"
-            if let data: String = try await dataStore.load(fromPath: localPath) {
-                guard let dataDecoded = Data(base64Encoded: data) else { return nil }
-                let image = UIImage(data: dataDecoded)
-                return image
-            }
-        } catch {
-            print("Could not find image in local storage.")
-            return nil
-        }
-        return nil
+        guard let data = await dataStore.loadImage(forRecipe: id, size: size) else { return nil }
+        return UIImage(data: data)
     }
-    
+
+    /// Encode off the main actor — pngData() is CPU-intensive and must not block the UI.
+    private nonisolated func encodeToPNG(_ image: UIImage) async -> Data? {
+        image.pngData()
+    }
+
     private func imageToStore(id: Int, size: RecipeImage.RecipeImageSize, image: UIImage) async {
-        if let data = image.pngData() {
-            await saveLocal(data.base64EncodedString(), path: "image\(id)_\(size.rawValue)")
-        }
+        guard let data = await encodeToPNG(image) else { return }
+        await dataStore.saveImage(data, forRecipe: id, size: size)
     }
-    
+
     private func imageToCache(id: Int, size: RecipeImage.RecipeImageSize, image: UIImage) {
-        if recipeImages[id] != nil {
-            recipeImages[id]![size.rawValue] = image
-        } else {
-            recipeImages[id] = [size.rawValue : image]
-        }
-        if imagesNeedUpdate[id] != nil {
-            imagesNeedUpdate[id]![size.rawValue] = false
-        } else {
-            imagesNeedUpdate[id] = [size.rawValue: false]
-        }
+        recipeImages[id, default: [:]][size.rawValue] = image
+        imagesNeedUpdate[id, default: [:]][size.rawValue] = false
     }
-    
+
     private func imageFromCache(id: Int, size: RecipeImage.RecipeImageSize) -> UIImage? {
-        if recipeImages[id] != nil {
-            return recipeImages[id]![size.rawValue]
+        recipeImages[id]?[size.rawValue]
+    }
+
+    private func imageUpdateNeeded(id: Int, size: RecipeImage.RecipeImageSize) -> Bool {
+        imagesNeedUpdate[id]?[size.rawValue] ?? true
+    }
+
+    /// A Nextcloud recipe needs syncing when it isn't stored yet, or when it was
+    /// modified on the server since the last completed sync.
+    private func needsUpdate(_ recipe: Recipe) async -> Bool {
+        guard await dataStore.recipeDetailExists(recipeId: recipe.id) else { return true }
+        guard let dateString = recipe.dateModified,
+              let modified = Self.parseServerDate(dateString)
+        else { return true }
+        return modified >= UserSettings.shared.lastUpdate
+    }
+
+    private static let serverDateFormatters: [DateFormatter] = [
+        "yyyy-MM-dd'T'HH:mm:ssZ",
+        "yyyy-MM-dd'T'HH:mm:ssZZZZZ",
+        "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ",
+        "yyyy-MM-dd HH:mm:ss",
+    ].map { format in
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = format
+        return formatter
+    }
+
+    private static func parseServerDate(_ string: String) -> Date? {
+        for formatter in serverDateFormatters {
+            if let date = formatter.date(from: string) { return date }
         }
         return nil
     }
-    
-    private func imageUpdateNeeded(id: Int, size: RecipeImage.RecipeImageSize) -> Bool {
-        if imagesNeedUpdate[id] != nil {
-            if imagesNeedUpdate[id]![size.rawValue] != nil {
-                return imagesNeedUpdate[id]![size.rawValue]!
-            }
+}
+
+
+extension UIImage {
+    /// Scales the image down so its longer side is at most `maxDimension` points
+    /// (never up). Also bakes in the orientation, which camera photos carry as metadata.
+    func resized(maxDimension: CGFloat) -> UIImage {
+        let scale = min(1, maxDimension / max(size.width, size.height))
+        let target = CGSize(width: size.width * scale, height: size.height * scale)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        return UIGraphicsImageRenderer(size: target, format: format).image { _ in
+            draw(in: CGRect(origin: .zero, size: target))
         }
-        return true
-    }
-    
-    private func needsUpdate(category: String, lastModified: String) -> Bool {
-        print("=======================")
-        print("original date string: \(lastModified)")
-        // Create a DateFormatter
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        
-        // Convert the string to a Date object
-        if let date = dateFormatter.date(from: lastModified), let lastUpdate = lastUpdates[category] {
-            if date < lastUpdate {
-                print("No update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: lastUpdate))")
-                return false
-            } else {
-                print("Update needed. (recipe: \(dateFormatter.string(from: date)), last: \(dateFormatter.string(from: lastUpdate))")
-                return true
-            }
-        }
-        print("String is not a date. Update needed.")
-        return true
     }
 }
 
 
-extension DateFormatter {
-    static func utcToString(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return dateFormatter.string(from: date)
-    }
-}
+// MARK: - Timer logic
 
-
-// Timer logic
 extension AppState {
     func createTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
         let timer = RecipeTimer(duration: duration)
         timers[recipeId] = timer
         return timer
     }
-    
+
     func getTimer(forRecipe recipeId: String, duration: DurationComponents) -> RecipeTimer {
         return timers[recipeId] ?? createTimer(forRecipe: recipeId, duration: duration)
     }
-    
+
     func deleteTimer(forRecipe recipeId: String) {
         timers.removeValue(forKey: recipeId)
     }

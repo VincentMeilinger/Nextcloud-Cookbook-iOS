@@ -19,23 +19,19 @@ struct RecipeIngredientSection: View {
             HStack {
                 Button {
                     withAnimation {
-                        if groceryList.containsRecipe(viewModel.observableRecipeDetail.id) {
-                            groceryList.deleteGroceryRecipe(viewModel.observableRecipeDetail.id)
+                        if groceryList.containsRecipe(viewModel.observableRecipeDetail.groceryListKey) {
+                            groceryList.deleteGroceryRecipe(viewModel.observableRecipeDetail.groceryListKey)
                         } else {
                             groceryList.addItems(
                                 viewModel.observableRecipeDetail.recipeIngredient,
-                                toRecipe: viewModel.observableRecipeDetail.id,
+                                toRecipe: viewModel.observableRecipeDetail.groceryListKey,
                                 recipeName: viewModel.observableRecipeDetail.name
                             )
                         }
                     }
                 } label: {
-                    if #available(iOS 17.0, *) {
-                        Image(systemName: "storefront")
-                    } else {
-                        Image(systemName: "heart.text.square")
-                    }
-                }.disabled(viewModel.editMode)
+                    Image(systemName: "storefront")
+                }
                 
                 SecondaryLabel(text: LocalizedStringKey("Ingredients"))
                 
@@ -53,11 +49,11 @@ struct RecipeIngredientSection: View {
                     ingredient: $viewModel.observableRecipeDetail.recipeIngredient[ix],
                     servings: $viewModel.observableRecipeDetail.ingredientMultiplier,
                     recipeYield: Double(viewModel.observableRecipeDetail.recipeYield),
-                    recipeId: viewModel.observableRecipeDetail.id
+                    recipeId: viewModel.observableRecipeDetail.groceryListKey
                 ) {
                     groceryList.addItem(
                         viewModel.observableRecipeDetail.recipeIngredient[ix],
-                        toRecipe: viewModel.observableRecipeDetail.id,
+                        toRecipe: viewModel.observableRecipeDetail.groceryListKey,
                         recipeName: viewModel.observableRecipeDetail.name
                     )
                 }
@@ -72,16 +68,7 @@ struct RecipeIngredientSection: View {
                         .foregroundStyle(.secondary)
                 }.padding(.top)
             }
-            
-            if viewModel.editMode {
-                Button {
-                    viewModel.presentIngredientEditView.toggle()
-                } label: {
-                    Text("Edit")
-                }
-                .buttonStyle(.borderedProminent)
-            }
-        }
+                    }
         .padding()
         .animation(.easeInOut, value: viewModel.observableRecipeDetail.ingredientMultiplier)
     }

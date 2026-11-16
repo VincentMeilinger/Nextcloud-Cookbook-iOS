@@ -9,27 +9,43 @@ import Foundation
 import SwiftUI
 
 
+/// Where a recipe is stored.
+enum RecipeOrigin: Codable, Equatable, Hashable {
+    /// Stored only on this device (no external source id).
+    case local
+    /// Stored on a Nextcloud server (the external source id is the server's recipe id).
+    case nextcloud
+
+    init(externalSourceId: String?) {
+        self = externalSourceId == nil ? .local : .nextcloud
+    }
+}
+
+
 struct Recipe: Codable {
+    /// App-internal id, assigned on this device (see `DataStore.recipeIds(forExternalIds:)`).
+    let id: Int
+    /// The recipe's id at its source (the Nextcloud recipe id); `nil` for local recipes.
+    let externalSourceId: String?
     let name: String
     let keywords: String?
     let dateCreated: String?
     let dateModified: String?
     let imageUrl: String?
     let imagePlaceholderUrl: String?
-    let recipe_id: Int
-    
+
     // Properties excluded from Codable
     var storedLocally: Bool? = nil
-    
+
+    var origin: RecipeOrigin { RecipeOrigin(externalSourceId: externalSourceId) }
+
     private enum CodingKeys: String, CodingKey {
-        case name, keywords, dateCreated, dateModified, imageUrl, imagePlaceholderUrl, recipe_id
+        case id, externalSourceId, name, keywords, dateCreated, dateModified, imageUrl, imagePlaceholderUrl
     }
 }
 
 
-extension Recipe: Identifiable, Hashable {
-    var id: String { name }
-}
+extension Recipe: Identifiable, Hashable {}
 
 
 struct RecipeDetail: Codable {
@@ -39,7 +55,11 @@ struct RecipeDetail: Codable {
     var dateModified: String?
     var imageUrl: String?
     var image: String?
-    var id: String
+    /// App-internal id; `nil` until the recipe has been saved on this device or fetched.
+    var id: Int?
+    /// The recipe's id at its source (the Nextcloud recipe id); `nil` for local recipes
+    /// and recipes not uploaded yet.
+    var externalSourceId: String?
     var prepTime: String?
     var cookTime: String?
     var totalTime: String?
@@ -52,7 +72,7 @@ struct RecipeDetail: Codable {
     var recipeInstructions: [String]
     var nutrition: [String:String]
     
-    init(name: String, keywords: String, dateCreated: String, dateModified: String, image: String, imageUrl: String, id: String, prepTime: String? = nil, cookTime: String? = nil, totalTime: String? = nil, description: String, url: String, recipeYield: Int, recipeCategory: String, tool: [String], recipeIngredient: [String], recipeInstructions: [String], nutrition: [String:String]) {
+    init(name: String, keywords: String, dateCreated: String, dateModified: String, image: String, imageUrl: String, id: Int?, externalSourceId: String?, prepTime: String? = nil, cookTime: String? = nil, totalTime: String? = nil, description: String, url: String, recipeYield: Int, recipeCategory: String, tool: [String], recipeIngredient: [String], recipeInstructions: [String], nutrition: [String:String]) {
         self.name = name
         self.keywords = keywords
         self.dateCreated = dateCreated
@@ -60,6 +80,7 @@ struct RecipeDetail: Codable {
         self.image = image
         self.imageUrl = imageUrl
         self.id = id
+        self.externalSourceId = externalSourceId
         self.prepTime = prepTime
         self.cookTime = cookTime
         self.totalTime = totalTime
@@ -80,7 +101,8 @@ struct RecipeDetail: Codable {
         dateModified = ""
         image = ""
         imageUrl = ""
-        id = ""
+        id = nil
+        externalSourceId = nil
         prepTime = ""
         cookTime = ""
         totalTime = ""
@@ -96,7 +118,7 @@ struct RecipeDetail: Codable {
     
     // Custom decoder to handle value type ambiguity
     private enum CodingKeys: String, CodingKey {
-        case name, keywords, dateCreated, dateModified, image, imageUrl, id, prepTime, cookTime, totalTime, description, url, recipeYield, recipeCategory, tool, recipeIngredient, recipeInstructions, nutrition
+        case name, keywords, dateCreated, dateModified, image, imageUrl, id, externalSourceId, prepTime, cookTime, totalTime, description, url, recipeYield, recipeCategory, tool, recipeIngredient, recipeInstructions, nutrition
     }
 
     init(from decoder: Decoder) throws {
@@ -107,7 +129,8 @@ struct RecipeDetail: Codable {
         dateModified = try container.decodeIfPresent(String.self, forKey: .dateModified)
         image = try container.decodeIfPresent(String.self, forKey: .image)
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
-        id = try container.decode(String.self, forKey: .id)
+        id = try container.decodeIfPresent(Int.self, forKey: .id)
+        externalSourceId = try container.decodeIfPresent(String.self, forKey: .externalSourceId)
         prepTime = try container.decodeIfPresent(String.self, forKey: .prepTime)
         cookTime = try container.decodeIfPresent(String.self, forKey: .cookTime)
         totalTime = try container.decodeIfPresent(String.self, forKey: .totalTime)
@@ -134,7 +157,8 @@ extension RecipeDetail {
              dateModified: "",
              image: "",
              imageUrl: "",
-             id: "",
+             id: nil,
+             externalSourceId: nil,
              prepTime: "",
              cookTime: "",
              totalTime: "",
@@ -155,9 +179,7 @@ extension RecipeDetail {
     }
     
     mutating func setKeywordsFromArray(_ keywordsArray: [String]) {
-        if !keywordsArray.isEmpty {
-            self.keywords = keywordsArray.joined(separator: ",")
-        }
+        self.keywords = keywordsArray.joined(separator: ",")
     }
 }
 

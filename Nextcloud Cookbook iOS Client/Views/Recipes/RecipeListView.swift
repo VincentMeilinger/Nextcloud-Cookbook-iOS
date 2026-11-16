@@ -1,5 +1,5 @@
 //
-//  CategoryDetailView.swift
+//  RecipeListView.swift
 //  Nextcloud Cookbook iOS Client
 //
 //  Created by Vincent Meilinger on 15.09.23.
@@ -10,66 +10,53 @@ import SwiftUI
 
 
 
+/// Recipes of one cookbook. Used as a pushed screen on iPhone and as the
+/// root of a cookbook's sidebar entry on iPad.
 struct RecipeListView: View {
-    @EnvironmentObject var appState: AppState
-    @EnvironmentObject var groceryList: GroceryList
-    @State var categoryName: String
-    @State var searchText: String = ""
-    @Binding var showEditView: Bool
-    @State var selectedRecipe: Recipe? = nil
-    
+    @EnvironmentObject private var appState: AppState
+    @Environment(LibraryModel.self) private var library
+    let categoryName: String
+    @State private var searchText = ""
+    @State private var showNewRecipe = false
+    @State private var createdRecipe: Recipe?
+
     var body: some View {
-        Group {
-            let recipes = recipesFiltered()
-            if !recipes.isEmpty {
-                List(recipesFiltered(), id: \.recipe_id) { recipe in
-                    RecipeCardView(recipe: recipe)
-                        .shadow(radius: 2)
-                        .background(
-                            NavigationLink(value: recipe) {
-                                EmptyView()
-                            }
-                                .buttonStyle(.plain)
-                                .opacity(0)
-                        )
-                        .frame(height: 85)
-                        .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
-                        .listRowSeparatorTint(.clear)
-                }
-                .listStyle(.plain)
-            } else {
-                VStack {
-                    Text("There are no recipes in this cookbook!")
-                    Button {
+        List(filteredRecipes) { recipe in
+            RecipeRow(recipe: recipe)
+        }
+        .listStyle(.plain)
+        .overlay {
+            if appState.recipes[categoryName, default: []].isEmpty {
+                ContentUnavailableView {
+                    Label("There are no recipes in this cookbook!", systemImage: "book.closed")
+                } actions: {
+                    Button("Refresh") {
                         Task {
                             await appState.getCategories()
                             await appState.getCategory(named: categoryName, fetchMode: .preferServer)
                         }
-                    } label: {
-                        Text("Refresh")
-                            .bold()
                     }
                     .buttonStyle(.bordered)
-                }.padding()
+                }
+            } else if filteredRecipes.isEmpty {
+                ContentUnavailableView.search(text: searchText)
             }
         }
         .searchable(text: $searchText, prompt: "Search recipes/keywords")
         .navigationTitle(categoryName == "*" ? String(localized: "Other") : categoryName)
-        
-        .navigationDestination(for: Recipe.self) { recipe in
-            RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
-                .environmentObject(appState)
-                .environmentObject(groceryList)
-        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    print("Add new recipe")
-                    showEditView = true
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                }
+                Button("New Recipe", systemImage: "plus") { showNewRecipe = true }
             }
+        }
+        .sheet(isPresented: $showNewRecipe) {
+            // New recipes created here start in this cookbook
+            RecipeEditorView(category: categoryName == "*" ? "" : categoryName) { createdRecipe = $0 }
+                .environmentObject(appState)
+                .environment(library)
+        }
+        .navigationDestination(item: $createdRecipe) { recipe in
+            RecipeView(viewModel: RecipeView.ViewModel(recipe: recipe))
         }
         .task {
             await appState.getCategory(
@@ -84,13 +71,13 @@ struct RecipeListView: View {
             )
         }
     }
-    
-    func recipesFiltered() -> [Recipe] {
-        guard let recipes = appState.recipes[categoryName] else { return [] }
-        guard searchText != "" else { return recipes }
+
+    private var filteredRecipes: [Recipe] {
+        let recipes = appState.recipes[categoryName, default: []]
+        guard !searchText.isEmpty else { return recipes }
         return recipes.filter { recipe in
-            recipe.name.lowercased().contains(searchText.lowercased()) || // check name for occurence of search term
-            (recipe.keywords != nil && recipe.keywords!.lowercased().contains(searchText.lowercased())) // check keywords for search term
+            recipe.name.localizedCaseInsensitiveContains(searchText)
+                || (recipe.keywords?.localizedCaseInsensitiveContains(searchText) ?? false)
         }
     }
 }

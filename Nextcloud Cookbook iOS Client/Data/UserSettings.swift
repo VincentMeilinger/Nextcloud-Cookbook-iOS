@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import Security
 
 class UserSettings: ObservableObject {
     
@@ -19,15 +20,17 @@ class UserSettings: ObservableObject {
         }
     }
     
+    /// App password. Stored in the Keychain, never in UserDefaults.
     @Published var token: String {
         didSet {
-            UserDefaults.standard.set(token, forKey: "token")
+            Keychain.set(token, forKey: "token")
         }
     }
-    
+
+    /// Base64-encoded "username:token" for HTTP Basic auth. Stored in the Keychain.
     @Published var authString: String {
         didSet {
-            UserDefaults.standard.set(authString, forKey: "authString")
+            Keychain.set(authString, forKey: "authString")
         }
     }
     
@@ -40,12 +43,6 @@ class UserSettings: ObservableObject {
     @Published var serverProtocol: String {
         didSet {
             UserDefaults.standard.set(serverProtocol, forKey: "serverProtocol")
-        }
-    }
-    
-    @Published var cookbookApiVersion: CookbookApiVersion {
-        didSet {
-            UserDefaults.standard.set(cookbookApiVersion, forKey: "cookbookApiVersion")
         }
     }
     
@@ -97,12 +94,6 @@ class UserSettings: ObservableObject {
         }
     }
     
-    @Published var expandKeywordSection: Bool {
-        didSet {
-            UserDefaults.standard.set(expandKeywordSection, forKey: "expandKeywordSection")
-        }
-    }
-    
     @Published var expandInfoSection: Bool {
         didSet {
             UserDefaults.standard.set(expandInfoSection, forKey: "expandInfoSection")
@@ -120,14 +111,16 @@ class UserSettings: ObservableObject {
             UserDefaults.standard.set(decimalNumberSeparator, forKey: "decimalNumberSeparator")
         }
     }
-    
+
+    /// True when valid Nextcloud credentials are stored.
+    var isLoggedIn: Bool { !serverAddress.isEmpty && !authString.isEmpty }
+
     init() {
         self.username = UserDefaults.standard.object(forKey: "username") as? String ?? ""
-        self.token = UserDefaults.standard.object(forKey: "token") as? String ?? ""
-        self.authString = UserDefaults.standard.object(forKey: "authString") as? String ?? ""
+        self.token = Self.loadSecret(forKey: "token")
+        self.authString = Self.loadSecret(forKey: "authString")
         self.serverAddress = UserDefaults.standard.object(forKey: "serverAddress") as? String ?? ""
         self.serverProtocol = UserDefaults.standard.object(forKey: "serverProtocol") as? String ?? "https://"
-        self.cookbookApiVersion = UserDefaults.standard.object(forKey: "cookbookApiVersion") as? CookbookApiVersion ?? .v1
         self.onboarding = UserDefaults.standard.object(forKey: "onboarding") as? Bool ?? true
         self.defaultCategory = UserDefaults.standard.object(forKey: "defaultCategory") as? String ?? ""
         self.language = UserDefaults.standard.object(forKey: "language") as? String ?? SupportedLanguage.DEVICE.rawValue
@@ -136,11 +129,10 @@ class UserSettings: ObservableObject {
         self.storeThumb = UserDefaults.standard.object(forKey: "storeThumb") as? Bool ?? true
         self.lastUpdate = UserDefaults.standard.object(forKey: "lastUpdate") as? Date ?? Date.distantPast
         self.expandNutritionSection = UserDefaults.standard.object(forKey: "expandNutritionSection") as? Bool ?? false
-        self.expandKeywordSection = UserDefaults.standard.object(forKey: "expandKeywordSection") as? Bool ?? false
         self.expandInfoSection = UserDefaults.standard.object(forKey: "expandInfoSection") as? Bool ?? false
         self.keepScreenAwake = UserDefaults.standard.object(forKey: "keepScreenAwake") as? Bool ?? true
         self.decimalNumberSeparator = UserDefaults.standard.object(forKey: "decimalNumberSeparator") as? String ?? "."
-        
+
         if authString == "" {
             if token != "" && username != "" {
                 let loginString = "\(self.username):\(self.token)"
@@ -157,5 +149,50 @@ class UserSettings: ObservableObject {
             let loginData = loginString.data(using: String.Encoding.utf8)!
             self.authString = loginData.base64EncodedString()
         }
+    }
+
+    /// Reads a secret from the Keychain. Values left in UserDefaults by older app
+    /// versions are moved into the Keychain and removed from UserDefaults.
+    private static func loadSecret(forKey key: String) -> String {
+        if let legacy = UserDefaults.standard.string(forKey: key) {
+            if !legacy.isEmpty { Keychain.set(legacy, forKey: key) }
+            UserDefaults.standard.removeObject(forKey: key)
+        }
+        return Keychain.get(key) ?? ""
+    }
+}
+
+
+/// Minimal generic-password Keychain wrapper for the app's credentials.
+enum Keychain {
+    private static let service = Bundle.main.bundleIdentifier ?? "NextcloudCookbook"
+
+    private static func query(_ key: String) -> [String: Any] {
+        [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: key,
+        ]
+    }
+
+    static func get(_ key: String) -> String? {
+        var q = query(key)
+        q[kSecReturnData as String] = true
+        q[kSecMatchLimit as String] = kSecMatchLimitOne
+        var result: AnyObject?
+        guard SecItemCopyMatching(q as CFDictionary, &result) == errSecSuccess,
+              let data = result as? Data
+        else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
+
+    /// Stores `value`, or deletes the item when `value` is empty.
+    static func set(_ value: String, forKey key: String) {
+        SecItemDelete(query(key) as CFDictionary)
+        guard !value.isEmpty else { return }
+        var q = query(key)
+        q[kSecValueData as String] = Data(value.utf8)
+        q[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
+        SecItemAdd(q as CFDictionary, nil)
     }
 }

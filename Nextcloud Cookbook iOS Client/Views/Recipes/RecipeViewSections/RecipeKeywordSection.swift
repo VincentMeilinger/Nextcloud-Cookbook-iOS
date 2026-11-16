@@ -8,28 +8,90 @@
 import Foundation
 import SwiftUI
 
-// MARK: - RecipeView Keyword Section
+// MARK: - RecipeView Keyword Pills
 
-struct RecipeKeywordSection: View {
-    @ObservedObject var viewModel: RecipeView.ViewModel
-    let columns: [GridItem] = [ GridItem(.flexible(minimum: 50, maximum: 200), spacing: 5) ]
-    
+/// The recipe's keywords as small capsules that wrap onto further lines.
+/// Shows nothing when the recipe has no keywords.
+struct RecipeKeywordPills: View {
+    let keywords: [String]
+
+    private var visibleKeywords: [String] {
+        keywords
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
     var body: some View {
-        CollapsibleView(titleColor: .secondary, isCollapsed: !UserSettings.shared.expandKeywordSection) {
-            Group {
-                if !viewModel.observableRecipeDetail.keywords.isEmpty && !viewModel.editMode {
-                    RecipeListSection(list: $viewModel.observableRecipeDetail.keywords)
-                } else {
-                    Text(LocalizedStringKey("No keywords."))
+        if !visibleKeywords.isEmpty {
+            FlowLayout(spacing: 6) {
+                ForEach(Array(visibleKeywords.enumerated()), id: \.offset) { _, keyword in
+                    Text(keyword)
+                        .font(.footnote)
+                        .fontWeight(.medium)
+                        .lineLimit(1)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(.quaternary))
                 }
             }
-        } title: {
-            HStack {
-                SecondaryLabel(text: LocalizedStringKey("Keywords"))
-                Spacer()
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text("Keywords: \(visibleKeywords.joined(separator: ", "))"))
+        }
+    }
+}
+
+/// Lays out its subviews left to right, starting a new line when the next one
+/// doesn't fit the available width.
+struct FlowLayout: Layout {
+    var spacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let rows = arrange(subviews, maxWidth: proposal.width ?? .infinity)
+        let width = rows.map(\.width).max() ?? 0
+        let height = rows.map(\.height).reduce(0, +) + spacing * CGFloat(max(rows.count - 1, 0))
+        return CGSize(width: width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var y = bounds.minY
+        for row in arrange(subviews, maxWidth: bounds.width) {
+            var x = bounds.minX
+            for index in row.indices {
+                let size = subviews[index].sizeThatFits(.unspecified)
+                subviews[index].place(
+                    at: CGPoint(x: x, y: y + (row.height - size.height) / 2),
+                    proposal: ProposedViewSize(size)
+                )
+                x += size.width + spacing
+            }
+            y += row.height + spacing
+        }
+    }
+
+    private struct Row {
+        var indices: [Int] = []
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+    }
+
+    private func arrange(_ subviews: Subviews, maxWidth: CGFloat) -> [Row] {
+        var rows: [Row] = []
+        var row = Row()
+        for index in subviews.indices {
+            let size = subviews[index].sizeThatFits(.unspecified)
+            let widthWithItem = row.indices.isEmpty ? size.width : row.width + spacing + size.width
+            if !row.indices.isEmpty && widthWithItem > maxWidth {
+                rows.append(row)
+                row = Row(indices: [index], width: size.width, height: size.height)
+            } else {
+                row.indices.append(index)
+                row.width = widthWithItem
+                row.height = max(row.height, size.height)
             }
         }
-        .padding()
+        if !row.indices.isEmpty { rows.append(row) }
+        return rows
     }
 }
 

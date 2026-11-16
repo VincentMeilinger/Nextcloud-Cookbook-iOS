@@ -10,7 +10,8 @@ import SwiftUI
 
 class ObservableRecipeDetail: ObservableObject {
     // Cookbook recipe detail fields
-    var id: String
+    var id: Int?
+    var externalSourceId: String?
     @Published var name: String
     @Published var keywords: [String]
     @Published var image: String
@@ -33,7 +34,8 @@ class ObservableRecipeDetail: ObservableObject {
     
     
     init() {
-        id = ""
+        id = nil
+        externalSourceId = nil
         name = String(localized: "New Recipe")
         keywords = []
         image = ""
@@ -55,6 +57,7 @@ class ObservableRecipeDetail: ObservableObject {
     
     init(_ recipeDetail: RecipeDetail) {
         id = recipeDetail.id
+        externalSourceId = recipeDetail.externalSourceId
         name = recipeDetail.name
         keywords = recipeDetail.keywords.isEmpty ? [] : recipeDetail.keywords.components(separatedBy: ",")
         image = recipeDetail.image ?? ""
@@ -74,6 +77,9 @@ class ObservableRecipeDetail: ObservableObject {
         ingredientMultiplier = Double(recipeDetail.recipeYield == 0 ? 1 : recipeDetail.recipeYield)
     }
     
+    /// Key of this recipe's section in the grocery list.
+    var groceryListKey: String { id.map(String.init) ?? "" }
+
     func toRecipeDetail() -> RecipeDetail {
         return RecipeDetail(
             name: self.name,
@@ -83,6 +89,7 @@ class ObservableRecipeDetail: ObservableObject {
             image: self.image,
             imageUrl: self.imageUrl,
             id: self.id,
+            externalSourceId: self.externalSourceId,
             prepTime: self.prepTime.toPTString(),
             cookTime: self.cookTime.toPTString(),
             totalTime: self.totalTime.toPTString(),

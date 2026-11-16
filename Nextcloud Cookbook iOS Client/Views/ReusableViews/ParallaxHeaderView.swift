@@ -32,8 +32,9 @@ struct ParallaxHeader<Content: View, Space: Hashable>: View {
                 heightModifier / 20,
                 max(10, heightModifier / 20)
             )
+            // Respect horizontal safe areas: on iPad the floating sidebar is one,
+            // and ignoring it would draw the header behind the sidebar.
             content()
-                .edgesIgnoringSafeArea(.horizontal)
                 .frame(
                     width: proxy.size.width,
                     height: proxy.size.height + heightModifier
