@@ -75,4 +75,4 @@ If you wish to see additional languages supported, please don't hesitate to open
 
 ## Further information
 
-Cookbook Client is available on the App Store for free, and will be updated regularly. This app is a hobby project, which is why development progress may be slower than desired. If you are interested in an iOS native CookBook client, you are welcome to contribute! In case you discover any bugs or encounter problems, feel free to point them out by creating an Issue.
+Cookbook Client is available on the App Store for free, and will be updated regularly. This app is a hobby project, which is why development progress may be slower than desired. If you are interested in an iOS native CookBook client, you are welcome to contribute! In case you discover any bugs or encounter problems, feel free to point them out by creating an Issue. Disclaimer: AI is used to maintain this project.
