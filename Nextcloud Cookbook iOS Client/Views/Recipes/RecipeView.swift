@@ -85,7 +85,8 @@ struct RecipeView: View {
 
                     Divider()
 
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 400), alignment: .top)]) {
+                    // Not a LazyVGrid: see AdaptiveColumnsLayout (#36)
+                    AdaptiveColumnsLayout(minColumnWidth: 400) {
                         if !viewModel.observableRecipeDetail.recipeIngredient.isEmpty {
                             RecipeIngredientSection(viewModel: viewModel)
                         }

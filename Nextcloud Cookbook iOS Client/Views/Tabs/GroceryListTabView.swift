@@ -181,6 +181,10 @@ private struct GroceryItemRow: View {
 /// Text field pinned above the tab bar so items can be added with one hand.
 /// Return adds the item and keeps the keyboard up for the next one; pasting
 /// several lines adds one item per line.
+///
+/// The field is multi-line so Return arrives as a newline instead of a submit:
+/// a submit ends editing, and re-focusing afterwards dropped the first character
+/// typed for the next item.
 private struct GroceryQuickAddBar: View {
     @EnvironmentObject var groceryList: GroceryList
     @State private var text = ""
@@ -190,10 +194,12 @@ private struct GroceryQuickAddBar: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            TextField("Add an item", text: $text)
+            TextField("Add an item", text: $text, axis: .vertical)
+                .lineLimit(1...4)
                 .focused($isFocused)
-                .submitLabel(.done)
-                .onSubmit(add)
+                .onChange(of: text) {
+                    if text.contains(where: \.isNewline) { add() }
+                }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
                 .background(.background, in: .capsule)
@@ -217,12 +223,11 @@ private struct GroceryQuickAddBar: View {
             .split(whereSeparator: \.isNewline)
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
+        text = ""
         guard !items.isEmpty else { return }
         withAnimation {
             groceryList.addItems(items, toRecipe: GroceryList.manualItemsKey, recipeName: String(localized: "Other"))
         }
-        text = ""
-        isFocused = true
     }
 }
 

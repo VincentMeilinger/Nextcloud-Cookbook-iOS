@@ -777,29 +777,31 @@ private struct EditableLinesSection: View {
             HStack {
                 Image(systemName: "plus.circle.fill")
                     .foregroundStyle(.tint)
-                TextField(addPrompt, text: $newText)
+                // Multi-line, so Return arrives as a newline and the field keeps
+                // focus; submitting and re-focusing dropped the next keystroke.
+                TextField(addPrompt, text: $newText, axis: .vertical)
                     .focused($isAddFieldFocused)
-                    .submitLabel(.next)
-                    .onSubmit(add)
+                    .onChange(of: newText) {
+                        if newText.contains(where: \.isNewline) { add() }
+                    }
             }
         } header: {
             Text(title)
         }
     }
 
-    /// Adds the typed text (one item per line when several lines were pasted)
-    /// and keeps the keyboard up for the next item.
+    /// Adds the typed text (one item per line when several lines were pasted).
+    /// The field keeps focus, so the keyboard stays up for the next item.
     private func add() {
         let items = newText
             .split(whereSeparator: \.isNewline)
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
+        newText = ""
         guard !items.isEmpty else { return }
         withAnimation {
             lines.append(contentsOf: items.map { RecipeDraft.Line(text: $0) })
         }
-        newText = ""
-        isAddFieldFocused = true
     }
 }
 
